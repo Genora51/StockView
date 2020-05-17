@@ -1,14 +1,14 @@
 ﻿using StockView.Model;
 using StockView.UI.Data;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace StockView.UI.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel : ViewModelBase
     {
         private IStockDataService _stockDataService;
         private Stock _selectedStock;
+
         public MainViewModel(IStockDataService stockDataService)
         {
             Stocks = new ObservableCollection<Stock>();
@@ -29,8 +29,10 @@ namespace StockView.UI.ViewModel
         public Stock SelectedStock
         {
             get { return _selectedStock; }
-            set { _selectedStock = value; }
+            set {
+                _selectedStock = value;
+                OnPropertyChanged();
+            }
         }
-
     }
 }
