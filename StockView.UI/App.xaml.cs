@@ -1,11 +1,5 @@
-﻿using StockView.UI.Data;
-using StockView.UI.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
+using StockView.UI.Startup;
 using System.Windows;
 
 namespace StockView.UI
@@ -17,9 +11,10 @@ namespace StockView.UI
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var mainWindow = new MainWindow(
-                new MainViewModel(
-                    new StockDataService()));
+            var bootstrapper = new Bootstrapper();
+            var container = bootstrapper.Bootstrap();
+
+            var mainWindow = container.Resolve<MainWindow>();
             mainWindow.Show();
         }
     }
