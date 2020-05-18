@@ -1,6 +1,7 @@
 ﻿using StockView.Model;
 using StockView.UI.Data;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace StockView.UI.ViewModel
 {
@@ -15,9 +16,9 @@ namespace StockView.UI.ViewModel
             _stockDataService = stockDataService;
         }
 
-        public void Load()
+        public async Task LoadAsync()
         {
-            var stocks = _stockDataService.GetAll();
+            var stocks = await _stockDataService.GetAllAsync();
             Stocks.Clear();
             foreach (var stock in stocks)
             {

@@ -1,10 +1,11 @@
 ﻿using StockView.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StockView.UI.Data
 {
     public interface IStockDataService
     {
-        IEnumerable<Stock> GetAll();
+        Task<IEnumerable<Stock>> GetAllAsync();
     }
 }
