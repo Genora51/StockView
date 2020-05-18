@@ -2,7 +2,9 @@
 using StockView.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StockView.UI.Data
 {
@@ -14,11 +16,11 @@ namespace StockView.UI.Data
         {
             _contextCreator = contextCreator;
         }
-        public IEnumerable<Stock> GetAll()
+        public async Task<IEnumerable<Stock>> GetAllAsync()
         {
             using (var ctx = _contextCreator())
             {
-                return ctx.Stocks.AsNoTracking().ToList();
+                return await ctx.Stocks.AsNoTracking().ToListAsync();
             }
         }
     }
