@@ -11,11 +11,15 @@ namespace StockView.UI.Startup
         {
             var builder = new ContainerBuilder();
 
+            // Database
             builder.RegisterType<StockViewDbContext>().AsSelf();
 
+            // MVVM
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
 
+            // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
             builder.RegisterType<StockDataService>().As<IStockDataService>();
 
