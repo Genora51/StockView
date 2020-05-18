@@ -1,8 +1,7 @@
 ﻿namespace StockView.DataAccess.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class InitialDatabase : DbMigration
     {
         public override void Up()
@@ -12,9 +11,9 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Symbol = c.String(),
-                        CompanyName = c.String(),
-                        Industry = c.String(),
+                        Symbol = c.String(nullable: false, maxLength: 5),
+                        CompanyName = c.String(maxLength: 50),
+                        Industry = c.String(maxLength: 50),
                     })
                 .PrimaryKey(t => t.Id);
             
