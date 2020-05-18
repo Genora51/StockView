@@ -18,6 +18,7 @@ namespace StockView.UI.Startup
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
+            builder.RegisterType<StockDetailViewModel>().As<IStockDetailViewModel>();
 
             // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
