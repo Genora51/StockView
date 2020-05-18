@@ -1,15 +1,25 @@
-﻿using StockView.Model;
+﻿using StockView.DataAccess;
+using StockView.Model;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace StockView.UI.Data
 {
     public class StockDataService : IStockDataService
     {
+        private Func<StockViewDbContext> _contextCreator;
+
+        public StockDataService(Func<StockViewDbContext> contextCreator)
+        {
+            _contextCreator = contextCreator;
+        }
         public IEnumerable<Stock> GetAll()
         {
-            // TODO: Load data from real database
-            yield return new Stock { CompanyName = "Alphabet Inc.", Symbol = "GOOGL", Industry = "Technology" };
-            yield return new Stock { CompanyName = "Home Depot", Symbol = "HD", Industry = "Consumer Cyclical" };
-            yield return new Stock { CompanyName = "Johnson & Johnson", Symbol = "JNJ", Industry = "Healthcare" };
+            using (var ctx = _contextCreator())
+            {
+                return ctx.Stocks.AsNoTracking().ToList();
+            }
         }
     }
 }
