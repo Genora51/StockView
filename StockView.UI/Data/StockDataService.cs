@@ -21,5 +21,15 @@ namespace StockView.UI.Data
                 return await ctx.Stocks.AsNoTracking().SingleAsync(s => s.Id == stockId);
             }
         }
+
+        public async Task SaveAsync(Stock stock)
+        {
+            using (var ctx = _contextCreator())
+            {
+                ctx.Stocks.Attach(stock);
+                ctx.Entry(stock).State = EntityState.Modified;
+                await ctx.SaveChangesAsync();
+            }
+        }
     }
 }

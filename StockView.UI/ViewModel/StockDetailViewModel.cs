@@ -31,9 +31,9 @@ namespace StockView.UI.ViewModel
             return true;
         }
 
-        private void OnSaveExecute()
+        private async void OnSaveExecute()
         {
-            throw new NotImplementedException();
+            await _dataService.SaveAsync(Stock);
         }
 
         private async void OnOpenStockDetailView(int stockId)
