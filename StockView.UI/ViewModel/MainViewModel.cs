@@ -21,6 +21,6 @@ namespace StockView.UI.ViewModel
         }
 
         public INavigationViewModel NavigationViewModel { get; }
-        public IStockDetailViewModel StockDetailViewModel { get; set; }
+        public IStockDetailViewModel StockDetailViewModel { get; }
     }
 }
