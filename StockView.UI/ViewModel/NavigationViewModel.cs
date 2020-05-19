@@ -19,7 +19,7 @@ namespace StockView.UI.ViewModel
         {
             _stockLookupService = stockLookupService;
             _eventAggregator = eventAggregator;
-            Stocks = new ObservableCollection<LookupItem>();
+            Stocks = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterStockSavedEvent>().Subscribe(AfterStockSaved);
         }
 
@@ -35,15 +35,15 @@ namespace StockView.UI.ViewModel
             Stocks.Clear();
             foreach (var item in lookup)
             {
-                Stocks.Add(item);
+                Stocks.Add(new NavigationItemViewModel(item.Id, item.DisplayMember));
             }
         }
 
-        public ObservableCollection<LookupItem> Stocks { get; }
+        public ObservableCollection<NavigationItemViewModel> Stocks { get; }
 
-        private LookupItem _selectedStock;
+        private NavigationItemViewModel _selectedStock;
 
-        public LookupItem SelectedStock
+        public NavigationItemViewModel SelectedStock
         {
             get { return _selectedStock; }
             set
