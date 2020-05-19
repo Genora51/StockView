@@ -1,8 +1,6 @@
 ﻿using Prism.Events;
-using StockView.Model;
-using StockView.UI.Data;
+using StockView.UI.Data.Lookups;
 using StockView.UI.Event;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,28 +33,11 @@ namespace StockView.UI.ViewModel
             Stocks.Clear();
             foreach (var item in lookup)
             {
-                Stocks.Add(new NavigationItemViewModel(item.Id, item.DisplayMember));
+                Stocks.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
+                    _eventAggregator));
             }
         }
 
         public ObservableCollection<NavigationItemViewModel> Stocks { get; }
-
-        private NavigationItemViewModel _selectedStock;
-
-        public NavigationItemViewModel SelectedStock
-        {
-            get { return _selectedStock; }
-            set
-            {
-                _selectedStock = value;
-                OnPropertyChanged();
-                if(_selectedStock != null)
-                {
-                    _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
-                        .Publish(_selectedStock.Id);
-                }
-            }
-        }
-
     }
 }
