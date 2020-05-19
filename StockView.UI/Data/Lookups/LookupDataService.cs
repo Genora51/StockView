@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Lookups
 {
-    public class LookupDataService : IStockLookupDataService
+    public class LookupDataService : IStockLookupDataService, IIndustryLookupDataService
     {
         private Func<StockViewDbContext> _contextCreator;
 
@@ -27,6 +27,21 @@ namespace StockView.UI.Data.Lookups
                     {
                         Id = s.Id,
                         DisplayMember = s.Symbol
+                    })
+                    .ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<LookupItem>> GetIndustryLookupAsync()
+        {
+            using (var ctx = _contextCreator())
+            {
+                return await ctx.Industries.AsNoTracking()
+                    .Select(i =>
+                    new LookupItem
+                    {
+                        Id = i.Id,
+                        DisplayMember = i.Name
                     })
                     .ToListAsync();
             }

@@ -24,9 +24,9 @@ namespace StockView.UI.Wrapper
             set { SetValue(value); }
         }
 
-        public string Industry
+        public int? IndustryId
         {
-            get { return GetValue<string>(); }
+            get { return GetValue<int?>(); }
             set { SetValue(value); }
         }
 

@@ -10,5 +10,7 @@ namespace StockView.DataAccess
 
         }
         public DbSet<Stock> Stocks { get; set; }
+
+        public DbSet<Industry> Industries { get; set; }
     }
 }

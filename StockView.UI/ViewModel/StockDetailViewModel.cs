@@ -1,11 +1,12 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using StockView.Model;
+using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
-using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -16,19 +17,24 @@ namespace StockView.UI.ViewModel
         private IStockRepository _stockRepository;
         private IEventAggregator _eventAggregator;
         private IMessageDialogService _messageDialogService;
+        private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
         private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
-            IMessageDialogService messageDialogService)
+            IMessageDialogService messageDialogService,
+            IIndustryLookupDataService industryLookupDataService)
         {
             _stockRepository = stockRepository;
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
+            _industryLookupDataService = industryLookupDataService;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
+
+            Industries = new ObservableCollection<LookupItem>();
         }
 
         public async Task LoadAsync(int? stockId)
@@ -36,7 +42,13 @@ namespace StockView.UI.ViewModel
             var stock = stockId.HasValue
                 ? await _stockRepository.GetByIdAsync(stockId.Value)
                 : CreateNewStock();
+            InitialiseStock(stock);
 
+            await LoadIndustriesLookupAsync();
+        }
+
+        private void InitialiseStock(Stock stock)
+        {
             Stock = new StockWrapper(stock);
             Stock.PropertyChanged += (s, e) =>
             {
@@ -57,6 +69,17 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private async Task LoadIndustriesLookupAsync()
+        {
+            Industries.Clear();
+            Industries.Add(new NullLookupItem { DisplayMember = " - " });
+            var lookup = await _industryLookupDataService.GetIndustryLookupAsync();
+            foreach (var lookupItem in lookup)
+            {
+                Industries.Add(lookupItem);
+            }
+        }
+
         public StockWrapper Stock
         {
             get { return _stock; }
@@ -69,6 +92,7 @@ namespace StockView.UI.ViewModel
 
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ObservableCollection<LookupItem> Industries { get; }
 
         public bool HasChanges
         {
