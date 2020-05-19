@@ -3,24 +3,19 @@ using System;
 
 namespace StockView.UI.Wrapper
 {
-    public class StockWrapper : NotifyDataErrorInfoBase
-    {
-        public StockWrapper(Stock model)
+    public class StockWrapper : ModelWrapper<Stock> {
+        
+        public StockWrapper(Stock model) : base(model)
         {
-            Model = model;
         }
-
-        public Stock Model { get; }
-
         public int Id { get { return Model.Id; } }
 
         public string Symbol
         {
-            get { return Model.Symbol; }
+            get { return GetValue<string>(); }
             set
             {
-                Model.Symbol = value;
-                OnPropertyChanged();
+                SetValue(value);
                 ValidateProperty(nameof(Symbol));
             }
         }
@@ -41,22 +36,14 @@ namespace StockView.UI.Wrapper
 
         public string CompanyName
         {
-            get { return Model.CompanyName; }
-            set
-            {
-                Model.CompanyName = value;
-                OnPropertyChanged();
-            }
+            get { return GetValue<string>(); }
+            set { SetValue(value); }
         }
 
         public string Industry
         {
-            get { return Model.Industry; }
-            set
-            {
-                Model.Industry = value;
-                OnPropertyChanged();
-            }
+            get { return GetValue<string>(); }
+            set { SetValue(value); }
         }
     }
 }
