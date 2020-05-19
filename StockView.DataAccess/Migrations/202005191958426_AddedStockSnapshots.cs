@@ -13,6 +13,7 @@
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Date = c.DateTime(nullable: false, storeType: "date"),
+                        Value = c.Single(nullable: false),
                         StockId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)

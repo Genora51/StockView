@@ -7,7 +7,9 @@
         xmlns:view="clr-namespace:StockView.UI.View"
         xmlns:viewModel="clr-namespace:StockView.UI.ViewModel"
         mc:Ignorable="d"
-        Title="StockView" Height="350" Width="525" FontSize="15">
+        Title="StockView" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        FontSize="15">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:StockDetailViewModel}">
             <view:StockDetailView/>
