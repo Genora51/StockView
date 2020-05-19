@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using Prism.Events;
 using StockView.DataAccess;
-using StockView.UI.Data;
+using StockView.UI.Data.Lookups;
+using StockView.UI.Data.Repositories;
 using StockView.UI.ViewModel;
 
 namespace StockView.UI.Startup
@@ -26,7 +27,7 @@ namespace StockView.UI.Startup
 
             // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
-            builder.RegisterType<StockDataService>().As<IStockDataService>();
+            builder.RegisterType<StockRepository>().As<IStockRepository>();
 
             return builder.Build();
         }

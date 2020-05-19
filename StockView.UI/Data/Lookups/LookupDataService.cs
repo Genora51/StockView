@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StockView.UI.Data
+namespace StockView.UI.Data.Lookups
 {
     public class LookupDataService : IStockLookupDataService
     {

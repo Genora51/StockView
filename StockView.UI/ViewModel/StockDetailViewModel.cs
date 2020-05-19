@@ -1,10 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Events;
-using StockView.Model;
-using StockView.UI.Data;
+using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.Wrapper;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -12,14 +10,14 @@ namespace StockView.UI.ViewModel
 {
     public class StockDetailViewModel : ViewModelBase, IStockDetailViewModel
     {
-        private IStockDataService _dataService;
+        private IStockRepository _stockRepository;
         private IEventAggregator _eventAggregator;
         private StockWrapper _stock;
 
-        public StockDetailViewModel(IStockDataService dataService,
+        public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator)
         {
-            _dataService = dataService;
+            _stockRepository = stockRepository;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
                 .Subscribe(OnOpenStockDetailView);
@@ -29,7 +27,7 @@ namespace StockView.UI.ViewModel
 
         public async Task LoadAsync(int stockId)
         {
-            var stock = await _dataService.GetByIdAsync(stockId);
+            var stock = await _stockRepository.GetByIdAsync(stockId);
 
             Stock = new StockWrapper(stock);
             Stock.PropertyChanged += (s, e) =>
@@ -62,7 +60,7 @@ namespace StockView.UI.ViewModel
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Stock.Model);
+            await _stockRepository.SaveAsync();
             _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
                 new AfterStockSavedEventArgs
                 {

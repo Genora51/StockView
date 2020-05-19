@@ -1,11 +1,11 @@
 ﻿using StockView.Model;
 using System.Threading.Tasks;
 
-namespace StockView.UI.Data
+namespace StockView.UI.Data.Repositories
 {
-    public interface IStockDataService
+    public interface IStockRepository
     {
         Task<Stock> GetByIdAsync(int stockId);
-        Task SaveAsync(Stock stock);
+        Task SaveAsync();
     }
 }
