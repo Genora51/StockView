@@ -1,10 +1,12 @@
 ﻿using StockView.Model;
 using System;
+using System.Collections.Generic;
 
 namespace StockView.UI.Wrapper
 {
-    public class StockWrapper : ModelWrapper<Stock> {
-        
+    public class StockWrapper : ModelWrapper<Stock>
+    {
+
         public StockWrapper(Stock model) : base(model)
         {
         }
@@ -13,25 +15,7 @@ namespace StockView.UI.Wrapper
         public string Symbol
         {
             get { return GetValue<string>(); }
-            set
-            {
-                SetValue(value);
-                ValidateProperty(nameof(Symbol));
-            }
-        }
-
-        private void ValidateProperty(string propertyName)
-        {
-            ClearErrors(propertyName);
-            switch(propertyName)
-            {
-                case nameof(Symbol):
-                    if (string.Equals(Symbol, "INVL", StringComparison.OrdinalIgnoreCase))
-                    {
-                        AddError(propertyName, "Invalid Symbol");
-                    }
-                    break;
-            }
+            set { SetValue(value); }
         }
 
         public string CompanyName
@@ -44,6 +28,19 @@ namespace StockView.UI.Wrapper
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }
+        }
+
+        protected override IEnumerable<string> ValidateProperty(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(Symbol):
+                    if (string.Equals(Symbol, "INVL", StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return "Invalid Symbol";
+                    }
+                    break;
+            }
         }
     }
 }
