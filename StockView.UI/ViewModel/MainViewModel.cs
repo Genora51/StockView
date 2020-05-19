@@ -1,5 +1,6 @@
 ﻿using Prism.Events;
 using StockView.UI.Event;
+using StockView.UI.View.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -9,14 +10,17 @@ namespace StockView.UI.ViewModel
     {
         private IEventAggregator _eventAggregator;
         private Func<IStockDetailViewModel> _stockDetailViewModelCreator;
+        private IMessageDialogService _messageDialogService;
         private IStockDetailViewModel _stockDetailViewModel;
 
         public MainViewModel(INavigationViewModel navigationViewModel,
             Func<IStockDetailViewModel> stockDetailViewModelCreator,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
             _stockDetailViewModelCreator = stockDetailViewModelCreator;
+            _messageDialogService = messageDialogService;
 
             _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
                 .Subscribe(OnOpenStockDetailView);
@@ -43,6 +47,14 @@ namespace StockView.UI.ViewModel
 
         private async void OnOpenStockDetailView(int stockId)
         {
+            if (StockDetailViewModel != null && StockDetailViewModel.HasChanges)
+            {
+                var result = _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
+                if (result == MessageDialogResult.Cancel)
+                {
+                    return;
+                }
+            }
             StockDetailViewModel = _stockDetailViewModelCreator();
             await StockDetailViewModel.LoadAsync(stockId);
         }
