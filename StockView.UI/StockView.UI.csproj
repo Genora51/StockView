@@ -86,6 +86,7 @@
     </ApplicationDefinition>
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
+    <Compile Include="Event\AfterStockDeletedEvent.cs" />
     <Compile Include="Event\AfterStockSavedEvent.cs" />
     <Compile Include="Event\OpenStockDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />

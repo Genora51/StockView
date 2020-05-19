@@ -1,8 +1,11 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
+using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -12,21 +15,27 @@ namespace StockView.UI.ViewModel
     {
         private IStockRepository _stockRepository;
         private IEventAggregator _eventAggregator;
+        private IMessageDialogService _messageDialogService;
         private StockWrapper _stock;
         private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _stockRepository = stockRepository;
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
-        public async Task LoadAsync(int stockId)
+        public async Task LoadAsync(int? stockId)
         {
-            var stock = await _stockRepository.GetByIdAsync(stockId);
+            var stock = stockId.HasValue
+                ? await _stockRepository.GetByIdAsync(stockId.Value)
+                : CreateNewStock();
 
             Stock = new StockWrapper(stock);
             Stock.PropertyChanged += (s, e) =>
@@ -41,6 +50,11 @@ namespace StockView.UI.ViewModel
                 }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            if (Stock.Id == 0)
+            {
+                // Trick to trigger validation
+                Stock.Symbol = "";
+            }
         }
 
         public StockWrapper Stock
@@ -54,11 +68,7 @@ namespace StockView.UI.ViewModel
         }
 
         public ICommand SaveCommand { get; }
-
-        private bool OnSaveCanExecute()
-        {
-            return Stock != null && !Stock.HasErrors && HasChanges;
-        }
+        public ICommand DeleteCommand { get; }
 
         public bool HasChanges
         {
@@ -73,6 +83,17 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private bool OnSaveCanExecute()
+        {
+            return Stock != null && !Stock.HasErrors && HasChanges;
+        }
+
+        private Stock CreateNewStock()
+        {
+            var stock = new Stock();
+            _stockRepository.Add(stock);
+            return stock;
+        }
 
         private async void OnSaveExecute()
         {
@@ -84,6 +105,18 @@ namespace StockView.UI.ViewModel
                     Id = Stock.Id,
                     DisplayMember = Stock.Symbol
                 });
+        }
+
+        private async void OnDeleteExecute()
+        {
+            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
+                "Question");
+            if (result == MessageDialogResult.OK)
+            {
+                _stockRepository.Remove(Stock.Model);
+                await _stockRepository.SaveAsync();
+                _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
+            }
         }
     }
 }

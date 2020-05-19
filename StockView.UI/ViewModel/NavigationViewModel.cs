@@ -1,6 +1,7 @@
 ﻿using Prism.Events;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Event;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,12 +20,7 @@ namespace StockView.UI.ViewModel
             _eventAggregator = eventAggregator;
             Stocks = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterStockSavedEvent>().Subscribe(AfterStockSaved);
-        }
-
-        private void AfterStockSaved(AfterStockSavedEventArgs obj)
-        {
-            var lookupItem = Stocks.Single(l => l.Id == obj.Id);
-            lookupItem.DisplayMember = obj.DisplayMember;
+            _eventAggregator.GetEvent<AfterStockDeletedEvent>().Subscribe(AfterStockDeleted);
         }
 
         public async Task LoadAsync()
@@ -39,5 +35,27 @@ namespace StockView.UI.ViewModel
         }
 
         public ObservableCollection<NavigationItemViewModel> Stocks { get; }
+
+        private void AfterStockDeleted(int stockId)
+        {
+            var stock = Stocks.SingleOrDefault(s => s.Id == stockId);
+            if (stock != null)
+            {
+                Stocks.Remove(stock);
+            }
+        }
+
+        private void AfterStockSaved(AfterStockSavedEventArgs obj)
+        {
+            var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
+            if (lookupItem == null)
+            {
+                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember, _eventAggregator));
+            }
+            else
+            {
+                lookupItem.DisplayMember = obj.DisplayMember;
+            }
+        }
     }
 }

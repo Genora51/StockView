@@ -1,8 +1,10 @@
-﻿using Prism.Events;
+﻿using Prism.Commands;
+using Prism.Events;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
@@ -24,6 +26,10 @@ namespace StockView.UI.ViewModel
 
             _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
                 .Subscribe(OnOpenStockDetailView);
+            _eventAggregator.GetEvent<AfterStockDeletedEvent>()
+                .Subscribe(AfterStockDeleted);
+
+            CreateNewStockCommand = new DelegateCommand(OnCreateNewStockExecute);
 
             NavigationViewModel = navigationViewModel;
         }
@@ -32,6 +38,8 @@ namespace StockView.UI.ViewModel
         {
             await NavigationViewModel.LoadAsync();
         }
+
+        public ICommand CreateNewStockCommand { get; }
 
         public INavigationViewModel NavigationViewModel { get; }
 
@@ -44,8 +52,12 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private void AfterStockDeleted(int stockId)
+        {
+            StockDetailViewModel = null;
+        }
 
-        private async void OnOpenStockDetailView(int stockId)
+        private async void OnOpenStockDetailView(int? stockId)
         {
             if (StockDetailViewModel != null && StockDetailViewModel.HasChanges)
             {
@@ -57,6 +69,11 @@ namespace StockView.UI.ViewModel
             }
             StockDetailViewModel = _stockDetailViewModelCreator();
             await StockDetailViewModel.LoadAsync(stockId);
+        }
+
+        private void OnCreateNewStockExecute()
+        {
+            OnOpenStockDetailView(null);
         }
     }
 }
