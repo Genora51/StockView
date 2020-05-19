@@ -3,6 +3,7 @@ using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data;
 using StockView.UI.Event;
+using StockView.UI.Wrapper;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -13,6 +14,7 @@ namespace StockView.UI.ViewModel
     {
         private IStockDataService _dataService;
         private IEventAggregator _eventAggregator;
+        private StockWrapper _stock;
 
         public StockDetailViewModel(IStockDataService dataService,
             IEventAggregator eventAggregator)
@@ -25,15 +27,42 @@ namespace StockView.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
+        public async Task LoadAsync(int stockId)
+        {
+            var stock = await _dataService.GetByIdAsync(stockId);
+
+            Stock = new StockWrapper(stock);
+            Stock.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Stock.HasErrors))
+                {
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            };
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+
+        public StockWrapper Stock
+        {
+            get { return _stock; }
+            private set
+            {
+                _stock = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand SaveCommand { get; }
+
         private bool OnSaveCanExecute()
         {
-            // TODO: Check if stock is valid
-            return true;
+            // TODO: Check in addition if stock has changes
+            return Stock != null && !Stock.HasErrors;
         }
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Stock);
+            await _dataService.SaveAsync(Stock.Model);
             _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
                 new AfterStockSavedEventArgs
                 {
@@ -46,24 +75,5 @@ namespace StockView.UI.ViewModel
         {
             await LoadAsync(stockId);
         }
-
-        public async Task LoadAsync(int stockId)
-        {
-            Stock = await _dataService.GetByIdAsync(stockId);
-        }
-
-        private Stock _stock;
-
-        public Stock Stock
-        {
-            get { return _stock; }
-            private set
-            {
-                _stock = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand SaveCommand { get; }
     }
 }
