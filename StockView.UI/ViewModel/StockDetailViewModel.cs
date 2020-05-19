@@ -13,6 +13,7 @@ namespace StockView.UI.ViewModel
         private IStockRepository _stockRepository;
         private IEventAggregator _eventAggregator;
         private StockWrapper _stock;
+        private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator)
@@ -30,6 +31,10 @@ namespace StockView.UI.ViewModel
             Stock = new StockWrapper(stock);
             Stock.PropertyChanged += (s, e) =>
             {
+                if (!HasChanges)
+                {
+                    HasChanges = _stockRepository.HasChanges();
+                }
                 if (e.PropertyName == nameof(Stock.HasErrors))
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -52,13 +57,27 @@ namespace StockView.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            // TODO: Check in addition if stock has changes
-            return Stock != null && !Stock.HasErrors;
+            return Stock != null && !Stock.HasErrors && HasChanges;
         }
+
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set {
+                if (_hasChanges!=value)
+                {
+                    _hasChanges = value;
+                    OnPropertyChanged();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+
 
         private async void OnSaveExecute()
         {
             await _stockRepository.SaveAsync();
+            HasChanges = _stockRepository.HasChanges();
             _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
                 new AfterStockSavedEventArgs
                 {
