@@ -24,12 +24,6 @@ namespace StockView.UI.Wrapper
             set { SetValue(value); }
         }
 
-        public string Industry
-        {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
-        }
-
         protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
             switch (propertyName)

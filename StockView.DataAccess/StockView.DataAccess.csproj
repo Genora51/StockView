@@ -55,6 +55,10 @@
     <Compile Include="Migrations\202005181230343_InitialDatabase.designer.cs">
       <DependentUpon>202005181230343_InitialDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005191511110_AddedIndustry.cs" />
+    <Compile Include="Migrations\202005191511110_AddedIndustry.designer.cs">
+      <DependentUpon>202005191511110_AddedIndustry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -72,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202005181230343_InitialDatabase.resx">
       <DependentUpon>202005181230343_InitialDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005191511110_AddedIndustry.resx">
+      <DependentUpon>202005191511110_AddedIndustry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

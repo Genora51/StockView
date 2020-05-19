@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Industry.cs" />
     <Compile Include="LookupItem.cs" />
     <Compile Include="Stock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

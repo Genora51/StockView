@@ -14,9 +14,15 @@
         {
             context.Stocks.AddOrUpdate(
                 s => s.Symbol,
-                new Stock { CompanyName = "Alphabet Inc.", Symbol = "GOOGL", Industry = "Technology" },
-                new Stock { CompanyName = "Home Depot", Symbol = "HD", Industry = "Consumer Cyclical" },
-                new Stock { CompanyName = "Johnson & Johnson", Symbol = "JNJ", Industry = "Healthcare" }
+                new Stock { CompanyName = "Alphabet Inc.", Symbol = "GOOGL" },
+                new Stock { CompanyName = "Home Depot", Symbol = "HD" },
+                new Stock { CompanyName = "Johnson & Johnson", Symbol = "JNJ" }
+                );
+            context.Industries.AddOrUpdate(
+                i => i.Name,
+                new Industry { Name = "Consumer Cyclical" },
+                new Industry { Name = "Healthcare" },
+                new Industry { Name = "Technology" }
                 );
         }
     }

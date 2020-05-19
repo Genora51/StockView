@@ -13,7 +13,8 @@ namespace StockView.Model
         [StringLength(50)]
         public string CompanyName { get; set; }
 
-        [StringLength(50)]
-        public string Industry { get; set; }
+        public int? IndustryId { get; set; }
+
+        public Industry Industry { get; set; }
     }
 }
