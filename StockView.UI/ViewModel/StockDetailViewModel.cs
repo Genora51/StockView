@@ -72,6 +72,7 @@ namespace StockView.UI.ViewModel
         private async Task LoadIndustriesLookupAsync()
         {
             Industries.Clear();
+            Industries.Add(new NullLookupItem { DisplayMember = " - " });
             var lookup = await _industryLookupDataService.GetIndustryLookupAsync();
             foreach (var lookupItem in lookup)
             {
