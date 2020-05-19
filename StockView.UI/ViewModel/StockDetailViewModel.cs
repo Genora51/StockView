@@ -24,6 +24,7 @@ namespace StockView.UI.ViewModel
             _eventAggregator = eventAggregator;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
         public async Task LoadAsync(int? stockId)
@@ -63,6 +64,7 @@ namespace StockView.UI.ViewModel
         }
 
         public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public bool HasChanges
         {
@@ -99,6 +101,12 @@ namespace StockView.UI.ViewModel
                     Id = Stock.Id,
                     DisplayMember = Stock.Symbol
                 });
+        }
+
+        private async void OnDeleteExecute()
+        {
+            _stockRepository.Remove(Stock.Model);
+            await _stockRepository.SaveAsync();
         }
     }
 }

@@ -29,6 +29,11 @@ namespace StockView.UI.Data.Repositories
             return _context.ChangeTracker.HasChanges();
         }
 
+        public void Remove(Stock stock)
+        {
+            _context.Stocks.Remove(stock);
+        }
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

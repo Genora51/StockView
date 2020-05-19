@@ -9,5 +9,6 @@ namespace StockView.UI.Data.Repositories
         Task SaveAsync();
         bool HasChanges();
         void Add(Stock stock);
+        void Remove(Stock stock);
     }
 }
