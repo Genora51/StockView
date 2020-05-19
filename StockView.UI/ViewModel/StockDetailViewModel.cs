@@ -1,9 +1,11 @@
-﻿using Prism.Events;
+﻿using Prism.Commands;
+using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data;
 using StockView.UI.Event;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
@@ -19,6 +21,25 @@ namespace StockView.UI.ViewModel
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
                 .Subscribe(OnOpenStockDetailView);
+
+            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+        }
+
+        private bool OnSaveCanExecute()
+        {
+            // TODO: Check if stock is valid
+            return true;
+        }
+
+        private async void OnSaveExecute()
+        {
+            await _dataService.SaveAsync(Stock);
+            _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
+                new AfterStockSavedEventArgs
+                {
+                    Id = Stock.Id,
+                    DisplayMember = Stock.Symbol
+                });
         }
 
         private async void OnOpenStockDetailView(int stockId)
@@ -43,5 +64,6 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        public ICommand SaveCommand { get; }
     }
 }
