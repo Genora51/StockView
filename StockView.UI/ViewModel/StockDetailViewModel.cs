@@ -19,8 +19,6 @@ namespace StockView.UI.ViewModel
         {
             _stockRepository = stockRepository;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
-                .Subscribe(OnOpenStockDetailView);
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
@@ -67,11 +65,6 @@ namespace StockView.UI.ViewModel
                     Id = Stock.Id,
                     DisplayMember = Stock.Symbol
                 });
-        }
-
-        private async void OnOpenStockDetailView(int stockId)
-        {
-            await LoadAsync(stockId);
         }
     }
 }
