@@ -32,6 +32,14 @@ namespace StockView.UI.ViewModel
             var stock = await _dataService.GetByIdAsync(stockId);
 
             Stock = new StockWrapper(stock);
+            Stock.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Stock.HasErrors))
+                {
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            };
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         public StockWrapper Stock
@@ -48,8 +56,8 @@ namespace StockView.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            // TODO: Check if stock is valid
-            return true;
+            // TODO: Check in addition if stock has changes
+            return Stock != null && !Stock.HasErrors;
         }
 
         private async void OnSaveExecute()
