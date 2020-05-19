@@ -107,6 +107,7 @@ namespace StockView.UI.ViewModel
         {
             _stockRepository.Remove(Stock.Model);
             await _stockRepository.SaveAsync();
+            _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
         }
     }
 }
