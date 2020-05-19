@@ -34,6 +34,12 @@ namespace StockView.UI.ViewModel
         private async void OnSaveExecute()
         {
             await _dataService.SaveAsync(Stock);
+            _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
+                new AfterStockSavedEventArgs
+                {
+                    Id = Stock.Id,
+                    DisplayMember = Stock.Symbol
+                });
         }
 
         private async void OnOpenStockDetailView(int stockId)

@@ -2,7 +2,9 @@
 using StockView.Model;
 using StockView.UI.Data;
 using StockView.UI.Event;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StockView.UI.ViewModel
@@ -18,6 +20,13 @@ namespace StockView.UI.ViewModel
             _stockLookupService = stockLookupService;
             _eventAggregator = eventAggregator;
             Stocks = new ObservableCollection<LookupItem>();
+            _eventAggregator.GetEvent<AfterStockSavedEvent>().Subscribe(AfterStockSaved);
+        }
+
+        private void AfterStockSaved(AfterStockSavedEventArgs obj)
+        {
+            var lookupItem = Stocks.Single(l => l.Id == obj.Id);
+            lookupItem.DisplayMember = obj.DisplayMember;
         }
 
         public async Task LoadAsync()
