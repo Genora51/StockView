@@ -26,6 +26,8 @@ namespace StockView.UI.ViewModel
 
             _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
                 .Subscribe(OnOpenStockDetailView);
+            _eventAggregator.GetEvent<AfterStockDeletedEvent>()
+                .Subscribe(AfterStockDeleted);
 
             CreateNewStockCommand = new DelegateCommand(OnCreateNewStockExecute);
 
@@ -50,6 +52,10 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private void AfterStockDeleted(int stockId)
+        {
+            StockDetailViewModel = null;
+        }
 
         private async void OnOpenStockDetailView(int? stockId)
         {
