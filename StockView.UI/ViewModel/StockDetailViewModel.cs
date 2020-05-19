@@ -1,8 +1,10 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.Wrapper;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -24,9 +26,11 @@ namespace StockView.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
-        public async Task LoadAsync(int stockId)
+        public async Task LoadAsync(int? stockId)
         {
-            var stock = await _stockRepository.GetByIdAsync(stockId);
+            var stock = stockId.HasValue
+                ? await _stockRepository.GetByIdAsync(stockId.Value)
+                : CreateNewStock();
 
             Stock = new StockWrapper(stock);
             Stock.PropertyChanged += (s, e) =>
@@ -55,11 +59,6 @@ namespace StockView.UI.ViewModel
 
         public ICommand SaveCommand { get; }
 
-        private bool OnSaveCanExecute()
-        {
-            return Stock != null && !Stock.HasErrors && HasChanges;
-        }
-
         public bool HasChanges
         {
             get { return _hasChanges; }
@@ -73,6 +72,17 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private bool OnSaveCanExecute()
+        {
+            return Stock != null && !Stock.HasErrors && HasChanges;
+        }
+
+        private Stock CreateNewStock()
+        {
+            var stock = new Stock();
+            _stockRepository.Add(stock);
+            return stock;
+        }
 
         private async void OnSaveExecute()
         {

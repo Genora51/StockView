@@ -6,13 +6,25 @@
         xmlns:local="clr-namespace:StockView.UI"
         xmlns:view="clr-namespace:StockView.UI.View"
         mc:Ignorable="d"
-        Title="StockView" Height="350" Width="525" FontSize="20">
+        Title="StockView" Height="350" Width="525" FontSize="15">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <view:NavigationView DataContext="{Binding NavigationViewModel}"/>
-        <view:StockDetailView Grid.Column="1" DataContext="{Binding StockDetailViewModel}"/>
+        <Menu Grid.ColumnSpan="2" FontSize="15">
+            <MenuItem Header="Create">
+                <MenuItem Header="New Stock" Command="{Binding CreateNewStockCommand}"/>
+            </MenuItem>
+        </Menu>
+        <view:NavigationView Grid.Row="1"
+                             DataContext="{Binding NavigationViewModel}"/>
+        <view:StockDetailView Grid.Row="1"
+                              Grid.Column="1"
+                              DataContext="{Binding StockDetailViewModel}"/>
     </Grid>
 </Window>

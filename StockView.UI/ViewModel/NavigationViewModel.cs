@@ -23,8 +23,14 @@ namespace StockView.UI.ViewModel
 
         private void AfterStockSaved(AfterStockSavedEventArgs obj)
         {
-            var lookupItem = Stocks.Single(l => l.Id == obj.Id);
-            lookupItem.DisplayMember = obj.DisplayMember;
+            var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
+            if (lookupItem == null)
+            {
+                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember, _eventAggregator));
+            } else
+            {
+                lookupItem.DisplayMember = obj.DisplayMember;
+            }
         }
 
         public async Task LoadAsync()

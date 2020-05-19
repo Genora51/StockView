@@ -2,7 +2,7 @@
 
 namespace StockView.UI.Event
 {
-    public class OpenStockDetailViewEvent : PubSubEvent<int>
+    public class OpenStockDetailViewEvent : PubSubEvent<int?>
     {
 
     }

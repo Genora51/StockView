@@ -8,5 +8,6 @@ namespace StockView.UI.Data.Repositories
         Task<Stock> GetByIdAsync(int stockId);
         Task SaveAsync();
         bool HasChanges();
+        void Add(Stock stock);
     }
 }
