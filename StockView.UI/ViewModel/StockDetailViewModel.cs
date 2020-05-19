@@ -3,6 +3,7 @@ using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
+using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
 using System.Threading.Tasks;
@@ -14,14 +15,17 @@ namespace StockView.UI.ViewModel
     {
         private IStockRepository _stockRepository;
         private IEventAggregator _eventAggregator;
+        private IMessageDialogService _messageDialogService;
         private StockWrapper _stock;
         private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _stockRepository = stockRepository;
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
@@ -105,9 +109,14 @@ namespace StockView.UI.ViewModel
 
         private async void OnDeleteExecute()
         {
-            _stockRepository.Remove(Stock.Model);
-            await _stockRepository.SaveAsync();
-            _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
+            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
+                "Question");
+            if (result == MessageDialogResult.OK)
+            {
+                _stockRepository.Remove(Stock.Model);
+                await _stockRepository.SaveAsync();
+                _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
+            }
         }
     }
 }
