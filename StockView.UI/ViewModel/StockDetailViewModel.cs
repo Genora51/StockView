@@ -45,6 +45,11 @@ namespace StockView.UI.ViewModel
                 }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            if (Stock.Id == 0)
+            {
+                // Trick to trigger validation
+                Stock.Symbol = "";
+            }
         }
 
         public StockWrapper Stock
