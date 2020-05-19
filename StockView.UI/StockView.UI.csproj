@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Event\AfterStockDeletedEvent.cs" />
