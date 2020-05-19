@@ -26,6 +26,21 @@ namespace StockView.UI.Wrapper
             {
                 Model.Symbol = value;
                 OnPropertyChanged();
+                ValidateProperty(nameof(Symbol));
+            }
+        }
+
+        private void ValidateProperty(string propertyName)
+        {
+            ClearErrors(propertyName);
+            switch(propertyName)
+            {
+                case nameof(Symbol):
+                    if (string.Equals(Symbol, "INVL", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddError(propertyName, "Invalid Symbol");
+                    }
+                    break;
             }
         }
 
