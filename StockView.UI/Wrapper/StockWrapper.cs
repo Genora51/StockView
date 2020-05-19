@@ -24,6 +24,12 @@ namespace StockView.UI.Wrapper
             set { SetValue(value); }
         }
 
+        public int? IndustryId
+        {
+            get { return GetValue<int?>(); }
+            set { SetValue(value); }
+        }
+
         protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
             switch (propertyName)
