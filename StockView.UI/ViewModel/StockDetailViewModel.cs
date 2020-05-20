@@ -3,7 +3,6 @@ using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
-using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
@@ -23,7 +22,6 @@ namespace StockView.UI.ViewModel
         private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
-        private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
