@@ -195,7 +195,12 @@ namespace StockView.UI.ViewModel
             {
                 _stockRepository.Remove(Stock.Model);
                 await _stockRepository.SaveAsync();
-                _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
+                _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Publish(
+                    new AfterDetailDeletedEventArgs
+                    {
+                        Id = Stock.Id,
+                        ViewModelName = nameof(StockDetailViewModel)
+                    });
             }
         }
 
