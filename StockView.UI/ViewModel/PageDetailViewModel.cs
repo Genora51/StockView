@@ -88,6 +88,12 @@ namespace StockView.UI.ViewModel
                 }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+            if (Page.Id == 0)
+            {
+                // Trigger validation
+                Page.Title = "";
+            }
         }
     }
 }

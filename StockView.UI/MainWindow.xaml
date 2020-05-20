@@ -29,6 +29,8 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="2" FontSize="15">
             <MenuItem Header="Create">
+                <MenuItem Header="New Page" Command="{Binding CreateNewDetailCommand}"
+                          CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
                 <MenuItem Header="New Stock" Command="{Binding CreateNewDetailCommand}"
                           CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
             </MenuItem>
