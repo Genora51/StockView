@@ -19,7 +19,7 @@ namespace StockView.UI.ViewModel
             _stockLookupService = stockLookupService;
             _eventAggregator = eventAggregator;
             Stocks = new ObservableCollection<NavigationItemViewModel>();
-            _eventAggregator.GetEvent<AfterStockSavedEvent>().Subscribe(AfterStockSaved);
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
         }
 
@@ -51,18 +51,23 @@ namespace StockView.UI.ViewModel
             }
         }
 
-        private void AfterStockSaved(AfterStockSavedEventArgs obj)
+        private void AfterDetailSaved(AfterDetailSavedEventArgs obj)
         {
-            var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
-            if (lookupItem == null)
+            switch (obj.ViewModelName)
             {
-                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember,
-                    nameof(StockDetailViewModel),
-                    _eventAggregator));
-            }
-            else
-            {
-                lookupItem.DisplayMember = obj.DisplayMember;
+                case nameof(StockDetailViewModel):
+                    var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
+                    if (lookupItem == null)
+                    {
+                        Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember,
+                            nameof(StockDetailViewModel),
+                            _eventAggregator));
+                    }
+                    else
+                    {
+                        lookupItem.DisplayMember = obj.DisplayMember;
+                    }
+                    break;
             }
         }
     }

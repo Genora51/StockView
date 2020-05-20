@@ -179,11 +179,12 @@ namespace StockView.UI.ViewModel
         {
             await _stockRepository.SaveAsync();
             HasChanges = _stockRepository.HasChanges();
-            _eventAggregator.GetEvent<AfterStockSavedEvent>().Publish(
-                new AfterStockSavedEventArgs
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Publish(
+                new AfterDetailSavedEventArgs
                 {
                     Id = Stock.Id,
-                    DisplayMember = Stock.Symbol
+                    DisplayMember = Stock.Symbol,
+                    ViewModelName = nameof(StockDetailViewModel)
                 });
         }
 
