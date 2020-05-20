@@ -26,13 +26,14 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="2" FontSize="15">
             <MenuItem Header="Create">
-                <MenuItem Header="New Stock" Command="{Binding CreateNewStockCommand}"/>
+                <MenuItem Header="New Stock" Command="{Binding CreateNewDetailCommand}"
+                          CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
             </MenuItem>
         </Menu>
         <view:NavigationView Grid.Row="1"
                              DataContext="{Binding NavigationViewModel}"/>
         <ContentControl Grid.Row="1"
                               Grid.Column="1"
-                              Content="{Binding StockDetailViewModel}"/>
+                              Content="{Binding DetailViewModel}"/>
     </Grid>
 </Window>

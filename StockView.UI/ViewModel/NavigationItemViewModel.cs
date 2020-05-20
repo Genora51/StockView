@@ -9,20 +9,28 @@ namespace StockView.UI.ViewModel
     {
 		private string _displayMember;
 		private IEventAggregator _eventAggregator;
+		private string _detailViewModelName;
 
 		public NavigationItemViewModel(int id, string displayMember,
+			string detailViewModelName,
 			IEventAggregator eventAggregator)
 		{
 			_eventAggregator = eventAggregator;
 			Id = id;
 			DisplayMember = displayMember;
-			OpenStockDetailViewCommand = new DelegateCommand(OnOpenStockDetailView);
+			_detailViewModelName = detailViewModelName;
+			OpenDetailViewCommand = new DelegateCommand(OnOpenDetailViewExecute);
 		}
 
-		private void OnOpenStockDetailView()
+		private void OnOpenDetailViewExecute()
 		{
-			_eventAggregator.GetEvent<OpenStockDetailViewEvent>()
-						.Publish(Id);
+			_eventAggregator.GetEvent<OpenDetailViewEvent>()
+						.Publish(
+				new OpenDetailViewEventArgs
+				{
+					Id = Id,
+					ViewModelName = _detailViewModelName
+				});
 		}
 
 		public int Id { get; }
@@ -36,7 +44,7 @@ namespace StockView.UI.ViewModel
 			}
 		}
 
-		public ICommand OpenStockDetailViewCommand { get; }
+		public ICommand OpenDetailViewCommand { get; }
 
 	}
 }

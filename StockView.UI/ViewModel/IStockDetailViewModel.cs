@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
-
-namespace StockView.UI.ViewModel
+﻿namespace StockView.UI.ViewModel
 {
-    public interface IStockDetailViewModel
+    public interface IStockDetailViewModel : IDetailViewModel
     {
-        Task LoadAsync(int? stockId);
-        bool HasChanges { get; }
     }
 }

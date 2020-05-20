@@ -87,10 +87,14 @@
     <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
-    <Compile Include="Event\AfterStockDeletedEvent.cs" />
-    <Compile Include="Event\AfterStockSavedEvent.cs" />
-    <Compile Include="Event\OpenStockDetailViewEvent.cs" />
+    <Compile Include="Data\Repositories\GenericRepository.cs" />
+    <Compile Include="Data\Repositories\IGenericRepository.cs" />
+    <Compile Include="Event\AfterDetailDeletedEvent.cs" />
+    <Compile Include="Event\AfterDetailSavedEvent.cs" />
+    <Compile Include="Event\OpenDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
+    <Compile Include="ViewModel\DetailViewModelBase.cs" />
+    <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\INavigationViewModel.cs" />
     <Compile Include="ViewModel\IStockDetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

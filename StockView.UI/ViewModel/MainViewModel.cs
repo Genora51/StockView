@@ -13,7 +13,7 @@ namespace StockView.UI.ViewModel
         private IEventAggregator _eventAggregator;
         private Func<IStockDetailViewModel> _stockDetailViewModelCreator;
         private IMessageDialogService _messageDialogService;
-        private IStockDetailViewModel _stockDetailViewModel;
+        private IDetailViewModel _detailViewModel;
 
         public MainViewModel(INavigationViewModel navigationViewModel,
             Func<IStockDetailViewModel> stockDetailViewModelCreator,
@@ -24,12 +24,12 @@ namespace StockView.UI.ViewModel
             _stockDetailViewModelCreator = stockDetailViewModelCreator;
             _messageDialogService = messageDialogService;
 
-            _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
-                .Subscribe(OnOpenStockDetailView);
-            _eventAggregator.GetEvent<AfterStockDeletedEvent>()
-                .Subscribe(AfterStockDeleted);
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                .Subscribe(OnOpenDetailView);
+            _eventAggregator.GetEvent<AfterDetailDeletedEvent>()
+                .Subscribe(AfterDetailDeleted);
 
-            CreateNewStockCommand = new DelegateCommand(OnCreateNewStockExecute);
+            CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
 
             NavigationViewModel = navigationViewModel;
         }
@@ -39,27 +39,27 @@ namespace StockView.UI.ViewModel
             await NavigationViewModel.LoadAsync();
         }
 
-        public ICommand CreateNewStockCommand { get; }
+        public ICommand CreateNewDetailCommand { get; }
 
         public INavigationViewModel NavigationViewModel { get; }
 
-        public IStockDetailViewModel StockDetailViewModel
+        public IDetailViewModel DetailViewModel
         {
-            get { return _stockDetailViewModel; }
+            get { return _detailViewModel; }
             private set {
-                _stockDetailViewModel = value;
+                _detailViewModel = value;
                 OnPropertyChanged();
             }
         }
 
-        private void AfterStockDeleted(int stockId)
+        private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
-            StockDetailViewModel = null;
+            DetailViewModel = null;
         }
 
-        private async void OnOpenStockDetailView(int? stockId)
+        private async void OnOpenDetailView(OpenDetailViewEventArgs args)
         {
-            if (StockDetailViewModel != null && StockDetailViewModel.HasChanges)
+            if (DetailViewModel != null && DetailViewModel.HasChanges)
             {
                 var result = _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
                 if (result == MessageDialogResult.Cancel)
@@ -67,13 +67,21 @@ namespace StockView.UI.ViewModel
                     return;
                 }
             }
-            StockDetailViewModel = _stockDetailViewModelCreator();
-            await StockDetailViewModel.LoadAsync(stockId);
+            
+            switch (args.ViewModelName)
+            {
+                case nameof(StockDetailViewModel):
+                    DetailViewModel = _stockDetailViewModelCreator();
+                    break;
+            }
+            await DetailViewModel.LoadAsync(args.Id);
         }
 
-        private void OnCreateNewStockExecute()
+        private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenStockDetailView(null);
+            OnOpenDetailView(new OpenDetailViewEventArgs {
+                ViewModelName = viewModelType.Name
+            });
         }
     }
 }

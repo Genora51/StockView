@@ -19,8 +19,8 @@ namespace StockView.UI.ViewModel
             _stockLookupService = stockLookupService;
             _eventAggregator = eventAggregator;
             Stocks = new ObservableCollection<NavigationItemViewModel>();
-            _eventAggregator.GetEvent<AfterStockSavedEvent>().Subscribe(AfterStockSaved);
-            _eventAggregator.GetEvent<AfterStockDeletedEvent>().Subscribe(AfterStockDeleted);
+            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
+            _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
         }
 
         public async Task LoadAsync()
@@ -30,31 +30,44 @@ namespace StockView.UI.ViewModel
             foreach (var item in lookup)
             {
                 Stocks.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
+                    nameof(StockDetailViewModel),
                     _eventAggregator));
             }
         }
 
         public ObservableCollection<NavigationItemViewModel> Stocks { get; }
 
-        private void AfterStockDeleted(int stockId)
+        private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
-            var stock = Stocks.SingleOrDefault(s => s.Id == stockId);
-            if (stock != null)
+            switch (args.ViewModelName)
             {
-                Stocks.Remove(stock);
+                case nameof(StockDetailViewModel):
+                    var stock = Stocks.SingleOrDefault(s => s.Id == args.Id);
+                    if (stock != null)
+                    {
+                        Stocks.Remove(stock);
+                    }
+                    break;
             }
         }
 
-        private void AfterStockSaved(AfterStockSavedEventArgs obj)
+        private void AfterDetailSaved(AfterDetailSavedEventArgs obj)
         {
-            var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
-            if (lookupItem == null)
+            switch (obj.ViewModelName)
             {
-                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember, _eventAggregator));
-            }
-            else
-            {
-                lookupItem.DisplayMember = obj.DisplayMember;
+                case nameof(StockDetailViewModel):
+                    var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
+                    if (lookupItem == null)
+                    {
+                        Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember,
+                            nameof(StockDetailViewModel),
+                            _eventAggregator));
+                    }
+                    else
+                    {
+                        lookupItem.DisplayMember = obj.DisplayMember;
+                    }
+                    break;
             }
         }
     }
