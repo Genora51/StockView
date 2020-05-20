@@ -16,10 +16,9 @@ using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
-    public class StockDetailViewModel : ViewModelBase, IStockDetailViewModel
+    public class StockDetailViewModel : DetailViewModelBase, IStockDetailViewModel
     {
         private IStockRepository _stockRepository;
-        private IEventAggregator _eventAggregator;
         private IMessageDialogService _messageDialogService;
         private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
@@ -30,14 +29,12 @@ namespace StockView.UI.ViewModel
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IIndustryLookupDataService industryLookupDataService)
+            : base(eventAggregator)
         {
             _stockRepository = stockRepository;
-            _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogService;
             _industryLookupDataService = industryLookupDataService;
 
-            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-            DeleteCommand = new DelegateCommand(OnDeleteExecute);
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
 
@@ -45,7 +42,7 @@ namespace StockView.UI.ViewModel
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
         }
 
-        public async Task LoadAsync(int? stockId)
+        public override async Task LoadAsync(int? stockId)
         {
             var stock = stockId.HasValue
                 ? await _stockRepository.GetByIdAsync(stockId.Value)
@@ -137,9 +134,6 @@ namespace StockView.UI.ViewModel
             }
         }
 
-
-        public ICommand SaveCommand { get; }
-        public ICommand DeleteCommand { get; }
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
 
@@ -147,20 +141,7 @@ namespace StockView.UI.ViewModel
 
         public ObservableCollection<StockSnapshotWrapper> Snapshots { get; }
 
-        public bool HasChanges
-        {
-            get { return _hasChanges; }
-            set {
-                if (_hasChanges!=value)
-                {
-                    _hasChanges = value;
-                    OnPropertyChanged();
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
-            }
-        }
-
-        private bool OnSaveCanExecute()
+        protected override bool OnSaveCanExecute()
         {
             return Stock != null
                 && !Stock.HasErrors
@@ -175,20 +156,14 @@ namespace StockView.UI.ViewModel
             return stock;
         }
 
-        private async void OnSaveExecute()
+        protected override async void OnSaveExecute()
         {
             await _stockRepository.SaveAsync();
             HasChanges = _stockRepository.HasChanges();
-            _eventAggregator.GetEvent<AfterDetailSavedEvent>().Publish(
-                new AfterDetailSavedEventArgs
-                {
-                    Id = Stock.Id,
-                    DisplayMember = Stock.Symbol,
-                    ViewModelName = nameof(StockDetailViewModel)
-                });
+            RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
         }
 
-        private async void OnDeleteExecute()
+        protected override async void OnDeleteExecute()
         {
             var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
                 "Question");
@@ -196,12 +171,7 @@ namespace StockView.UI.ViewModel
             {
                 _stockRepository.Remove(Stock.Model);
                 await _stockRepository.SaveAsync();
-                _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Publish(
-                    new AfterDetailDeletedEventArgs
-                    {
-                        Id = Stock.Id,
-                        ViewModelName = nameof(StockDetailViewModel)
-                    });
+                RaiseDetailDeletedEvent(Stock.Id);
             }
         }
 
