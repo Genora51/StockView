@@ -12,16 +12,19 @@ namespace StockView.UI.ViewModel
     {
         private IEventAggregator _eventAggregator;
         private Func<IStockDetailViewModel> _stockDetailViewModelCreator;
+        private Func<IPageDetailViewModel> _pageDetailViewModelCreator;
         private IMessageDialogService _messageDialogService;
         private IDetailViewModel _detailViewModel;
 
         public MainViewModel(INavigationViewModel navigationViewModel,
             Func<IStockDetailViewModel> stockDetailViewModelCreator,
+            Func<IPageDetailViewModel> pageDetailViewModelCreator,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
             _stockDetailViewModelCreator = stockDetailViewModelCreator;
+            _pageDetailViewModelCreator = pageDetailViewModelCreator;
             _messageDialogService = messageDialogService;
 
             _eventAggregator.GetEvent<OpenDetailViewEvent>()
@@ -73,6 +76,11 @@ namespace StockView.UI.ViewModel
                 case nameof(StockDetailViewModel):
                     DetailViewModel = _stockDetailViewModelCreator();
                     break;
+                case nameof(PageDetailViewModel):
+                    DetailViewModel = _pageDetailViewModelCreator();
+                    break;
+                default:
+                    throw new Exception($"ViewMode {args.ViewModelName} not mapped");
             }
             await DetailViewModel.LoadAsync(args.Id);
         }

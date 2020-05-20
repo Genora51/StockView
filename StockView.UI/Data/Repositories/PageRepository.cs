@@ -5,10 +5,10 @@ using System.Data.Entity;
 
 namespace StockView.UI.Data.Repositories
 {
-    class PageRepository : GenericRepository<Page, StockViewDbContext>,
-        IPageRepository
+    public class PageRepository : GenericRepository<Page, StockViewDbContext>,
+                                  IPageRepository
     {
-        protected PageRepository(StockViewDbContext context) : base(context)
+        public PageRepository(StockViewDbContext context) : base(context)
         {
         }
 

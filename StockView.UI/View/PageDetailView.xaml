@@ -15,7 +15,8 @@
         </Grid.RowDefinitions>
 
         <Label Content="Title" Margin="10 10 10 0"/>
-        <TextBox Grid.Row="1" Text="{Binding Page.Title,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Text="{Binding Page.Title,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 Margin="10 0 10 10"/>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal">
             <Button Content="Save" Width="75" Margin="10" Command="{Binding SaveCommand}"/>
