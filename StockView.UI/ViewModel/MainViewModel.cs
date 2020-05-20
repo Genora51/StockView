@@ -29,7 +29,7 @@ namespace StockView.UI.ViewModel
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>()
                 .Subscribe(AfterDetailDeleted);
 
-            CreateNewStockCommand = new DelegateCommand(OnCreateNewStockExecute);
+            CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
 
             NavigationViewModel = navigationViewModel;
         }
@@ -39,7 +39,7 @@ namespace StockView.UI.ViewModel
             await NavigationViewModel.LoadAsync();
         }
 
-        public ICommand CreateNewStockCommand { get; }
+        public ICommand CreateNewDetailCommand { get; }
 
         public INavigationViewModel NavigationViewModel { get; }
 
@@ -77,9 +77,11 @@ namespace StockView.UI.ViewModel
             await DetailViewModel.LoadAsync(args.Id);
         }
 
-        private void OnCreateNewStockExecute()
+        private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenDetailView(null);
+            OnOpenDetailView(new OpenDetailViewEventArgs {
+                ViewModelName = viewModelType.Name
+            });
         }
     }
 }
