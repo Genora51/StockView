@@ -32,6 +32,7 @@ namespace StockView.UI.Startup
             // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
             builder.RegisterType<StockRepository>().As<IStockRepository>();
+            builder.RegisterType<PageRepository>().As<IPageRepository>();
 
             return builder.Build();
         }
