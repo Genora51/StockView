@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Autofac.Features.Indexed;
+using Prism.Commands;
 using Prism.Events;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
@@ -11,20 +12,17 @@ namespace StockView.UI.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private IEventAggregator _eventAggregator;
-        private Func<IStockDetailViewModel> _stockDetailViewModelCreator;
-        private Func<IPageDetailViewModel> _pageDetailViewModelCreator;
+        private IIndex<string, IDetailViewModel> _detailViewModelCreator;
         private IMessageDialogService _messageDialogService;
         private IDetailViewModel _detailViewModel;
 
         public MainViewModel(INavigationViewModel navigationViewModel,
-            Func<IStockDetailViewModel> stockDetailViewModelCreator,
-            Func<IPageDetailViewModel> pageDetailViewModelCreator,
+            IIndex<string, IDetailViewModel> detailViewModelCreator,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
-            _stockDetailViewModelCreator = stockDetailViewModelCreator;
-            _pageDetailViewModelCreator = pageDetailViewModelCreator;
+            _detailViewModelCreator = detailViewModelCreator;
             _messageDialogService = messageDialogService;
 
             _eventAggregator.GetEvent<OpenDetailViewEvent>()
@@ -70,18 +68,8 @@ namespace StockView.UI.ViewModel
                     return;
                 }
             }
-            
-            switch (args.ViewModelName)
-            {
-                case nameof(StockDetailViewModel):
-                    DetailViewModel = _stockDetailViewModelCreator();
-                    break;
-                case nameof(PageDetailViewModel):
-                    DetailViewModel = _pageDetailViewModelCreator();
-                    break;
-                default:
-                    throw new Exception($"ViewMode {args.ViewModelName} not mapped");
-            }
+
+            DetailViewModel = _detailViewModelCreator[args.ViewModelName];
             await DetailViewModel.LoadAsync(args.Id);
         }
 
