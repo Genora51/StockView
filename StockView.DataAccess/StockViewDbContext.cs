@@ -18,6 +18,8 @@ namespace StockView.DataAccess
 
         public DbSet<StockSnapshot> StockSnapshots { get; set; }
 
+        public DbSet<Page> Pages { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -63,6 +63,10 @@
     <Compile Include="Migrations\202005191958426_AddedStockSnapshots.designer.cs">
       <DependentUpon>202005191958426_AddedStockSnapshots.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005201608281_AddedPage.cs" />
+    <Compile Include="Migrations\202005201608281_AddedPage.designer.cs">
+      <DependentUpon>202005201608281_AddedPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -86,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005191958426_AddedStockSnapshots.resx">
       <DependentUpon>202005191958426_AddedStockSnapshots.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005201608281_AddedPage.resx">
+      <DependentUpon>202005201608281_AddedPage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

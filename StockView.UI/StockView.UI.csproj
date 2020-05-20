@@ -85,10 +85,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
+    <Compile Include="Data\Lookups\IPageLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Data\Repositories\GenericRepository.cs" />
     <Compile Include="Data\Repositories\IGenericRepository.cs" />
+    <Compile Include="Data\Repositories\IPageRepository.cs" />
+    <Compile Include="Data\Repositories\PageRepository.cs" />
     <Compile Include="Event\AfterDetailDeletedEvent.cs" />
     <Compile Include="Event\AfterDetailSavedEvent.cs" />
     <Compile Include="Event\OpenDetailViewEvent.cs" />
@@ -96,14 +99,19 @@
     <Compile Include="ViewModel\DetailViewModelBase.cs" />
     <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\INavigationViewModel.cs" />
+    <Compile Include="ViewModel\IPageDetailViewModel.cs" />
     <Compile Include="ViewModel\IStockDetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NavigationItemViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />
+    <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PageDetailView.xaml.cs">
+      <DependentUpon>PageDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Services\IMessageDialogService.cs" />
     <Compile Include="View\Services\MessageDialogService.cs" />
@@ -112,6 +120,7 @@
     </Compile>
     <Compile Include="Wrapper\ModelWrapper.cs" />
     <Compile Include="Wrapper\NotifyDataErrorInfoBase.cs" />
+    <Compile Include="Wrapper\PageWrapper.cs" />
     <Compile Include="Wrapper\StockSnapshotWrapper.cs" />
     <Compile Include="Wrapper\StockWrapper.cs" />
     <Page Include="MainWindow.xaml">
@@ -129,6 +138,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PageDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

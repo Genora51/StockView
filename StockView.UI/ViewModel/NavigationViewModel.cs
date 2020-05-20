@@ -11,14 +11,18 @@ namespace StockView.UI.ViewModel
     public class NavigationViewModel : ViewModelBase, INavigationViewModel
     {
         private IStockLookupDataService _stockLookupService;
+        private IPageLookupDataService _pageLookupService;
         private IEventAggregator _eventAggregator;
 
         public NavigationViewModel(IStockLookupDataService stockLookupService,
+            IPageLookupDataService pageLookupService,
             IEventAggregator eventAggregator)
         {
             _stockLookupService = stockLookupService;
+            _pageLookupService = pageLookupService;
             _eventAggregator = eventAggregator;
             Stocks = new ObservableCollection<NavigationItemViewModel>();
+            Pages = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
         }
@@ -33,41 +37,67 @@ namespace StockView.UI.ViewModel
                     nameof(StockDetailViewModel),
                     _eventAggregator));
             }
+            lookup = await _pageLookupService.GetPageLookupAsync();
+            Pages.Clear();
+            foreach (var item in lookup)
+            {
+                Pages.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
+                    nameof(PageDetailViewModel),
+                    _eventAggregator));
+            }
         }
 
         public ObservableCollection<NavigationItemViewModel> Stocks { get; }
+
+        public ObservableCollection<NavigationItemViewModel> Pages { get; }
 
         private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
-                    var stock = Stocks.SingleOrDefault(s => s.Id == args.Id);
-                    if (stock != null)
-                    {
-                        Stocks.Remove(stock);
-                    }
+                    AfterDetailDeleted(Stocks, args);
+                    break;
+                case nameof(PageDetailViewModel):
+                    AfterDetailDeleted(Pages, args);
                     break;
             }
         }
 
-        private void AfterDetailSaved(AfterDetailSavedEventArgs obj)
+        private void AfterDetailDeleted(ObservableCollection<NavigationItemViewModel> items, AfterDetailDeletedEventArgs args)
         {
-            switch (obj.ViewModelName)
+            var item = items.SingleOrDefault(s => s.Id == args.Id);
+            if (item != null)
+            {
+                items.Remove(item);
+            }
+        }
+
+        private void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
-                    var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
-                    if (lookupItem == null)
-                    {
-                        Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember,
-                            nameof(StockDetailViewModel),
-                            _eventAggregator));
-                    }
-                    else
-                    {
-                        lookupItem.DisplayMember = obj.DisplayMember;
-                    }
+                    AfterDetailSaved(Stocks, args);
                     break;
+                case nameof(PageDetailViewModel):
+                    AfterDetailSaved(Pages, args);
+                    break;
+            }
+        }
+
+        private void AfterDetailSaved(ObservableCollection<NavigationItemViewModel> items, AfterDetailSavedEventArgs args)
+        {
+            var lookupItem = items.SingleOrDefault(l => l.Id == args.Id);
+            if (lookupItem == null)
+            {
+                items.Add(new NavigationItemViewModel(args.Id, args.DisplayMember,
+                    args.ViewModelName,
+                    _eventAggregator));
+            }
+            else
+            {
+                lookupItem.DisplayMember = args.DisplayMember;
             }
         }
     }
