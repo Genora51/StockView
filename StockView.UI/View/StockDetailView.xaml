@@ -42,11 +42,12 @@
             </StackPanel>
             <DataGrid ItemsSource="{Binding Snapshots}"
                       SelectedItem="{Binding SelectedSnapshot,Mode=TwoWay}"
-                      AutoGenerateColumns="False" RowHeaderWidth="0">
+                      AutoGenerateColumns="False" RowHeaderWidth="0"
+                      Name="dataGrid1">
                 <DataGrid.Columns>
                     <!--<DataGridTextColumn Header="Date"
                         Binding="{Binding Date,Mode=TwoWay,StringFormat=\{0:yyyy-MM-dd\},UpdateSourceTrigger=PropertyChanged}"/>-->
-                    <DataGridTemplateColumn Header="Date" Width="80">
+                    <DataGridTemplateColumn Header="Date" Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Date,
@@ -55,7 +56,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <DatePicker SelectedDate="{Binding Date}"/>
+                                <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>

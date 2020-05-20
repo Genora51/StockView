@@ -6,7 +6,11 @@ using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,6 +23,7 @@ namespace StockView.UI.ViewModel
         private IMessageDialogService _messageDialogService;
         private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
+        private StockSnapshotWrapper _selectedSnapshot;
         private bool _hasChanges;
 
         public StockDetailViewModel(IStockRepository stockRepository,
@@ -33,8 +38,11 @@ namespace StockView.UI.ViewModel
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
+            AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
+            RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
 
             Industries = new ObservableCollection<LookupItem>();
+            Snapshots = new ObservableCollection<StockSnapshotWrapper>();
         }
 
         public async Task LoadAsync(int? stockId)
@@ -44,7 +52,36 @@ namespace StockView.UI.ViewModel
                 : CreateNewStock();
             InitialiseStock(stock);
 
+            InitialiseStockSnapshots(stock.Snapshots);
+
             await LoadIndustriesLookupAsync();
+        }
+
+        private void InitialiseStockSnapshots(ICollection<StockSnapshot> snapshots)
+        {
+            foreach (var wrapper in Snapshots)
+            {
+                wrapper.PropertyChanged -= StockSnapshotWrapper_PropertyChanged;
+            }
+            Snapshots.Clear();
+            foreach (var stockSnapshot in snapshots)
+            {
+                var wrapper = new StockSnapshotWrapper(stockSnapshot);
+                Snapshots.Add(wrapper);
+                wrapper.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
+            }
+        }
+
+        private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges)
+            {
+                HasChanges = _stockRepository.HasChanges();
+            }
+            if (e.PropertyName == nameof(StockSnapshotWrapper.HasErrors))
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private void InitialiseStock(Stock stock)
@@ -90,9 +127,25 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        public StockSnapshotWrapper SelectedSnapshot
+        {
+            get { return _selectedSnapshot; }
+            set {
+                _selectedSnapshot = value;
+                OnPropertyChanged();
+                ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ICommand AddSnapshotCommand { get; }
+        public ICommand RemoveSnapshotCommand { get; }
+
         public ObservableCollection<LookupItem> Industries { get; }
+
+        public ObservableCollection<StockSnapshotWrapper> Snapshots { get; }
 
         public bool HasChanges
         {
@@ -109,7 +162,10 @@ namespace StockView.UI.ViewModel
 
         private bool OnSaveCanExecute()
         {
-            return Stock != null && !Stock.HasErrors && HasChanges;
+            return Stock != null
+                && !Stock.HasErrors
+                && Snapshots.All(s => !s.HasErrors)
+                && HasChanges;
         }
 
         private Stock CreateNewStock()
@@ -141,6 +197,23 @@ namespace StockView.UI.ViewModel
                 await _stockRepository.SaveAsync();
                 _eventAggregator.GetEvent<AfterStockDeletedEvent>().Publish(Stock.Id);
             }
+        }
+
+        private void OnAddSnapshotExecute()
+        {
+            // TODO: Implement
+            throw new NotImplementedException();
+        }
+
+        private void OnRemoveSnapshotExecute()
+        {
+            // TODO: Implement
+            throw new NotImplementedException();
+        }
+
+        private bool OnRemoveSnapshotCanExecute()
+        {
+            return SelectedSnapshot != null;
         }
     }
 }

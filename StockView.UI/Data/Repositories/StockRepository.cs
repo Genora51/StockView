@@ -21,7 +21,9 @@ namespace StockView.UI.Data.Repositories
 
         public async Task<Stock> GetByIdAsync(int stockId)
         {
-            return await _context.Stocks.SingleAsync(s => s.Id == stockId);
+            return await _context.Stocks
+                .Include(s => s.Snapshots)
+                .SingleAsync(s => s.Id == stockId);
         }
 
         public bool HasChanges()
