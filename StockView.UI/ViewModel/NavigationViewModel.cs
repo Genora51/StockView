@@ -30,6 +30,7 @@ namespace StockView.UI.ViewModel
             foreach (var item in lookup)
             {
                 Stocks.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
+                    nameof(StockDetailViewModel),
                     _eventAggregator));
             }
         }
@@ -50,7 +51,9 @@ namespace StockView.UI.ViewModel
             var lookupItem = Stocks.SingleOrDefault(l => l.Id == obj.Id);
             if (lookupItem == null)
             {
-                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember, _eventAggregator));
+                Stocks.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember,
+                    nameof(StockDetailViewModel),
+                    _eventAggregator));
             }
             else
             {

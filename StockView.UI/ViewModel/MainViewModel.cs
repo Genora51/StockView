@@ -24,8 +24,8 @@ namespace StockView.UI.ViewModel
             _stockDetailViewModelCreator = stockDetailViewModelCreator;
             _messageDialogService = messageDialogService;
 
-            _eventAggregator.GetEvent<OpenStockDetailViewEvent>()
-                .Subscribe(OnOpenStockDetailView);
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                .Subscribe(OnOpenDetailView);
             _eventAggregator.GetEvent<AfterStockDeletedEvent>()
                 .Subscribe(AfterStockDeleted);
 
@@ -57,7 +57,7 @@ namespace StockView.UI.ViewModel
             DetailViewModel = null;
         }
 
-        private async void OnOpenStockDetailView(int? stockId)
+        private async void OnOpenDetailView(OpenDetailViewEventArgs args)
         {
             if (DetailViewModel != null && DetailViewModel.HasChanges)
             {
@@ -67,13 +67,19 @@ namespace StockView.UI.ViewModel
                     return;
                 }
             }
-            DetailViewModel = _stockDetailViewModelCreator();
-            await DetailViewModel.LoadAsync(stockId);
+            
+            switch (args.ViewModelName)
+            {
+                case nameof(StockDetailViewModel):
+                    DetailViewModel = _stockDetailViewModelCreator();
+                    break;
+            }
+            await DetailViewModel.LoadAsync(args.Id);
         }
 
         private void OnCreateNewStockExecute()
         {
-            OnOpenStockDetailView(null);
+            OnOpenDetailView(null);
         }
     }
 }

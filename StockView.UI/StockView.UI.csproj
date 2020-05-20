@@ -89,7 +89,7 @@
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Event\AfterStockDeletedEvent.cs" />
     <Compile Include="Event\AfterStockSavedEvent.cs" />
-    <Compile Include="Event\OpenStockDetailViewEvent.cs" />
+    <Compile Include="Event\OpenDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
     <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\INavigationViewModel.cs" />
