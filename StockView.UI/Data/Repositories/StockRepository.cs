@@ -36,6 +36,11 @@ namespace StockView.UI.Data.Repositories
             _context.Stocks.Remove(stock);
         }
 
+        public void RemoveSnapshot(StockSnapshot model)
+        {
+            _context.StockSnapshots.Remove(model);
+        }
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

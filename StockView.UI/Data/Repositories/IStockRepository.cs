@@ -10,5 +10,6 @@ namespace StockView.UI.Data.Repositories
         bool HasChanges();
         void Add(Stock stock);
         void Remove(Stock stock);
+        void RemoveSnapshot(StockSnapshot model);
     }
 }

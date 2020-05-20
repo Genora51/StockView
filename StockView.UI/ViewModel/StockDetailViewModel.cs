@@ -207,12 +207,18 @@ namespace StockView.UI.ViewModel
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             Snapshots.Add(newSnapshot);
             Stock.Model.Snapshots.Add(newSnapshot.Model);
+            HasChanges = _stockRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private void OnRemoveSnapshotExecute()
         {
-            // TODO: Implement
-            throw new NotImplementedException();
+            SelectedSnapshot.PropertyChanged -= StockSnapshotWrapper_PropertyChanged;
+            _stockRepository.RemoveSnapshot(SelectedSnapshot.Model);
+            Snapshots.Remove(SelectedSnapshot);
+            SelectedSnapshot = null;
+            HasChanges = _stockRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private bool OnRemoveSnapshotCanExecute()
