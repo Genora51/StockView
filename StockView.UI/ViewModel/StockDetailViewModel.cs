@@ -201,8 +201,12 @@ namespace StockView.UI.ViewModel
 
         private void OnAddSnapshotExecute()
         {
-            // TODO: Implement
-            throw new NotImplementedException();
+            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot {
+                Date = DateTime.Now
+            });
+            newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
+            Snapshots.Add(newSnapshot);
+            Stock.Model.Snapshots.Add(newSnapshot.Model);
         }
 
         private void OnRemoveSnapshotExecute()
