@@ -1,7 +1,9 @@
 ﻿namespace StockView.DataAccess.Migrations
 {
     using StockView.Model;
+    using System;
     using System.Data.Entity.Migrations;
+    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<StockView.DataAccess.StockViewDbContext>
     {
@@ -24,6 +26,10 @@
                 new Industry { Name = "Healthcare" },
                 new Industry { Name = "Technology" }
                 );
+            context.SaveChanges();
+
+            context.StockSnapshots.AddOrUpdate(ss => new { ss.Date, ss.StockId },
+                new StockSnapshot { Date = new DateTime(2020, 5, 19), StockId = context.Stocks.First().Id });
         }
     }
 }

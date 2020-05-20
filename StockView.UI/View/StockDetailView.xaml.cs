@@ -24,5 +24,13 @@ namespace StockView.UI.View
         {
             InitializeComponent();
         }
+
+        private void DatePicker_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                dataGrid1.CommitEdit();
+            }
+        }
     }
 }

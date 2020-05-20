@@ -1,9 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockView.Model
 {
     public class Stock
     {
+        public Stock()
+        {
+            Snapshots = new Collection<StockSnapshot>();
+        }
+
         public int Id { get; set; }
 
         [Required]
@@ -16,5 +24,7 @@ namespace StockView.Model
         public int? IndustryId { get; set; }
 
         public Industry Industry { get; set; }
+
+        public ICollection<StockSnapshot> Snapshots { get; set; }
     }
 }
