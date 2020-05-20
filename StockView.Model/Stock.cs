@@ -10,6 +10,7 @@ namespace StockView.Model
         public Stock()
         {
             Snapshots = new Collection<StockSnapshot>();
+            Pages = new Collection<Page>();
         }
 
         public int Id { get; set; }
@@ -26,5 +27,7 @@ namespace StockView.Model
         public Industry Industry { get; set; }
 
         public ICollection<StockSnapshot> Snapshots { get; set; }
+
+        public ICollection<Page> Pages { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     using StockView.Model;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -30,6 +31,17 @@
 
             context.StockSnapshots.AddOrUpdate(ss => new { ss.Date, ss.StockId },
                 new StockSnapshot { Date = new DateTime(2020, 5, 19), StockId = context.Stocks.First().Id });
+
+            context.Pages.AddOrUpdate(p => p.Title,
+                new Page
+                {
+                    Title = "Page 1",
+                    Stocks = new List<Stock>
+                    {
+                        context.Stocks.Single(s => s.Symbol == "GOOGL"),
+                        context.Stocks.Single(s => s.Symbol == "JNJ")
+                    }
+                });
         }
     }
 }
