@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Lookups
 {
-    public class LookupDataService : IStockLookupDataService, IIndustryLookupDataService
+    public class LookupDataService : IStockLookupDataService,
+        IIndustryLookupDataService,
+        IPageLookupDataService
     {
         private Func<StockViewDbContext> _contextCreator;
 
@@ -44,6 +46,22 @@ namespace StockView.UI.Data.Lookups
                         DisplayMember = i.Name
                     })
                     .ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<LookupItem>> GetPageLookupAsync()
+        {
+            using (var ctx = _contextCreator())
+            {
+                var items = await ctx.Pages.AsNoTracking()
+                    .Select(p =>
+                        new LookupItem
+                        {
+                            Id = p.Id,
+                            DisplayMember = p.Title
+                        })
+                    .ToListAsync();
+                return items;
             }
         }
     }
