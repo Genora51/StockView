@@ -19,12 +19,14 @@ namespace StockView.UI.ViewModel
             EventAggregator = eventAggregator;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
+            CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }
 
         public abstract Task LoadAsync(int? id);
 
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
+        public ICommand CloseDetailViewCommand { get; }
 
         public int Id
         {
@@ -61,6 +63,11 @@ namespace StockView.UI.ViewModel
         protected abstract bool OnSaveCanExecute();
 
         protected abstract void OnSaveExecute();
+
+        protected virtual void OnCloseDetailViewExecute()
+        {
+            // TODO: Close the instance
+        }
 
         protected virtual void RaiseDetailDeletedEvent(int modelId)
         {
