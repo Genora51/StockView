@@ -1,6 +1,7 @@
 ﻿using StockView.DataAccess;
 using StockView.Model;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Repositories
@@ -18,6 +19,13 @@ namespace StockView.UI.Data.Repositories
             return await Context.Stocks
                 .Include(s => s.Snapshots)
                 .SingleAsync(s => s.Id == stockId);
+        }
+
+        public async Task<bool> HasPagesAsync(int stockId)
+        {
+            return await Context.Pages.AsNoTracking()
+                .Include(p => p.Stocks)
+                .AnyAsync(p => p.Stocks.Any(s => s.Id == stockId));
         }
 
         public void RemoveSnapshot(StockSnapshot model)

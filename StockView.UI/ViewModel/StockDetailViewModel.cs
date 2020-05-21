@@ -163,6 +163,11 @@ namespace StockView.UI.ViewModel
 
         protected override async void OnDeleteExecute()
         {
+            if (await _stockRepository.HasPagesAsync(Stock.Id))
+            {
+                _messageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
+                return;
+            }
             var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
                 "Question");
             if (result == MessageDialogResult.OK)
