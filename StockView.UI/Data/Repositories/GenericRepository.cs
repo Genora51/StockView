@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Repositories
@@ -37,6 +38,11 @@ namespace StockView.UI.Data.Repositories
         public async Task SaveAsync()
         {
             await Context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await Context.Set<TEntity>().ToListAsync();
         }
     }
 }
