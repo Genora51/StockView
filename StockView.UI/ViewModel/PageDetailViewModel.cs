@@ -135,7 +135,13 @@ namespace StockView.UI.ViewModel
 
         private void OnRemoveStockExecute()
         {
-            // TODO: Implement remove logic
+            var stockToRemove = SelectedAddedStock;
+
+            Page.Model.Stocks.Remove(stockToRemove);
+            AddedStocks.Remove(stockToRemove);
+            AvailableStocks.Add(stockToRemove);
+            HasChanges = _pageRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private bool OnAddStockCanExecute()
@@ -145,7 +151,13 @@ namespace StockView.UI.ViewModel
 
         private void OnAddStockExecute()
         {
-            // TODO: Implement add logic
+            var stockToAdd = SelectedAvailableStock;
+
+            Page.Model.Stocks.Add(stockToAdd);
+            AddedStocks.Add(stockToAdd);
+            AvailableStocks.Remove(stockToAdd);
+            HasChanges = _pageRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private Page CreateNewPage()
