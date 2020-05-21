@@ -29,6 +29,7 @@ namespace StockView.UI.ViewModel
         {
             _pageRepository = pageRepository;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
+            eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 
             AddedStocks = new ObservableCollection<Stock>();
             AvailableStocks = new ObservableCollection<Stock>();
@@ -209,6 +210,15 @@ namespace StockView.UI.ViewModel
             if (args.ViewModelName == nameof(StockDetailViewModel))
             {
                 await _pageRepository.ReloadStockAsync(args.Id);
+                _allStocks = await _pageRepository.GetAllStocksAsync();
+                SetupPicklist();
+            }
+        }
+
+        private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(StockDetailViewModel))
+            {
                 _allStocks = await _pageRepository.GetAllStocksAsync();
                 SetupPicklist();
             }
