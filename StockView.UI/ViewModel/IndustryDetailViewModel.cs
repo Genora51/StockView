@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
@@ -8,12 +9,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
     public class IndustryDetailViewModel : DetailViewModelBase
     {
         private IIndustryRepository _industryRepository;
+        private IndustryWrapper _selectedIndustry;
 
         public IndustryDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -23,6 +26,23 @@ namespace StockView.UI.ViewModel
             _industryRepository = industryRepository;
             Title = "Industries";
             Industries = new ObservableCollection<IndustryWrapper>();
+
+            AddCommand = new DelegateCommand(OnAddExecute);
+            RemoveCommand = new DelegateCommand(OnRemoveExecute, OnRemoveCanExecute);
+        }
+
+        public ICommand AddCommand { get; }
+        public ICommand RemoveCommand { get; }
+
+        public IndustryWrapper SelectedIndustry
+        {
+            get { return _selectedIndustry; }
+            set
+            {
+                _selectedIndustry = value;
+                OnPropertyChanged();
+                ((DelegateCommand)RemoveCommand).RaiseCanExecuteChanged();
+            }
         }
 
         public ObservableCollection<IndustryWrapper> Industries { get; }
@@ -74,6 +94,32 @@ namespace StockView.UI.ViewModel
             await _industryRepository.SaveAsync();
             HasChanges = _industryRepository.HasChanges();
             RaiseCollectionSavedEvent();
+        }
+
+        private bool OnRemoveCanExecute()
+        {
+            return SelectedIndustry != null;
+        }
+
+        private void OnRemoveExecute()
+        {
+            SelectedIndustry.PropertyChanged -= Wrapper_PropertyChanged;
+            _industryRepository.Remove(SelectedIndustry.Model);
+            Industries.Remove(SelectedIndustry);
+            SelectedIndustry = null;
+            HasChanges = _industryRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+
+        private void OnAddExecute()
+        {
+            var wrapper = new IndustryWrapper(new Industry());
+            wrapper.PropertyChanged += Wrapper_PropertyChanged;
+            _industryRepository.Add(wrapper.Model);
+            Industries.Add(wrapper);
+
+            // Trigger validation
+            wrapper.Name = "";
         }
     }
 }
