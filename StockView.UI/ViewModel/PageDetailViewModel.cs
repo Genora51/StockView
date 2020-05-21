@@ -80,6 +80,8 @@ namespace StockView.UI.ViewModel
                 ? await _pageRepository.GetByIdAsync(pageId.Value)
                 : CreateNewPage();
 
+            Id = page.Id;
+
             InitialisePage(page);
 
             _allStocks = await _pageRepository.GetAllStocksAsync();
@@ -125,6 +127,7 @@ namespace StockView.UI.ViewModel
         {
             await _pageRepository.SaveAsync();
             HasChanges = _pageRepository.HasChanges();
+            Id = Page.Id;
             RaiseDetailSavedEvent(Page.Id, Page.Title);
         }
 

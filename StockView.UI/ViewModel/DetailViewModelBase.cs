@@ -10,6 +10,7 @@ namespace StockView.UI.ViewModel
     public abstract class DetailViewModelBase : ViewModelBase, IDetailViewModel
     {
         private bool _hasChanges;
+        private int _id;
         protected readonly IEventAggregator EventAggregator;
 
         public DetailViewModelBase(IEventAggregator eventAggregator)
@@ -23,6 +24,13 @@ namespace StockView.UI.ViewModel
 
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
+
+        public int Id
+        {
+            get { return _id; }
+            protected set { _id = value; }
+        }
+
 
         public bool HasChanges
         {

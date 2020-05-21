@@ -45,6 +45,9 @@ namespace StockView.UI.ViewModel
             var stock = stockId.HasValue
                 ? await _stockRepository.GetByIdAsync(stockId.Value)
                 : CreateNewStock();
+
+            Id = stock.Id;
+
             InitialiseStock(stock);
 
             InitialiseStockSnapshots(stock.Snapshots);
@@ -158,6 +161,7 @@ namespace StockView.UI.ViewModel
         {
             await _stockRepository.SaveAsync();
             HasChanges = _stockRepository.HasChanges();
+            Id = Stock.Id;
             RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
         }
 
