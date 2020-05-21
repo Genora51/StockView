@@ -17,7 +17,6 @@ namespace StockView.UI.ViewModel
     {
         private IPageRepository _pageRepository;
         private PageWrapper _page;
-        private IMessageDialogService _messageDialogService;
 
         private Stock _selectedAvailableStock;
         private Stock _selectedAddedStock;
@@ -25,10 +24,9 @@ namespace StockView.UI.ViewModel
 
         public PageDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IPageRepository pageRepository) : base(eventAggregator)
+            IPageRepository pageRepository) : base(eventAggregator, messageDialogService)
         {
             _pageRepository = pageRepository;
-            _messageDialogService = messageDialogService;
 
             AddedStocks = new ObservableCollection<Stock>();
             AvailableStocks = new ObservableCollection<Stock>();
@@ -109,7 +107,7 @@ namespace StockView.UI.ViewModel
 
         protected override void OnDeleteExecute()
         {
-            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the page {Page.Title}?", "Question");
+            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the page {Page.Title}?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _pageRepository.Remove(Page.Model);

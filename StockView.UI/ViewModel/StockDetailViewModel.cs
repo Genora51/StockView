@@ -18,7 +18,6 @@ namespace StockView.UI.ViewModel
     public class StockDetailViewModel : DetailViewModelBase, IStockDetailViewModel
     {
         private IStockRepository _stockRepository;
-        private IMessageDialogService _messageDialogService;
         private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
@@ -27,10 +26,9 @@ namespace StockView.UI.ViewModel
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IIndustryLookupDataService industryLookupDataService)
-            : base(eventAggregator)
+            : base(eventAggregator, messageDialogService)
         {
             _stockRepository = stockRepository;
-            _messageDialogService = messageDialogService;
             _industryLookupDataService = industryLookupDataService;
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
@@ -179,10 +177,10 @@ namespace StockView.UI.ViewModel
         {
             if (await _stockRepository.HasPagesAsync(Stock.Id))
             {
-                _messageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
+                MessageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
                 return;
             }
-            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
+            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
                 "Question");
             if (result == MessageDialogResult.OK)
             {
