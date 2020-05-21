@@ -4,8 +4,10 @@ using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
+using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
@@ -15,12 +17,20 @@ namespace StockView.UI.ViewModel
         private PageWrapper _page;
         private IMessageDialogService _messageDialogService;
 
+        private Stock _selectedAvailableStock;
+        private Stock _selectedAddedStock;
+
         public PageDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IPageRepository pageRepository) : base(eventAggregator)
         {
             _pageRepository = pageRepository;
             _messageDialogService = messageDialogService;
+
+            AddedStocks = new ObservableCollection<Stock>();
+            AvailableStocks = new ObservableCollection<Stock>();
+            AddStockCommand = new DelegateCommand(OnAddStockExecute, OnAddStockCanExecute);
+            RemoveStockCommand = new DelegateCommand(OnRemoveStockExecute, OnRemoveStockCanExecute);
         }
 
         public PageWrapper Page
@@ -33,6 +43,34 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        public ICommand AddStockCommand { get; }
+        public ICommand RemoveStockCommand { get; }
+
+        public ObservableCollection<Stock> AddedStocks { get; }
+        public ObservableCollection<Stock> AvailableStocks { get; }
+
+        public Stock SelectedAvailableStock
+        {
+            get { return _selectedAvailableStock; }
+            set
+            {
+                _selectedAvailableStock = value;
+                OnPropertyChanged();
+                ((DelegateCommand)AddStockCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        public Stock SelectedAddedStock
+        {
+            get { return _selectedAddedStock; }
+            set
+            {
+                _selectedAddedStock = value;
+                OnPropertyChanged();
+                ((DelegateCommand)RemoveStockCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         public async override Task LoadAsync(int? pageId)
         {
             var page = pageId.HasValue
@@ -40,6 +78,8 @@ namespace StockView.UI.ViewModel
                 : CreateNewPage();
 
             InitialisePage(page);
+
+            // TODO: Load stocks for picklist
         }
 
         protected override void OnDeleteExecute()
@@ -63,6 +103,26 @@ namespace StockView.UI.ViewModel
             await _pageRepository.SaveAsync();
             HasChanges = _pageRepository.HasChanges();
             RaiseDetailSavedEvent(Page.Id, Page.Title);
+        }
+
+        private bool OnRemoveStockCanExecute()
+        {
+            return SelectedAddedStock != null;
+        }
+
+        private void OnRemoveStockExecute()
+        {
+            // TODO: Implement remove logic
+        }
+
+        private bool OnAddStockCanExecute()
+        {
+            return SelectedAvailableStock != null;
+        }
+
+        private void OnAddStockExecute()
+        {
+            // TODO: Implement add logic
         }
 
         private Page CreateNewPage()
