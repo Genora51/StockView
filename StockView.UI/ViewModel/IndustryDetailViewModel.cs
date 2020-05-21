@@ -73,6 +73,7 @@ namespace StockView.UI.ViewModel
         {
             await _industryRepository.SaveAsync();
             HasChanges = _industryRepository.HasChanges();
+            RaiseCollectionSavedEvent();
         }
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Data\Repositories\IndustryRepository.cs" />
     <Compile Include="Data\Repositories\IPageRepository.cs" />
     <Compile Include="Data\Repositories\PageRepository.cs" />
+    <Compile Include="Event\AfterCollectionSavedEvent.cs" />
     <Compile Include="Event\AfterDetailClosedEvent.cs" />
     <Compile Include="Event\AfterDetailDeletedEvent.cs" />
     <Compile Include="Event\AfterDetailSavedEvent.cs" />
