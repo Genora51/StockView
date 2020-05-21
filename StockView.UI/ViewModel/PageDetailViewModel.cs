@@ -75,13 +75,13 @@ namespace StockView.UI.ViewModel
             }
         }
 
-        public async override Task LoadAsync(int? pageId)
+        public async override Task LoadAsync(int pageId)
         {
-            var page = pageId.HasValue
-                ? await _pageRepository.GetByIdAsync(pageId.Value)
+            var page = pageId > 0
+                ? await _pageRepository.GetByIdAsync(pageId)
                 : CreateNewPage();
 
-            Id = page.Id;
+            Id = pageId;
 
             InitialisePage(page);
 

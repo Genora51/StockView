@@ -38,13 +38,13 @@ namespace StockView.UI.ViewModel
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
         }
 
-        public override async Task LoadAsync(int? stockId)
+        public override async Task LoadAsync(int stockId)
         {
-            var stock = stockId.HasValue
-                ? await _stockRepository.GetByIdAsync(stockId.Value)
+            var stock = stockId > 0
+                ? await _stockRepository.GetByIdAsync(stockId)
                 : CreateNewStock();
 
-            Id = stock.Id;
+            Id = stockId;
 
             InitialiseStock(stock);
 

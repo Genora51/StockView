@@ -86,9 +86,11 @@ namespace StockView.UI.ViewModel
             SelectedDetailViewModel = detailViewModel;
         }
 
+        private int nextNewItemId = 0;
         private void OnCreateNewDetailExecute(Type viewModelType)
         {
             OnOpenDetailView(new OpenDetailViewEventArgs {
+                Id = nextNewItemId--,
                 ViewModelName = viewModelType.Name
             });
         }

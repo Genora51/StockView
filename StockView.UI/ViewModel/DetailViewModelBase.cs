@@ -26,7 +26,7 @@ namespace StockView.UI.ViewModel
             CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }
 
-        public abstract Task LoadAsync(int? id);
+        public abstract Task LoadAsync(int id);
 
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
