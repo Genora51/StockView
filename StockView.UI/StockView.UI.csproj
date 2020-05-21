@@ -100,6 +100,7 @@
     <Compile Include="ViewModel\DetailViewModelBase.cs" />
     <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\INavigationViewModel.cs" />
+    <Compile Include="ViewModel\IndustryDetailViewModel.cs" />
     <Compile Include="ViewModel\IPageDetailViewModel.cs" />
     <Compile Include="ViewModel\IStockDetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -108,6 +109,9 @@
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\IndustryDetailView.xaml.cs">
+      <DependentUpon>IndustryDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
     </Compile>
@@ -138,6 +142,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\IndustryDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\NavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -17,6 +17,9 @@
         <DataTemplate DataType="{x:Type viewModel:PageDetailViewModel}">
             <view:PageDetailView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:IndustryDetailViewModel}">
+            <view:IndustryDetailView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -33,6 +36,11 @@
                           CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
                 <MenuItem Header="New Stock" Command="{Binding CreateNewDetailCommand}"
                           CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Industries"
+                          Command="{Binding OpenSingleDetailViewCommand}"
+                          CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
             </MenuItem>
         </Menu>
         <view:NavigationView Grid.Row="1"
