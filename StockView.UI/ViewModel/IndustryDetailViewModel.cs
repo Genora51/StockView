@@ -91,9 +91,22 @@ namespace StockView.UI.ViewModel
 
         protected async override void OnSaveExecute()
         {
-            await _industryRepository.SaveAsync();
-            HasChanges = _industryRepository.HasChanges();
-            RaiseCollectionSavedEvent();
+            try
+            {
+                await _industryRepository.SaveAsync();
+                HasChanges = _industryRepository.HasChanges();
+                RaiseCollectionSavedEvent();
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                {
+                    ex = ex.InnerException;
+                }
+                MessageDialogService.ShowInfoDialog("Error while saving the entities, " +
+                    "the data will be reloaded. Details: " + ex.Message);
+                await LoadAsync(Id);
+            }
         }
 
         private bool OnRemoveCanExecute()
