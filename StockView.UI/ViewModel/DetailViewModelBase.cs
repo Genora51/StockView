@@ -66,7 +66,12 @@ namespace StockView.UI.ViewModel
 
         protected virtual void OnCloseDetailViewExecute()
         {
-            // TODO: Close the instance
+            EventAggregator.GetEvent<AfterDetailClosedEvent>()
+                .Publish(new AfterDetailClosedEventArgs
+                {
+                    Id = Id,
+                    ViewModelName = this.GetType().Name
+                });
         }
 
         protected virtual void RaiseDetailDeletedEvent(int modelId)
