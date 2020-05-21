@@ -184,6 +184,10 @@ namespace StockView.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if (e.PropertyName == nameof(Page.Title))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
@@ -192,6 +196,12 @@ namespace StockView.UI.ViewModel
                 // Trigger validation
                 Page.Title = "";
             }
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = Page.Title;
         }
     }
 }

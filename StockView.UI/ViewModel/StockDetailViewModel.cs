@@ -95,6 +95,10 @@ namespace StockView.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if (e.PropertyName == nameof(Stock.Symbol))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Stock.Id == 0)
@@ -102,6 +106,12 @@ namespace StockView.UI.ViewModel
                 // Trick to trigger validation
                 Stock.Symbol = "";
             }
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = Stock.Symbol;
         }
 
         private async Task LoadIndustriesLookupAsync()

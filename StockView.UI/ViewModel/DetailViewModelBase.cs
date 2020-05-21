@@ -11,6 +11,7 @@ namespace StockView.UI.ViewModel
     {
         private bool _hasChanges;
         private int _id;
+        private string _title;
         protected readonly IEventAggregator EventAggregator;
 
         public DetailViewModelBase(IEventAggregator eventAggregator)
@@ -31,6 +32,15 @@ namespace StockView.UI.ViewModel
             protected set { _id = value; }
         }
 
+        public string Title
+        {
+            get { return _title; }
+            protected set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool HasChanges
         {
