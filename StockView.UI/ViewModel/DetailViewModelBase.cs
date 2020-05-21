@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using StockView.UI.Event;
+using StockView.UI.View.Services;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,19 +11,42 @@ namespace StockView.UI.ViewModel
     public abstract class DetailViewModelBase : ViewModelBase, IDetailViewModel
     {
         private bool _hasChanges;
+        private int _id;
+        private string _title;
         protected readonly IEventAggregator EventAggregator;
+        protected readonly IMessageDialogService MessageDialogService;
 
-        public DetailViewModelBase(IEventAggregator eventAggregator)
+        public DetailViewModelBase(IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             EventAggregator = eventAggregator;
+            MessageDialogService = messageDialogService;
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
+            CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }
 
-        public abstract Task LoadAsync(int? id);
+        public abstract Task LoadAsync(int id);
 
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
+        public ICommand CloseDetailViewCommand { get; }
+
+        public int Id
+        {
+            get { return _id; }
+            protected set { _id = value; }
+        }
+
+        public string Title
+        {
+            get { return _title; }
+            protected set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool HasChanges
         {
@@ -43,6 +67,25 @@ namespace StockView.UI.ViewModel
         protected abstract bool OnSaveCanExecute();
 
         protected abstract void OnSaveExecute();
+
+        protected virtual void OnCloseDetailViewExecute()
+        {
+            if (HasChanges)
+            {
+                var result = MessageDialogService.ShowOkCancelDialog(
+                    "You've made changes. Close this item?", "Question");
+                if (result == MessageDialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+            EventAggregator.GetEvent<AfterDetailClosedEvent>()
+                .Publish(new AfterDetailClosedEventArgs
+                {
+                    Id = Id,
+                    ViewModelName = this.GetType().Name
+                });
+        }
 
         protected virtual void RaiseDetailDeletedEvent(int modelId)
         {

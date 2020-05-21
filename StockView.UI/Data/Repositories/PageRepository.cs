@@ -3,6 +3,7 @@ using StockView.Model;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StockView.UI.Data.Repositories
 {
@@ -24,6 +25,16 @@ namespace StockView.UI.Data.Repositories
         {
             return await Context.Set<Stock>()
                 .ToListAsync();
+        }
+
+        public async Task ReloadStockAsync(int stockId)
+        {
+            var dbEntityEntry = Context.ChangeTracker.Entries<Stock>()
+                .SingleOrDefault(db => db.Entity.Id == stockId);
+            if (dbEntityEntry != null)
+            {
+                await dbEntityEntry.ReloadAsync();
+            }
         }
     }
 }

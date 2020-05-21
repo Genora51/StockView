@@ -2,6 +2,7 @@
 using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
+using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
@@ -17,7 +18,6 @@ namespace StockView.UI.ViewModel
     {
         private IPageRepository _pageRepository;
         private PageWrapper _page;
-        private IMessageDialogService _messageDialogService;
 
         private Stock _selectedAvailableStock;
         private Stock _selectedAddedStock;
@@ -25,10 +25,11 @@ namespace StockView.UI.ViewModel
 
         public PageDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IPageRepository pageRepository) : base(eventAggregator)
+            IPageRepository pageRepository) : base(eventAggregator, messageDialogService)
         {
             _pageRepository = pageRepository;
-            _messageDialogService = messageDialogService;
+            eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
+            eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 
             AddedStocks = new ObservableCollection<Stock>();
             AvailableStocks = new ObservableCollection<Stock>();
@@ -74,11 +75,13 @@ namespace StockView.UI.ViewModel
             }
         }
 
-        public async override Task LoadAsync(int? pageId)
+        public async override Task LoadAsync(int pageId)
         {
-            var page = pageId.HasValue
-                ? await _pageRepository.GetByIdAsync(pageId.Value)
+            var page = pageId > 0
+                ? await _pageRepository.GetByIdAsync(pageId)
                 : CreateNewPage();
+
+            Id = pageId;
 
             InitialisePage(page);
 
@@ -107,7 +110,7 @@ namespace StockView.UI.ViewModel
 
         protected override void OnDeleteExecute()
         {
-            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the page {Page.Title}?", "Question");
+            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the page {Page.Title}?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _pageRepository.Remove(Page.Model);
@@ -125,6 +128,7 @@ namespace StockView.UI.ViewModel
         {
             await _pageRepository.SaveAsync();
             HasChanges = _pageRepository.HasChanges();
+            Id = Page.Id;
             RaiseDetailSavedEvent(Page.Id, Page.Title);
         }
 
@@ -181,6 +185,10 @@ namespace StockView.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if (e.PropertyName == nameof(Page.Title))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
@@ -188,6 +196,31 @@ namespace StockView.UI.ViewModel
             {
                 // Trigger validation
                 Page.Title = "";
+            }
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = Page.Title;
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(StockDetailViewModel))
+            {
+                await _pageRepository.ReloadStockAsync(args.Id);
+                _allStocks = await _pageRepository.GetAllStocksAsync();
+                SetupPicklist();
+            }
+        }
+
+        private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(StockDetailViewModel))
+            {
+                _allStocks = await _pageRepository.GetAllStocksAsync();
+                SetupPicklist();
             }
         }
     }

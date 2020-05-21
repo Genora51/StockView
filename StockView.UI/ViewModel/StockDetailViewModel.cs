@@ -18,7 +18,6 @@ namespace StockView.UI.ViewModel
     public class StockDetailViewModel : DetailViewModelBase, IStockDetailViewModel
     {
         private IStockRepository _stockRepository;
-        private IMessageDialogService _messageDialogService;
         private IIndustryLookupDataService _industryLookupDataService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
@@ -27,10 +26,9 @@ namespace StockView.UI.ViewModel
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IIndustryLookupDataService industryLookupDataService)
-            : base(eventAggregator)
+            : base(eventAggregator, messageDialogService)
         {
             _stockRepository = stockRepository;
-            _messageDialogService = messageDialogService;
             _industryLookupDataService = industryLookupDataService;
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
@@ -40,11 +38,14 @@ namespace StockView.UI.ViewModel
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
         }
 
-        public override async Task LoadAsync(int? stockId)
+        public override async Task LoadAsync(int stockId)
         {
-            var stock = stockId.HasValue
-                ? await _stockRepository.GetByIdAsync(stockId.Value)
+            var stock = stockId > 0
+                ? await _stockRepository.GetByIdAsync(stockId)
                 : CreateNewStock();
+
+            Id = stockId;
+
             InitialiseStock(stock);
 
             InitialiseStockSnapshots(stock.Snapshots);
@@ -92,6 +93,10 @@ namespace StockView.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if (e.PropertyName == nameof(Stock.Symbol))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Stock.Id == 0)
@@ -99,6 +104,12 @@ namespace StockView.UI.ViewModel
                 // Trick to trigger validation
                 Stock.Symbol = "";
             }
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = Stock.Symbol;
         }
 
         private async Task LoadIndustriesLookupAsync()
@@ -158,6 +169,7 @@ namespace StockView.UI.ViewModel
         {
             await _stockRepository.SaveAsync();
             HasChanges = _stockRepository.HasChanges();
+            Id = Stock.Id;
             RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
         }
 
@@ -165,10 +177,10 @@ namespace StockView.UI.ViewModel
         {
             if (await _stockRepository.HasPagesAsync(Stock.Id))
             {
-                _messageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
+                MessageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
                 return;
             }
-            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
+            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
                 "Question");
             if (result == MessageDialogResult.OK)
             {
