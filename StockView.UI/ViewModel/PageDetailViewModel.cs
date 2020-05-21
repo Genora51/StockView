@@ -5,7 +5,9 @@ using StockView.UI.Data.Repositories;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,6 +21,7 @@ namespace StockView.UI.ViewModel
 
         private Stock _selectedAvailableStock;
         private Stock _selectedAddedStock;
+        private IEnumerable<Stock> _allStocks;
 
         public PageDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -79,7 +82,27 @@ namespace StockView.UI.ViewModel
 
             InitialisePage(page);
 
-            // TODO: Load stocks for picklist
+            _allStocks = await _pageRepository.GetAllStocksAsync();
+
+            SetupPicklist();
+        }
+
+        private void SetupPicklist()
+        {
+            var pageStockIds = Page.Model.Stocks.Select(s => s.Id).ToList();
+            var addedStocks = _allStocks.Where(s => pageStockIds.Contains(s.Id)).OrderBy(s => s.Symbol);
+            var availableStocks = _allStocks.Except(addedStocks).OrderBy(s => s.Symbol);
+
+            AddedStocks.Clear();
+            AvailableStocks.Clear();
+            foreach (var addedStock in addedStocks)
+            {
+                AddedStocks.Add(addedStock);
+            }
+            foreach (var availableStock in availableStocks)
+            {
+                AvailableStocks.Add(availableStock);
+            }
         }
 
         protected override void OnDeleteExecute()
