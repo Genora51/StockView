@@ -2,6 +2,7 @@
 using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
+using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
@@ -27,6 +28,7 @@ namespace StockView.UI.ViewModel
             IPageRepository pageRepository) : base(eventAggregator, messageDialogService)
         {
             _pageRepository = pageRepository;
+            eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
 
             AddedStocks = new ObservableCollection<Stock>();
             AvailableStocks = new ObservableCollection<Stock>();
@@ -200,6 +202,16 @@ namespace StockView.UI.ViewModel
         private void SetTitle()
         {
             Title = Page.Title;
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(StockDetailViewModel))
+            {
+                await _pageRepository.ReloadStockAsync(args.Id);
+                _allStocks = await _pageRepository.GetAllStocksAsync();
+                SetupPicklist();
+            }
         }
     }
 }

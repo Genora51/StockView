@@ -7,5 +7,6 @@ namespace StockView.UI.Data.Repositories
     public interface IPageRepository : IGenericRepository<Page>
     {
         Task<IEnumerable<Stock>> GetAllStocksAsync();
+        Task ReloadStockAsync(int stockId);
     }
 }
