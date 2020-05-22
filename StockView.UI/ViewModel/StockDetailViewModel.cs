@@ -172,41 +172,13 @@ namespace StockView.UI.ViewModel
 
         protected override async void OnSaveExecute()
         {
-            try
-            {
-                await _stockRepository.SaveAsync();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                var databaseValues = ex.Entries.Single().GetDatabaseValues();
-                if (databaseValues == null)
+            await SaveWithOptimisticConcurrencyAsync(_stockRepository.SaveAsync,
+                () =>
                 {
-                    MessageDialogService.ShowInfoDialog("The entity has been deleted by someone else.");
-                    RaiseDetailDeletedEvent(Id);
-                    return;
-                }
-
-                var result = MessageDialogService.ShowOkCancelDialog("The entity has been updated by someone else. "
-                    + "Click OK to svae your changes anyway, or click Cancel "
-                    + "to reload the entity from the database.", "Question");
-
-                if (result == MessageDialogResult.OK)
-                {
-                    // Update original values with db-values
-                    var entry = ex.Entries.Single();
-                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
-                    await _stockRepository.SaveAsync();
-                }
-                else
-                {
-                    // Reload from db
-                    await ex.Entries.Single().ReloadAsync();
-                    await LoadAsync(Stock.Id);
-                }
-            }
-            HasChanges = _stockRepository.HasChanges();
-            Id = Stock.Id;
-            RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
+                    HasChanges = _stockRepository.HasChanges();
+                    Id = Stock.Id;
+                    RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
+                });
         }
 
         protected override async void OnDeleteExecute()

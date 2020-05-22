@@ -3,6 +3,8 @@ using Prism.Events;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using System;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -116,5 +118,44 @@ namespace StockView.UI.ViewModel
                     ViewModelName = this.GetType().Name
                 });
         }
+
+        protected async Task SaveWithOptimisticConcurrencyAsync(Func<Task> saveFunc,
+            Action afterSaveAction)
+        {
+            try
+            {
+                await saveFunc();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var databaseValues = ex.Entries.Single().GetDatabaseValues();
+                if (databaseValues == null)
+                {
+                    MessageDialogService.ShowInfoDialog("The entity has been deleted by someone else.");
+                    RaiseDetailDeletedEvent(Id);
+                    return;
+                }
+
+                var result = MessageDialogService.ShowOkCancelDialog("The entity has been updated by someone else. "
+                    + "Click OK to svae your changes anyway, or click Cancel "
+                    + "to reload the entity from the database.", "Question");
+
+                if (result == MessageDialogResult.OK)
+                {
+                    // Update original values with db-values
+                    var entry = ex.Entries.Single();
+                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    await saveFunc();
+                }
+                else
+                {
+                    // Reload from db
+                    await ex.Entries.Single().ReloadAsync();
+                    await LoadAsync(Id);
+                }
+            }
+            afterSaveAction();
+        }
+
     }
 }

@@ -126,10 +126,13 @@ namespace StockView.UI.ViewModel
 
         protected async override void OnSaveExecute()
         {
-            await _pageRepository.SaveAsync();
-            HasChanges = _pageRepository.HasChanges();
-            Id = Page.Id;
-            RaiseDetailSavedEvent(Page.Id, Page.Title);
+            await SaveWithOptimisticConcurrencyAsync(_pageRepository.SaveAsync,
+                () =>
+                {
+                    HasChanges = _pageRepository.HasChanges();
+                    Id = Page.Id;
+                    RaiseDetailSavedEvent(Page.Id, Page.Title);
+                });
         }
 
         private bool OnRemoveStockCanExecute()
