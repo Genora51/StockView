@@ -13,7 +13,8 @@
         </Style>
         <DataTemplate x:Key="NaviItemTemplate">
             <Button Content="{Binding DisplayMember}"
-                                Command="{Binding OpenDetailViewCommand}">
+                    Command="{Binding OpenDetailViewCommand}"
+                    FontSize="15">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Grid x:Name="grid">
@@ -39,15 +40,15 @@
             <RowDefinition Height="300"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Header="Pages">
-            <ItemsControl ItemsSource="{Binding Pages}"
+        <GroupBox Header="Pages" Margin="5">
+            <ItemsControl ItemsSource="{Binding Pages}" Margin="5"
                           ItemContainerStyle="{StaticResource NaviItemContainerStyle}"
                           ItemTemplate="{StaticResource NaviItemTemplate}"/>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Stocks">
+        <GroupBox Grid.Row="1" Header="Stocks" Margin="5">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Stocks}"
+                <ItemsControl ItemsSource="{Binding Stocks}" Margin="5"
                           ItemContainerStyle="{StaticResource NaviItemContainerStyle}"
                           ItemTemplate="{StaticResource NaviItemTemplate}"/>
             </ScrollViewer>
