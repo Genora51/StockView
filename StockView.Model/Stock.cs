@@ -24,6 +24,9 @@ namespace StockView.Model
 
         public int? IndustryId { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public Industry Industry { get; set; }
 
         public ICollection<StockSnapshot> Snapshots { get; set; }

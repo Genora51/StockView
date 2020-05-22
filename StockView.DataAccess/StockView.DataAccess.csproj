@@ -67,6 +67,14 @@
     <Compile Include="Migrations\202005201608281_AddedPage.designer.cs">
       <DependentUpon>202005201608281_AddedPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005221245118_AddedRowVersionToStock.cs" />
+    <Compile Include="Migrations\202005221245118_AddedRowVersionToStock.designer.cs">
+      <DependentUpon>202005221245118_AddedRowVersionToStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005221459371_AddedRowVersionToPage.cs" />
+    <Compile Include="Migrations\202005221459371_AddedRowVersionToPage.designer.cs">
+      <DependentUpon>202005221459371_AddedRowVersionToPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -93,6 +101,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005201608281_AddedPage.resx">
       <DependentUpon>202005201608281_AddedPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005221245118_AddedRowVersionToStock.resx">
+      <DependentUpon>202005221245118_AddedRowVersionToStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005221459371_AddedRowVersionToPage.resx">
+      <DependentUpon>202005221459371_AddedRowVersionToPage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

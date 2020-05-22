@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -171,10 +172,13 @@ namespace StockView.UI.ViewModel
 
         protected override async void OnSaveExecute()
         {
-            await _stockRepository.SaveAsync();
-            HasChanges = _stockRepository.HasChanges();
-            Id = Stock.Id;
-            RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
+            await SaveWithOptimisticConcurrencyAsync(_stockRepository.SaveAsync,
+                () =>
+                {
+                    HasChanges = _stockRepository.HasChanges();
+                    Id = Stock.Id;
+                    RaiseDetailSavedEvent(Stock.Id, Stock.Symbol);
+                });
         }
 
         protected override async void OnDeleteExecute()

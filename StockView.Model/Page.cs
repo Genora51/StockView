@@ -17,6 +17,9 @@ namespace StockView.Model
         [StringLength(50)]
         public string Title { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public ICollection<Stock> Stocks { get; set; }
     }
 }
