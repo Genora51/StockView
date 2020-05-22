@@ -20,6 +20,9 @@
                     <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                         <Setter Property="FontSize" Value="15"/>
                     </Style>
+                    <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                        <Setter Property="Foreground" Value="#555555"/>
+                    </Style>
                     <Style TargetType="TextBox">
                         <Setter Property="Validation.ErrorTemplate">
                             <Setter.Value>
@@ -34,25 +37,27 @@
                         </Setter>
                         <Style.Triggers>
                             <Trigger Property="Validation.HasError" Value="True">
-                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="Background" Value="Pink"/>
                                 <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
 
                     <Style x:Key="DataGridColumnStyle" TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="Black"/>
                         <Style.Triggers>
                             <Trigger Property="Validation.HasError" Value="True">
-                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="Background" Value="Pink"/>
                                 <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
 
                     <Style x:Key="DataGridEditingColumnStyle" TargetType="{x:Type Control}">
+                        <Setter Property="Foreground" Value="Black"/>
                         <Style.Triggers>
                             <Trigger Property="Validation.HasError" Value="True">
-                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="Background" Value="Pink"/>
                                 <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}"/>
                             </Trigger>
                         </Style.Triggers>

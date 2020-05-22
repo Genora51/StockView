@@ -58,7 +58,8 @@
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
                                 <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
-                                    Style="{StaticResource DataGridEditingColumnStyle}"/>
+                                    Style="{StaticResource DataGridEditingColumnStyle}"
+                                            Foreground="Black"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
