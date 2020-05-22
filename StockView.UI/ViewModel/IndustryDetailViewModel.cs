@@ -114,8 +114,17 @@ namespace StockView.UI.ViewModel
             return SelectedIndustry != null;
         }
 
-        private void OnRemoveExecute()
+        private async void OnRemoveExecute()
         {
+            var isReferenced =
+                await _industryRepository.IsReferencedByStockAsync(
+                    SelectedIndustry.Id);
+            if (isReferenced)
+            {
+                MessageDialogService.ShowInfoDialog($"The industry {SelectedIndustry.Name}" +
+                    $" can't be removed, as it is referenced by at least one stock");
+                return;
+            }
             SelectedIndustry.PropertyChanged -= Wrapper_PropertyChanged;
             _industryRepository.Remove(SelectedIndustry.Model);
             Industries.Remove(SelectedIndustry);
