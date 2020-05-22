@@ -1,8 +1,9 @@
-﻿<Window x:Class="StockView.UI.MainWindow"
+﻿<Controls:MetroWindow x:Class="StockView.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:StockView.UI"
         xmlns:view="clr-namespace:StockView.UI.View"
         xmlns:viewModel="clr-namespace:StockView.UI.ViewModel"
@@ -62,4 +63,4 @@
             </TabControl.ItemTemplate>
         </TabControl>
     </Grid>
-</Window>
+</Controls:MetroWindow>
