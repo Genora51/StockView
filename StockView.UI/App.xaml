@@ -14,6 +14,12 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="FontSize" Value="15"/>
+                    </Style>
                     <Style TargetType="TextBox">
                         <Setter Property="Validation.ErrorTemplate">
                             <Setter.Value>
