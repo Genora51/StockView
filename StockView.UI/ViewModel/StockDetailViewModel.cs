@@ -3,6 +3,7 @@ using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
+using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
@@ -30,6 +31,9 @@ namespace StockView.UI.ViewModel
         {
             _stockRepository = stockRepository;
             _industryLookupDataService = industryLookupDataService;
+
+            eventAggregator.GetEvent<AfterCollectionSavedEvent>()
+                .Subscribe(AfterCollectionSaved);
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
@@ -215,6 +219,14 @@ namespace StockView.UI.ViewModel
         private bool OnRemoveSnapshotCanExecute()
         {
             return SelectedSnapshot != null;
+        }
+
+        private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(IndustryDetailViewModel))
+            {
+                await LoadIndustriesLookupAsync();
+            }
         }
     }
 }

@@ -90,8 +90,11 @@
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Data\Repositories\GenericRepository.cs" />
     <Compile Include="Data\Repositories\IGenericRepository.cs" />
+    <Compile Include="Data\Repositories\IIndustryRepository.cs" />
+    <Compile Include="Data\Repositories\IndustryRepository.cs" />
     <Compile Include="Data\Repositories\IPageRepository.cs" />
     <Compile Include="Data\Repositories\PageRepository.cs" />
+    <Compile Include="Event\AfterCollectionSavedEvent.cs" />
     <Compile Include="Event\AfterDetailClosedEvent.cs" />
     <Compile Include="Event\AfterDetailDeletedEvent.cs" />
     <Compile Include="Event\AfterDetailSavedEvent.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="ViewModel\DetailViewModelBase.cs" />
     <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\INavigationViewModel.cs" />
+    <Compile Include="ViewModel\IndustryDetailViewModel.cs" />
     <Compile Include="ViewModel\IPageDetailViewModel.cs" />
     <Compile Include="ViewModel\IStockDetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -108,6 +112,9 @@
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\IndustryDetailView.xaml.cs">
+      <DependentUpon>IndustryDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +126,7 @@
     <Compile Include="View\StockDetailView.xaml.cs">
       <DependentUpon>StockDetailView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wrapper\IndustryWrapper.cs" />
     <Compile Include="Wrapper\ModelWrapper.cs" />
     <Compile Include="Wrapper\NotifyDataErrorInfoBase.cs" />
     <Compile Include="Wrapper\PageWrapper.cs" />
@@ -138,6 +146,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\IndustryDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\NavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
