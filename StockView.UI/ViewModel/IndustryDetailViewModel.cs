@@ -103,7 +103,7 @@ namespace StockView.UI.ViewModel
                 {
                     ex = ex.InnerException;
                 }
-                MessageDialogService.ShowInfoDialog("Error while saving the entities, " +
+                await MessageDialogService.ShowInfoDialogAsync("Error while saving the entities, " +
                     "the data will be reloaded. Details: " + ex.Message);
                 await LoadAsync(Id);
             }
@@ -121,7 +121,7 @@ namespace StockView.UI.ViewModel
                     SelectedIndustry.Id);
             if (isReferenced)
             {
-                MessageDialogService.ShowInfoDialog($"The industry {SelectedIndustry.Name}" +
+                await MessageDialogService.ShowInfoDialogAsync($"The industry {SelectedIndustry.Name}" +
                     $" can't be removed, as it is referenced by at least one stock");
                 return;
             }

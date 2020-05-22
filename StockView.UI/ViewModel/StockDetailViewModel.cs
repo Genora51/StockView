@@ -185,10 +185,10 @@ namespace StockView.UI.ViewModel
         {
             if (await _stockRepository.HasPagesAsync(Stock.Id))
             {
-                MessageDialogService.ShowInfoDialog($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
+                await MessageDialogService.ShowInfoDialogAsync($"{Stock.Symbol} can't be deleted as it is part of at least one page.");
                 return;
             }
-            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the stock {Stock.Symbol}?",
+            var result = await MessageDialogService.ShowOkCancelDialogAsync($"Do you really want to delete the stock {Stock.Symbol}?",
                 "Question");
             if (result == MessageDialogResult.OK)
             {

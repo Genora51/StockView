@@ -108,13 +108,13 @@ namespace StockView.UI.ViewModel
             }
         }
 
-        protected override void OnDeleteExecute()
+        protected async override void OnDeleteExecute()
         {
-            var result = MessageDialogService.ShowOkCancelDialog($"Do you really want to delete the page {Page.Title}?", "Question");
+            var result = await MessageDialogService.ShowOkCancelDialogAsync($"Do you really want to delete the page {Page.Title}?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _pageRepository.Remove(Page.Model);
-                _pageRepository.SaveAsync();
+                await _pageRepository.SaveAsync();
                 RaiseDetailDeletedEvent(Page.Id);
             }
         }
