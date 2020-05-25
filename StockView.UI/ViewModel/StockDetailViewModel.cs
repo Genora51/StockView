@@ -67,7 +67,7 @@ namespace StockView.UI.ViewModel
             Snapshots.Clear();
             foreach (var stockSnapshot in snapshots)
             {
-                var wrapper = new StockSnapshotWrapper(stockSnapshot);
+                var wrapper = new StockSnapshotWrapper(stockSnapshot, ValidateSnapshotProperty);
                 Snapshots.Add(wrapper);
                 wrapper.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             }
@@ -75,7 +75,15 @@ namespace StockView.UI.ViewModel
 
         private IEnumerable<string> ValidateSnapshotProperty(string propertyName, object currentValue)
         {
-            return null;
+            switch (propertyName)
+            {
+                case nameof(StockSnapshotWrapper.Date):
+                    if (Snapshots.Count(s => s.Date == (DateTime)currentValue) > 1)
+                    {
+                        yield return "Date must be unique";
+                    }
+                    break;
+            }
         }
 
         private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -206,12 +214,14 @@ namespace StockView.UI.ViewModel
         private void OnAddSnapshotExecute()
         {
             var newSnapshot = new StockSnapshotWrapper(new StockSnapshot {
-                Date = DateTime.Now
-            });
+                Date = new DateTime(1970, 1, 1)
+            }, ValidateSnapshotProperty);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             Snapshots.Add(newSnapshot);
             Stock.Model.Snapshots.Add(newSnapshot.Model);
             HasChanges = _stockRepository.HasChanges();
+            // Trigger validation
+            newSnapshot.Date = DateTime.Now.Date;
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
