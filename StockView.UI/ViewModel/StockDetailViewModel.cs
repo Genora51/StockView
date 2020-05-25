@@ -73,6 +73,11 @@ namespace StockView.UI.ViewModel
             }
         }
 
+        private IEnumerable<string> ValidateSnapshotProperty(string propertyName, object currentValue)
+        {
+            return null;
+        }
+
         private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!HasChanges)

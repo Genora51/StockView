@@ -29,18 +29,5 @@ namespace StockView.UI.Wrapper
             get { return GetValue<int?>(); }
             set { SetValue(value); }
         }
-
-        protected override IEnumerable<string> ValidateProperty(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Symbol):
-                    if (string.Equals(Symbol, "INVL", StringComparison.OrdinalIgnoreCase))
-                    {
-                        yield return "Invalid Symbol";
-                    }
-                    break;
-            }
-        }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using StockView.Model;
 using System;
+using System.Collections.Generic;
 
 namespace StockView.UI.Wrapper
 {
     public class StockSnapshotWrapper : ModelWrapper<StockSnapshot>
     {
-        public StockSnapshotWrapper(StockSnapshot model) : base(model)
+        public StockSnapshotWrapper(StockSnapshot model,
+            Func<string, object, IEnumerable<string>> validatePropertyExternal = null)
+            : base(model, validatePropertyExternal)
         {
         }
 
