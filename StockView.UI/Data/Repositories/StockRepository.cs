@@ -16,9 +16,14 @@ namespace StockView.UI.Data.Repositories
 
         public override async Task<Stock> GetByIdAsync(int stockId)
         {
-            return await Context.Stocks
-                .Include(s => s.Snapshots)
+            var stock = await Context.Stocks
                 .SingleAsync(s => s.Id == stockId);
+            var entry = Context.Entry(stock);
+            await entry.Collection(s => s.Snapshots)
+                .Query()
+                .OrderBy(sn => sn.Date)
+                .LoadAsync();
+            return stock;
         }
 
         public async Task<bool> HasPagesAsync(int stockId)
