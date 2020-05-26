@@ -120,6 +120,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NavigationItemViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />
+    <Compile Include="ViewModel\PageDataDetailViewModel.cs" />
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
