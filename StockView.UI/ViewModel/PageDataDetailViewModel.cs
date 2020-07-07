@@ -108,10 +108,10 @@ namespace StockView.UI.ViewModel
             StockSnapshots.Rows.Clear();
             StockSnapshots.Columns.Clear();
             // Set up snapshots
-            StockSnapshots.Columns.Add("Date");
+            StockSnapshots.Columns.Add("Date", typeof(DateTime));
             foreach (var stock in stocks)
             {
-                StockSnapshots.Columns.Add(stock.Symbol);
+                StockSnapshots.Columns.Add(stock.Symbol, typeof(StockSnapshotWrapper));
             }
             var snaps = stocks.SelectMany(
                 s => s.Snapshots.Select(
@@ -131,6 +131,7 @@ namespace StockView.UI.ViewModel
                     wrapper.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
                     dataRow[snapObj.Symbol] = wrapper;
                 }
+                StockSnapshots.Rows.Add(dataRow);
             }
                        
         }

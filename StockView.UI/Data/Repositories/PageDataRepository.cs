@@ -2,6 +2,7 @@
 using StockView.Model;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Linq;
 
 namespace StockView.UI.Data.Repositories
 {
@@ -15,12 +16,8 @@ namespace StockView.UI.Data.Repositories
         public async override Task<Page> GetByIdAsync(int id)
         {
             var page = await Context.Pages
+                .Include(p => p.Stocks.Select(s => s.Snapshots))
                 .SingleAsync(p => p.Id == id);
-            var entry = Context.Entry(page);
-            await entry.Collection(p => p.Stocks)
-                .Query()
-                .Include(s => s.Snapshots)
-                .LoadAsync();
             return page;
         }
     }

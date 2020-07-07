@@ -42,7 +42,7 @@ namespace StockView.UI.ViewModel
             foreach (var item in lookup)
             {
                 Pages.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
-                    nameof(PageDetailViewModel),
+                    nameof(PageDataDetailViewModel),
                     _eventAggregator));
             }
         }
@@ -59,6 +59,7 @@ namespace StockView.UI.ViewModel
                     AfterDetailDeleted(Stocks, args);
                     break;
                 case nameof(PageDetailViewModel):
+                case nameof(PageDataDetailViewModel):
                     AfterDetailDeleted(Pages, args);
                     break;
             }
@@ -81,6 +82,7 @@ namespace StockView.UI.ViewModel
                     AfterDetailSaved(Stocks, args);
                     break;
                 case nameof(PageDetailViewModel):
+                case nameof(PageDataDetailViewModel):
                     AfterDetailSaved(Pages, args);
                     break;
             }

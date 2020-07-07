@@ -130,6 +130,9 @@
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PageDataDetailView.xaml.cs">
+      <DependentUpon>PageDataDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PageDetailView.xaml.cs">
       <DependentUpon>PageDetailView.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PageDataDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
