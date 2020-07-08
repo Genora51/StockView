@@ -205,7 +205,7 @@ namespace StockView.UI.ViewModel
 
         private void SetTitle()
         {
-            Title = Page.Title;
+            Title = Page.Title + " [Edit]";
         }
 
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)

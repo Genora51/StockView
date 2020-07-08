@@ -12,39 +12,53 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
+
+        <DockPanel Margin="10">
+            <StackPanel DockPanel.Dock="Right">
+                <!-- TODO: Bind commands -->
+                <Button Content="Add Row" Width="125" Margin="10"
+                        />
+                <Button Content="Remove Row" Width="125" Margin="10"
+                        />
+                <Button Content="Add Value" Width="125" Margin="10"
+                        />
+                <Button Content="Remove Value" Width="125" Margin="10"
+                        />
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
                   BeginningEdit="DataGrid_BeginningEdit"
                   CanUserAddRows="False" SelectionUnit="Cell"
                   Name="dataGrid1"
                   RowHeaderWidth="0">
-            <DataGrid.Resources>
-                <DataTemplate x:Key="DateTemplate">
-                    <TextBlock Text="{Binding Date,
+                <DataGrid.Resources>
+                    <DataTemplate x:Key="DateTemplate">
+                        <TextBlock Text="{Binding Date,
                         ValidatesOnDataErrors=True,
                         StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
                        />
-                </DataTemplate>
-                <DataTemplate x:Key="DateEditingTemplate">
-                    <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
+                    </DataTemplate>
+                    <DataTemplate x:Key="DateEditingTemplate">
+                        <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
                         Style="{StaticResource DataGridEditingColumnStyle}"
                         Foreground="Black"/>
-                </DataTemplate>
-                <Style x:Key="PDColumnStyle" BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
-                    <Setter Property="TextAlignment" Value="Right"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=Text}" Value="-">
-                            <Setter Property="TextAlignment" Value="Center"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>
-        </DataGrid>
-
+                    </DataTemplate>
+                    <Style x:Key="PDColumnStyle" BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=Text}" Value="-">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+            </DataGrid>
+        </DockPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Content="Save" Width="125" Margin="10"
                     Command="{Binding SaveCommand}"/>
+            <Button Content="Edit Page" Width="125" Margin="10"
+                    Command="{Binding OpenPageDetailViewCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

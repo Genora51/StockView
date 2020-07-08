@@ -2,6 +2,7 @@
 using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
+using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
@@ -12,6 +13,7 @@ using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
@@ -32,6 +34,8 @@ namespace StockView.UI.ViewModel
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
             // TODO: Reload snapshots on detail save/delete
+            // Assign delegate commands
+            OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
         }
 
         public PageWrapper Page
@@ -196,6 +200,17 @@ namespace StockView.UI.ViewModel
                     Id = Page.Id;
                     RaiseDetailSavedEvent(Page.Id, Page.Title);
                 });
+        }
+
+        public ICommand OpenPageDetailViewCommand { get; }
+
+        private void OnOpenPageDetailViewExecute()
+        {
+            EventAggregator.GetEvent<OpenDetailViewEvent>().Publish(new OpenDetailViewEventArgs
+            {
+                Id = Page.Id,
+                ViewModelName = nameof(PageDetailViewModel)
+            });
         }
     }
 }

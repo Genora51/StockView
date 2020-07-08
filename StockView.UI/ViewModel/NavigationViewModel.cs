@@ -90,6 +90,7 @@ namespace StockView.UI.ViewModel
 
         private void AfterDetailSaved(ObservableCollection<NavigationItemViewModel> items, AfterDetailSavedEventArgs args)
         {
+            if (args.ViewModelName == nameof(PageDetailViewModel)) args.ViewModelName = nameof(PageDataDetailViewModel);
             var lookupItem = items.SingleOrDefault(l => l.Id == args.Id);
             if (lookupItem == null)
             {
