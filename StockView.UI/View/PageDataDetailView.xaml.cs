@@ -50,11 +50,20 @@ namespace StockView.UI.View
             } else if (e.PropertyType == typeof(StockSnapshotWrapper)) {
                 var binding = tc.Binding as Binding;
                 binding.Path = new PropertyPath(binding.Path.Path + ".Value");
+                binding.FallbackValue = "-";
                 binding.StringFormat = "F2";
-                tc.ElementStyle = (Style)FindResource("DataGridColumnStyle");
+                tc.ElementStyle = (Style)dataGrid1.FindResource("PDColumnStyle");
                 tc.EditingElementStyle = (Style)FindResource("DataGridEditingColumnStyle");
             }
             
+        }
+
+        private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            if (((DataRowView)e.Row.Item)[e.Column.Header.ToString()] is DBNull)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

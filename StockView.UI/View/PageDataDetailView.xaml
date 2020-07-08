@@ -15,6 +15,7 @@
         
         <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                  BeginningEdit="DataGrid_BeginningEdit"
                   CanUserAddRows="False" SelectionUnit="Cell"
                   Name="dataGrid1"
                   RowHeaderWidth="0">
@@ -23,13 +24,21 @@
                     <TextBlock Text="{Binding Date,
                         ValidatesOnDataErrors=True,
                         StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource DataGridColumnStyle}"/>
+                       />
                 </DataTemplate>
                 <DataTemplate x:Key="DateEditingTemplate">
                     <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
                         Style="{StaticResource DataGridEditingColumnStyle}"
                         Foreground="Black"/>
                 </DataTemplate>
+                <Style x:Key="PDColumnStyle" BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
+                    <Setter Property="TextAlignment" Value="Right"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=Text}" Value="-">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
             </DataGrid.Resources>
         </DataGrid>
 
