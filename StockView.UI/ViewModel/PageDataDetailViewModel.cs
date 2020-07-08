@@ -160,10 +160,12 @@ namespace StockView.UI.ViewModel
                     ) > 1
                 ) {
                     e.Row.SetColumnError(e.Column, "Date must be unique");
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                     return;
                 } else {
                     e.Row.ClearErrors();
                 }
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 foreach (var item in e.Row.ItemArray)
                 {
                     if (item is StockSnapshotWrapper wrapper)
@@ -179,13 +181,21 @@ namespace StockView.UI.ViewModel
 
         protected override bool OnSaveCanExecute()
         {
-            // TODO: Snapshot errors
-            return Page != null && !Page.HasErrors && HasChanges;
+            return Page != null
+                && !Page.HasErrors
+                && !StockSnapshots.HasErrors
+                && HasChanges;
         }
 
-        protected override void OnSaveExecute()
+        protected override async void OnSaveExecute()
         {
-            throw new System.NotImplementedException();
+            await SaveWithOptimisticConcurrencyAsync(_pageDataRepository.SaveAsync,
+                () =>
+                {
+                    HasChanges = _pageDataRepository.HasChanges();
+                    Id = Page.Id;
+                    RaiseDetailSavedEvent(Page.Id, Page.Title);
+                });
         }
     }
 }
