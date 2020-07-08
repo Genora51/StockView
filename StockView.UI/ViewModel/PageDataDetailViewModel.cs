@@ -38,6 +38,7 @@ namespace StockView.UI.ViewModel
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute, OnAddSnapshotCanExecute);
+            RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
         }
 
         public PageWrapper Page
@@ -59,7 +60,7 @@ namespace StockView.UI.ViewModel
                 _selectedCell = value;
                 OnPropertyChanged();
                 ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
-                // TODO: ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -220,6 +221,7 @@ namespace StockView.UI.ViewModel
 
         public ICommand OpenPageDetailViewCommand { get; }
         public ICommand AddSnapshotCommand { get; }
+        public ICommand RemoveSnapshotCommand { get; }
 
         private void OnOpenPageDetailViewExecute()
         {
@@ -246,12 +248,30 @@ namespace StockView.UI.ViewModel
             //SelectedCell
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
         }
         private bool OnAddSnapshotCanExecute()
         {
             return SelectedSnapshot == null
                 && SelectedCell.Item != null
                 && SelectedCell.Column.Header.ToString() != "Date";
+        }
+        private void OnRemoveSnapshotExecute()
+        {
+            SelectedSnapshot.PropertyChanged -= StockSnapshotWrapper_PropertyChanged;
+            _pageDataRepository.RemoveSnapshot(SelectedSnapshot.Model);
+            var row = (DataRowView)SelectedCell.Item;
+            var symbol = SelectedCell.Column.Header.ToString();
+            row[symbol] = null;
+            HasChanges = _pageDataRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+
+        }
+        private bool OnRemoveSnapshotCanExecute()
+        {
+            return SelectedSnapshot != null;
         }
     }
 }

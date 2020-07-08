@@ -20,5 +20,10 @@ namespace StockView.UI.Data.Repositories
                 .SingleAsync(p => p.Id == id);
             return page;
         }
+
+        public void RemoveSnapshot(StockSnapshot model)
+        {
+            Context.StockSnapshots.Remove(model);
+        }
     }
 }

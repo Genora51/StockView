@@ -23,7 +23,7 @@
                 <Button Content="Add Value" Width="125" Margin="10"
                         Command="{Binding AddSnapshotCommand}"/>
                 <Button Content="Remove Value" Width="125" Margin="10"
-                        />
+                        Command="{Binding RemoveSnapshotCommand}"/>
             </StackPanel>
             <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
