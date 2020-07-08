@@ -263,6 +263,11 @@ namespace StockView.UI.ViewModel
             var row = (DataRowView)SelectedCell.Item;
             var symbol = SelectedCell.Column.Header.ToString();
             row[symbol] = null;
+            if (row.Row.ItemArray.OfType<StockSnapshotWrapper>().Count() == 0)
+            {
+                _selectedCell = default;
+                row.Delete();
+            }
             HasChanges = _pageDataRepository.HasChanges();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
