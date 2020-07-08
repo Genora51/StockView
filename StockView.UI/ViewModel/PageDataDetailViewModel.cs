@@ -39,6 +39,7 @@ namespace StockView.UI.ViewModel
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute, OnAddSnapshotCanExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
+            AddRowCommand = new DelegateCommand(OnAddRowExecute);
         }
 
         public PageWrapper Page
@@ -222,6 +223,7 @@ namespace StockView.UI.ViewModel
         public ICommand OpenPageDetailViewCommand { get; }
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
+        public ICommand AddRowCommand { get; }
 
         private void OnOpenPageDetailViewExecute()
         {
@@ -277,6 +279,13 @@ namespace StockView.UI.ViewModel
         private bool OnRemoveSnapshotCanExecute()
         {
             return SelectedSnapshot != null;
+        }
+        private void OnAddRowExecute()
+        {
+            var row = StockSnapshots.NewRow();
+            StockSnapshots.Rows.Add(row);
+            // Trigger validation
+            row["Date"] = DateTime.Now.Date;
         }
     }
 }

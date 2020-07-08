@@ -17,7 +17,7 @@
             <StackPanel DockPanel.Dock="Right">
                 <!-- TODO: Bind commands -->
                 <Button Content="Add Row" Width="125" Margin="10"
-                        />
+                        Command="{Binding AddRowCommand}"/>
                 <Button Content="Remove Row" Width="125" Margin="10"
                         />
                 <Button Content="Add Value" Width="125" Margin="10"
