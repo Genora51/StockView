@@ -21,13 +21,14 @@
                 <Button Content="Remove Row" Width="125" Margin="10"
                         />
                 <Button Content="Add Value" Width="125" Margin="10"
-                        />
+                        Command="{Binding AddSnapshotCommand}"/>
                 <Button Content="Remove Value" Width="125" Margin="10"
                         />
             </StackPanel>
             <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
                   BeginningEdit="DataGrid_BeginningEdit"
+                  CurrentCell="{Binding SelectedCell,Mode=TwoWay}"
                   CanUserAddRows="False" SelectionUnit="Cell"
                   Name="dataGrid1"
                   RowHeaderWidth="0">
@@ -36,6 +37,7 @@
                         <TextBlock Text="{Binding Date,
                         ValidatesOnDataErrors=True,
                         StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource DataGridColumnStyle}"
                        />
                     </DataTemplate>
                     <DataTemplate x:Key="DateEditingTemplate">

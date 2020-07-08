@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
@@ -21,7 +22,7 @@ namespace StockView.UI.ViewModel
     {
         private IPageDataRepository _pageDataRepository;
         private PageWrapper _page;
-        private StockSnapshotWrapper _selectedSnapshot;
+        private DataGridCellInfo _selectedCell;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -36,6 +37,7 @@ namespace StockView.UI.ViewModel
             // TODO: Reload snapshots on detail save/delete
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
+            AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute, OnAddSnapshotCanExecute);
         }
 
         public PageWrapper Page
@@ -48,14 +50,28 @@ namespace StockView.UI.ViewModel
             }
         }
 
-        public StockSnapshotWrapper SelectedSnapshot
+        public DataGridCellInfo SelectedCell
         {
-            get { return _selectedSnapshot; }
+            get { return _selectedCell; }
             set
             {
-                _selectedSnapshot = value;
+                if (value.Column == null) return;
+                _selectedCell = value;
                 OnPropertyChanged();
+                ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
                 // TODO: ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        private StockSnapshotWrapper SelectedSnapshot
+        {
+            get
+            {
+                if (SelectedCell == null || SelectedCell.Column == null) return null;
+                var stockName = SelectedCell.Column.Header.ToString();
+                var item = ((DataRowView)SelectedCell.Item)[stockName];
+                if (item is StockSnapshotWrapper snapshot) return snapshot;
+                else return null;
             }
         }
 
@@ -72,7 +88,7 @@ namespace StockView.UI.ViewModel
             InitialisePageSnapshots(page.Stocks);
         }
 
-        private void InitialisePage(Page page)
+        private void InitialisePage(Model.Page page)
         {
             Page = new PageWrapper(page);
             Page.PropertyChanged += (s, e) =>
@@ -203,6 +219,7 @@ namespace StockView.UI.ViewModel
         }
 
         public ICommand OpenPageDetailViewCommand { get; }
+        public ICommand AddSnapshotCommand { get; }
 
         private void OnOpenPageDetailViewExecute()
         {
@@ -211,6 +228,30 @@ namespace StockView.UI.ViewModel
                 Id = Page.Id,
                 ViewModelName = nameof(PageDetailViewModel)
             });
+        }
+        private void OnAddSnapshotExecute()
+        {
+            var row = (DataRowView)SelectedCell.Item;
+            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot
+            {
+                Date = (DateTime)row["Date"],
+            });
+            newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
+            var symbol = SelectedCell.Column.Header.ToString();
+            row[symbol] = newSnapshot;
+            Stocks.First(
+                s => s.Symbol == symbol
+            ).Model.Snapshots.Add(newSnapshot.Model);
+            HasChanges = _pageDataRepository.HasChanges();
+            //SelectedCell
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+        }
+        private bool OnAddSnapshotCanExecute()
+        {
+            return SelectedSnapshot == null
+                && SelectedCell.Item != null
+                && SelectedCell.Column.Header.ToString() != "Date";
         }
     }
 }
