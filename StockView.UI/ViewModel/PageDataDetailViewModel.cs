@@ -29,7 +29,7 @@ namespace StockView.UI.ViewModel
             IPageDataRepository pageDataRepository)
             : base(eventAggregator, messageDialogService)
         {
-            // TODO: Concurrency, Validation
+            // TODO: Concurrency
             _pageDataRepository = pageDataRepository;
 
             Stocks = new ObservableCollection<StockWrapper>();
@@ -40,6 +40,7 @@ namespace StockView.UI.ViewModel
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute, OnAddSnapshotCanExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             AddRowCommand = new DelegateCommand(OnAddRowExecute);
+            RemoveRowCommand = new DelegateCommand(OnRemoveRowExecute, OnRemoveRowCanExecute);
         }
 
         public PageWrapper Page
@@ -62,6 +63,7 @@ namespace StockView.UI.ViewModel
                 OnPropertyChanged();
                 ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -224,6 +226,7 @@ namespace StockView.UI.ViewModel
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
         public ICommand AddRowCommand { get; }
+        public ICommand RemoveRowCommand { get; }
 
         private void OnOpenPageDetailViewExecute()
         {
@@ -269,6 +272,7 @@ namespace StockView.UI.ViewModel
             {
                 _selectedCell = default;
                 row.Delete();
+                ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
             }
             HasChanges = _pageDataRepository.HasChanges();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -286,6 +290,29 @@ namespace StockView.UI.ViewModel
             StockSnapshots.Rows.Add(row);
             // Trigger validation
             row["Date"] = DateTime.Now.Date;
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+        }
+        private void OnRemoveRowExecute()
+        {
+            var row = ((DataRowView)SelectedCell.Item).Row;
+            foreach (var snapshot in row.ItemArray.OfType<StockSnapshotWrapper>())
+            {
+                snapshot.PropertyChanged -= StockSnapshotWrapper_PropertyChanged;
+                _pageDataRepository.RemoveSnapshot(snapshot.Model);
+            }
+            _selectedCell = default;
+            row.Delete();
+            HasChanges = _pageDataRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+        }
+        private bool OnRemoveRowCanExecute()
+        {
+            return SelectedCell.Item is DataRowView;
         }
     }
 }
