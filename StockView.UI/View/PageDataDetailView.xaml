@@ -10,12 +10,13 @@
     <Grid>
         <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
-                  CanUserAddRows="False" SelectionMode="Single"
+                  CanUserAddRows="False" SelectionUnit="Cell"
                   Name="dataGrid1"
                   RowHeaderWidth="0">
             <DataGrid.Resources>
                 <DataTemplate x:Key="DateTemplate">
                     <TextBlock Text="{Binding Date,
+                        ValidatesOnDataErrors=True,
                         StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource DataGridColumnStyle}"/>
                 </DataTemplate>

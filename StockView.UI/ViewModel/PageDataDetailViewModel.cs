@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace StockView.UI.ViewModel
             IPageDataRepository pageDataRepository)
             : base(eventAggregator, messageDialogService)
         {
+            // TODO: Concurrency, Validation
             _pageDataRepository = pageDataRepository;
 
             Stocks = new ObservableCollection<StockWrapper>();
@@ -97,6 +99,7 @@ namespace StockView.UI.ViewModel
 
         private void InitialisePageSnapshots(ICollection<Stock> stocks)
         {
+            StockSnapshots.ColumnChanged -= StockSnapshots_ColumnChanged;
             foreach (DataRow row in StockSnapshots.Rows)
             {
                 foreach (var item in row.ItemArray)
@@ -133,7 +136,7 @@ namespace StockView.UI.ViewModel
                 }
                 StockSnapshots.Rows.Add(dataRow);
             }
-                       
+            StockSnapshots.ColumnChanged += StockSnapshots_ColumnChanged;
         }
 
         private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -145,6 +148,27 @@ namespace StockView.UI.ViewModel
             if (e.PropertyName == nameof(StockSnapshotWrapper.HasErrors))
             {
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        private void StockSnapshots_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        {
+            if (e.Column.DataType == typeof(DateTime))
+            {
+                if (StockSnapshots.Rows.OfType<DataRow>().Count(
+                        r => (DateTime)r["Date"] == (DateTime)e.ProposedValue
+                    ) > 1
+                ) {
+                    e.Row.SetColumnError(e.Column, "Date must be unique");
+                    return;
+                } else {
+                    e.Row.ClearErrors();
+                }
+                foreach (var item in e.Row.ItemArray)
+                {
+                    if (item is StockSnapshotWrapper wrapper)
+                        wrapper.Date = (DateTime) e.ProposedValue;
+                }
             }
         }
 
