@@ -35,6 +35,8 @@ namespace StockView.UI.ViewModel
 
             eventAggregator.GetEvent<AfterCollectionSavedEvent>()
                 .Subscribe(AfterCollectionSaved);
+            eventAggregator.GetEvent<AfterDetailSavedEvent>()
+                .Subscribe(AfterDetailSaved);
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
@@ -101,21 +103,7 @@ namespace StockView.UI.ViewModel
         private void InitialiseStock(Stock stock)
         {
             Stock = new StockWrapper(stock);
-            Stock.PropertyChanged += (s, e) =>
-            {
-                if (!HasChanges)
-                {
-                    HasChanges = _stockRepository.HasChanges();
-                }
-                if (e.PropertyName == nameof(Stock.HasErrors))
-                {
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
-                if (e.PropertyName == nameof(Stock.Symbol))
-                {
-                    SetTitle();
-                }
-            };
+            Stock.PropertyChanged += StockWrapper_PropertyChanged;
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Stock.Id == 0)
             {
@@ -123,6 +111,22 @@ namespace StockView.UI.ViewModel
                 Stock.Symbol = "";
             }
             SetTitle();
+        }
+
+        private void StockWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges)
+            {
+                HasChanges = _stockRepository.HasChanges();
+            }
+            if (e.PropertyName == nameof(Stock.HasErrors))
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
+            if (e.PropertyName == nameof(Stock.Symbol))
+            {
+                SetTitle();
+            }
         }
 
         private void SetTitle()
@@ -245,6 +249,22 @@ namespace StockView.UI.ViewModel
             if (args.ViewModelName == nameof(IndustryDetailViewModel))
             {
                 await LoadIndustriesLookupAsync();
+            }
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(PageDataDetailViewModel))
+            {
+                if (await _stockRepository.BelongsToPageAsync(Stock.Id, args.Id))
+                {
+                    _stockRepository.DetachStock(Stock.Model);
+                    Stock.PropertyChanged -= StockWrapper_PropertyChanged;
+                    await LoadAsync(Stock.Id);
+                    SelectedSnapshot = null;
+                    HasChanges = _stockRepository.HasChanges();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
             }
         }
     }
