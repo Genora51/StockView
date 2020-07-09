@@ -137,9 +137,11 @@ namespace StockView.UI.ViewModel
                 }
             }
             StockSnapshots.Rows.Clear();
+            StockSnapshots.DefaultView.Sort = "";
             StockSnapshots.Columns.Clear();
             // Set up snapshots
             StockSnapshots.Columns.Add("Date", typeof(DateTime));
+            StockSnapshots.DefaultView.Sort = "Date ASC";
             foreach (var stock in stocks)
             {
                 StockSnapshots.Columns.Add(stock.Symbol, typeof(StockSnapshotWrapper));
