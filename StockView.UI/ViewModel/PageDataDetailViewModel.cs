@@ -319,35 +319,51 @@ namespace StockView.UI.ViewModel
             return SelectedCell.Item is DataRowView;
         }
 
+        private async Task ReloadPage()
+        {
+            _pageDataRepository.DetachPage(Page.Model);
+            Page.PropertyChanged -= PageWrapper_PropertyChanged;
+            _selectedCell = default;
+            await LoadAsync(Page.Id);
+            HasChanges = _pageDataRepository.HasChanges();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+        }
+
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
         {
             // TODO: implement
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
-                    _pageDataRepository.DetachPage(Page.Model);
-                    Page.PropertyChanged -= PageWrapper_PropertyChanged;
-                    await LoadAsync(Page.Id);
+                    if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
                     break;
                 case nameof(PageDetailViewModel):
-                    if (args.Id == Page.Id)
-                    {
-                        _pageDataRepository.DetachPage(Page.Model);
-                        Page.PropertyChanged -= PageWrapper_PropertyChanged;
-                        await LoadAsync(Page.Id);
-                    }
+                    if (args.Id == Page.Id) await ReloadPage();
                     break;
             }
         }
 
-        private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+        private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
             // TODO: implement
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
+                    if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
                     break;
                 case nameof(PageDetailViewModel):
+                    if (args.Id == Page.Id)
+                    {
+                        EventAggregator.GetEvent<AfterDetailClosedEvent>()
+                            .Publish(new AfterDetailClosedEventArgs
+                            {
+                                Id = Page.Id,
+                                ViewModelName = this.GetType().Name
+                            });
+                    }
                     break;
             }
         }
