@@ -3,6 +3,7 @@ using StockView.Model;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace StockView.UI.Data.Repositories
 {
@@ -24,6 +25,14 @@ namespace StockView.UI.Data.Repositories
         public void RemoveSnapshot(StockSnapshot model)
         {
             Context.StockSnapshots.Remove(model);
+        }
+
+        public void DetachPage(Page page)
+        {
+            var changedEntriesCopy = Context.ChangeTracker.Entries();
+
+            foreach (var entry in changedEntriesCopy)
+                entry.State = EntityState.Detached;
         }
     }
 }

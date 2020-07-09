@@ -31,6 +31,8 @@ namespace StockView.UI.ViewModel
         {
             // TODO: Concurrency
             _pageDataRepository = pageDataRepository;
+            eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
+            eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
@@ -95,20 +97,22 @@ namespace StockView.UI.ViewModel
         private void InitialisePage(Model.Page page)
         {
             Page = new PageWrapper(page);
-            Page.PropertyChanged += (s, e) =>
-            {
-                if (!HasChanges)
-                {
-                    HasChanges = _pageDataRepository.HasChanges();
-                }
-
-                if (e.PropertyName == nameof(Page.HasErrors))
-                {
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
-            };
+            Page.PropertyChanged += PageWrapper_PropertyChanged;
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             Title = Page.Title;
+        }
+
+        private void PageWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges)
+            {
+                HasChanges = _pageDataRepository.HasChanges();
+            }
+
+            if (e.PropertyName == nameof(Page.HasErrors))
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private void InitialisePageStocks(ICollection<Stock> stocks)
@@ -313,6 +317,39 @@ namespace StockView.UI.ViewModel
         private bool OnRemoveRowCanExecute()
         {
             return SelectedCell.Item is DataRowView;
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            // TODO: implement
+            switch (args.ViewModelName)
+            {
+                case nameof(StockDetailViewModel):
+                    _pageDataRepository.DetachPage(Page.Model);
+                    Page.PropertyChanged -= PageWrapper_PropertyChanged;
+                    await LoadAsync(Page.Id);
+                    break;
+                case nameof(PageDetailViewModel):
+                    if (args.Id == Page.Id)
+                    {
+                        _pageDataRepository.DetachPage(Page.Model);
+                        Page.PropertyChanged -= PageWrapper_PropertyChanged;
+                        await LoadAsync(Page.Id);
+                    }
+                    break;
+            }
+        }
+
+        private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+        {
+            // TODO: implement
+            switch (args.ViewModelName)
+            {
+                case nameof(StockDetailViewModel):
+                    break;
+                case nameof(PageDetailViewModel):
+                    break;
+            }
         }
     }
 }
