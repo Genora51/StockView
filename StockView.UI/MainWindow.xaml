@@ -18,6 +18,9 @@
         <DataTemplate DataType="{x:Type viewModel:PageDetailViewModel}">
             <view:PageDetailView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:PageDataDetailViewModel}">
+            <view:PageDataDetailView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:IndustryDetailViewModel}">
             <view:IndustryDetailView/>
         </DataTemplate>

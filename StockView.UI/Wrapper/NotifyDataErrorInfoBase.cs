@@ -18,9 +18,13 @@ namespace StockView.UI.Wrapper
 
         public IEnumerable GetErrors(string propertyName)
         {
-            return _errorsByPropertyName.ContainsKey(propertyName)
-                ? _errorsByPropertyName[propertyName]
-                : null;
+            if (!string.IsNullOrEmpty(propertyName))
+            {
+                return _errorsByPropertyName.ContainsKey(propertyName)
+                    ? _errorsByPropertyName[propertyName]
+                    : null;
+            }
+            return null;
         }
 
         protected virtual void OnErrorsChanged(string propertyName)

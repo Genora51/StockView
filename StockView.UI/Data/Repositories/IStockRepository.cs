@@ -8,5 +8,7 @@ namespace StockView.UI.Data.Repositories
         void RemoveSnapshot(StockSnapshot model);
 
         Task<bool> HasPagesAsync(int stockId);
+        Task<bool> BelongsToPageAsync(int stockId, int pageId);
+        void DetachStock(Stock stock);
     }
 }

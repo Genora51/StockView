@@ -75,6 +75,10 @@
     <Compile Include="Migrations\202005221459371_AddedRowVersionToPage.designer.cs">
       <DependentUpon>202005221459371_AddedRowVersionToPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005251229150_UniqueDates.cs" />
+    <Compile Include="Migrations\202005251229150_UniqueDates.designer.cs">
+      <DependentUpon>202005251229150_UniqueDates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -107,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005221459371_AddedRowVersionToPage.resx">
       <DependentUpon>202005221459371_AddedRowVersionToPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005251229150_UniqueDates.resx">
+      <DependentUpon>202005251229150_UniqueDates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

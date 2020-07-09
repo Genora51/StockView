@@ -101,7 +101,9 @@
     <Compile Include="Data\Repositories\IGenericRepository.cs" />
     <Compile Include="Data\Repositories\IIndustryRepository.cs" />
     <Compile Include="Data\Repositories\IndustryRepository.cs" />
+    <Compile Include="Data\Repositories\IPageDataRepository.cs" />
     <Compile Include="Data\Repositories\IPageRepository.cs" />
+    <Compile Include="Data\Repositories\PageDataRepository.cs" />
     <Compile Include="Data\Repositories\PageRepository.cs" />
     <Compile Include="Event\AfterCollectionSavedEvent.cs" />
     <Compile Include="Event\AfterDetailClosedEvent.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NavigationItemViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />
+    <Compile Include="ViewModel\PageDataDetailViewModel.cs" />
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -126,6 +129,9 @@
     </Compile>
     <Compile Include="View\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PageDataDetailView.xaml.cs">
+      <DependentUpon>PageDataDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PageDetailView.xaml.cs">
       <DependentUpon>PageDetailView.xaml</DependentUpon>
@@ -160,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PageDataDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,12 +7,16 @@ namespace StockView.UI.Wrapper
 {
     public class ModelWrapper<T> : NotifyDataErrorInfoBase
     {
-        public ModelWrapper(T model)
+        public ModelWrapper(T model,
+            Func<string, object, IEnumerable<string>> validatePropertyExternal = null)
         {
             Model = model;
+            ValidatePropertyExternal = validatePropertyExternal;
         }
 
         public T Model { get; }
+
+        private Func<string, object, IEnumerable<string>> ValidatePropertyExternal;
 
         protected virtual TValue GetValue<TValue>([CallerMemberName]string propertyName = null)
         {
@@ -34,6 +38,8 @@ namespace StockView.UI.Wrapper
             ValidateDataAnnotations(propertyName, currentValue);
 
             ValidateCustomErrors(propertyName);
+
+            ValidateExternalErrors(propertyName, currentValue);
         }
 
         private void ValidateDataAnnotations(string propertyName, object currentValue)
@@ -51,6 +57,18 @@ namespace StockView.UI.Wrapper
         private void ValidateCustomErrors(string propertyName)
         {
             var errors = ValidateProperty(propertyName);
+            if (errors != null)
+            {
+                foreach (var error in errors)
+                {
+                    AddError(propertyName, error);
+                }
+            }
+        }
+
+        private void ValidateExternalErrors(string propertyName, object currentValue)
+        {
+            var errors = ValidatePropertyExternal?.Invoke(propertyName, currentValue);
             if (errors != null)
             {
                 foreach (var error in errors)

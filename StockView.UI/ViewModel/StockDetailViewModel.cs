@@ -35,6 +35,8 @@ namespace StockView.UI.ViewModel
 
             eventAggregator.GetEvent<AfterCollectionSavedEvent>()
                 .Subscribe(AfterCollectionSaved);
+            eventAggregator.GetEvent<AfterDetailSavedEvent>()
+                .Subscribe(AfterDetailSaved);
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
@@ -67,9 +69,22 @@ namespace StockView.UI.ViewModel
             Snapshots.Clear();
             foreach (var stockSnapshot in snapshots)
             {
-                var wrapper = new StockSnapshotWrapper(stockSnapshot);
+                var wrapper = new StockSnapshotWrapper(stockSnapshot, ValidateSnapshotProperty);
                 Snapshots.Add(wrapper);
                 wrapper.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
+            }
+        }
+
+        private IEnumerable<string> ValidateSnapshotProperty(string propertyName, object currentValue)
+        {
+            switch (propertyName)
+            {
+                case nameof(StockSnapshotWrapper.Date):
+                    if (Snapshots.Count(s => s.Date == (DateTime)currentValue) > 1)
+                    {
+                        yield return "Date must be unique";
+                    }
+                    break;
             }
         }
 
@@ -88,21 +103,7 @@ namespace StockView.UI.ViewModel
         private void InitialiseStock(Stock stock)
         {
             Stock = new StockWrapper(stock);
-            Stock.PropertyChanged += (s, e) =>
-            {
-                if (!HasChanges)
-                {
-                    HasChanges = _stockRepository.HasChanges();
-                }
-                if (e.PropertyName == nameof(Stock.HasErrors))
-                {
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
-                if (e.PropertyName == nameof(Stock.Symbol))
-                {
-                    SetTitle();
-                }
-            };
+            Stock.PropertyChanged += StockWrapper_PropertyChanged;
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Stock.Id == 0)
             {
@@ -110,6 +111,22 @@ namespace StockView.UI.ViewModel
                 Stock.Symbol = "";
             }
             SetTitle();
+        }
+
+        private void StockWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!HasChanges)
+            {
+                HasChanges = _stockRepository.HasChanges();
+            }
+            if (e.PropertyName == nameof(Stock.HasErrors))
+            {
+                ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
+            if (e.PropertyName == nameof(Stock.Symbol))
+            {
+                SetTitle();
+            }
         }
 
         private void SetTitle()
@@ -201,12 +218,14 @@ namespace StockView.UI.ViewModel
         private void OnAddSnapshotExecute()
         {
             var newSnapshot = new StockSnapshotWrapper(new StockSnapshot {
-                Date = DateTime.Now
-            });
+                Date = new DateTime(1970, 1, 1)
+            }, ValidateSnapshotProperty);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             Snapshots.Add(newSnapshot);
             Stock.Model.Snapshots.Add(newSnapshot.Model);
             HasChanges = _stockRepository.HasChanges();
+            // Trigger validation
+            newSnapshot.Date = DateTime.Now.Date;
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
@@ -230,6 +249,22 @@ namespace StockView.UI.ViewModel
             if (args.ViewModelName == nameof(IndustryDetailViewModel))
             {
                 await LoadIndustriesLookupAsync();
+            }
+        }
+
+        private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
+        {
+            if (args.ViewModelName == nameof(PageDataDetailViewModel))
+            {
+                if (await _stockRepository.BelongsToPageAsync(Stock.Id, args.Id))
+                {
+                    _stockRepository.DetachStock(Stock.Model);
+                    Stock.PropertyChanged -= StockWrapper_PropertyChanged;
+                    await LoadAsync(Stock.Id);
+                    SelectedSnapshot = null;
+                    HasChanges = _stockRepository.HasChanges();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
             }
         }
     }
