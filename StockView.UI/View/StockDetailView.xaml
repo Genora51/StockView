@@ -65,8 +65,40 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Value" Width="*"
                         Binding="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=F2}"
-                        ElementStyle="{StaticResource DataGridColumnStyle}"
-                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"/>
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Value="1">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding Path="ItemsSource"
+                                                        RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}"/>
+                                                    <Binding/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                    <DataTrigger Value="-1">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding Path="ItemsSource"
+                                                        RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}"/>
+                                                    <Binding/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

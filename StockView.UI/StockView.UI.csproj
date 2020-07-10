@@ -124,6 +124,7 @@
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\Converters\ComparisonConverter.cs" />
     <Compile Include="View\IndustryDetailView.xaml.cs">
       <DependentUpon>IndustryDetailView.xaml</DependentUpon>
     </Compile>

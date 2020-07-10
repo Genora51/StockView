@@ -36,6 +36,7 @@ namespace StockView.UI.ViewModel
 
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
+            ChangeCount = 0;
             // TODO: Reload snapshots on detail save/delete
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
@@ -83,6 +84,14 @@ namespace StockView.UI.ViewModel
 
         public ObservableCollection<StockWrapper> Stocks { get; }
         public DataTable StockSnapshots { get; }
+        private int _changeCount;
+
+        public int ChangeCount
+        {
+            get { return _changeCount; }
+            private set { _changeCount = value; OnPropertyChanged(); }
+        }
+
 
         public async override Task LoadAsync(int pageId)
         {
@@ -179,6 +188,7 @@ namespace StockView.UI.ViewModel
             {
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
+            ChangeCount++;
         }
 
         private void StockSnapshots_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -202,6 +212,7 @@ namespace StockView.UI.ViewModel
                         wrapper.Date = (DateTime) e.ProposedValue;
                 }
             }
+            ChangeCount++;
         }
 
         protected override void OnDeleteExecute()
@@ -284,7 +295,6 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
-
         }
         private bool OnRemoveSnapshotCanExecute()
         {
