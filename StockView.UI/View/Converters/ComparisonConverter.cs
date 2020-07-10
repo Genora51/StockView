@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
@@ -12,16 +13,42 @@ namespace StockView.UI.View.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length != 2)
-                return 0;
+            if (values.Length == 2)
+            {
+                var snapshot = (StockSnapshotWrapper)values[1];
+                IEnumerable<StockSnapshotWrapper> snapshots;
+                if (values[0] is IEnumerable<StockSnapshotWrapper> enumerable)
+                    snapshots = enumerable;
+                else snapshots = default;
+                var prevSnap = snapshots.FindPrevious(snapshot);
+                return CompareSnapshots(prevSnap, snapshot);
+            } else if (values.Length >= 3)
+            {
+                // TODO: Implement
+                var columnName = values[1].ToString();
+                var row = (DataRowView)values[0];
+                StockSnapshotWrapper snapshot;
+                try
+                {
+                    if (row[columnName] is StockSnapshotWrapper snap)
+                        snapshot = snap;
+                    else return 0;
+                } catch (RowNotInTableException)
+                {
+                    return 0;
+                }
+                var table = row.DataView;
+                var prevSnap = table.Cast<DataRowView>().Select(
+                    r => r[columnName]
+                ).OfType<StockSnapshotWrapper>().FindPrevious(snapshot);
+                return CompareSnapshots(prevSnap, snapshot);
+            }
+            return 0;
 
-            var snapshot = (StockSnapshotWrapper) values[1];
-            IEnumerable<StockSnapshotWrapper> snapshots;
-            if (values[0] is IEnumerable<StockSnapshotWrapper> enumerable)
-                snapshots = enumerable;
-            else snapshots = default;
+        }
 
-            var prevSnap = snapshots.FindPrevious(snapshot);
+        private int CompareSnapshots(StockSnapshotWrapper prevSnap, StockSnapshotWrapper snapshot)
+        {
             if (prevSnap == null) return 0;
             var value = snapshot.Value;
             var prevValue = prevSnap.Value;

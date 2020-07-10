@@ -51,6 +51,36 @@
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=Text}" Value="-">
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </DataTrigger>
+                            <DataTrigger Value="1">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding/>
+                                            <Binding Path="Column.Header"
+                                                RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridCell}"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                            <DataTrigger Value="-1">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding/>
+                                            <Binding Path="Column.Header"
+                                                RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridCell}"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.Resources>
