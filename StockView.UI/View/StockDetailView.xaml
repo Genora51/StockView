@@ -99,6 +99,8 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridCheckBoxColumn Header="XD"
+                        Binding="{Binding ExDividends,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
