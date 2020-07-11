@@ -28,7 +28,8 @@ namespace StockView.UI.View.Converters
                 if (values[0] is StockSnapshotWrapper snap)
                     snapshot = snap;
                 else return 0;
-                var columnName = snapshot.Model.Stock.Symbol; // values[1].ToString();
+                var columnName = snapshot.Model.Stock?.Symbol; // values[1].ToString();
+                if (columnName == null) return 0;
                 DataView table;
                 if (values[2] is DataView view)
                     return 0;
