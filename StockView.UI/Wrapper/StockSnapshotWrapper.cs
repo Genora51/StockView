@@ -23,5 +23,11 @@ namespace StockView.UI.Wrapper
             get { return GetValue<float>(); }
             set { SetValue(value); }
         }
+
+        public bool ExDividends
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
     }
 }
