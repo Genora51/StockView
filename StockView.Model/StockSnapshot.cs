@@ -15,6 +15,8 @@ namespace StockView.Model
 
         public float Value { get; set; }
 
+        public bool ExDividends { get; set; }
+
         [Index("IX_StockDate", 1, IsUnique = true)]
         public int StockId { get; set; }
 
