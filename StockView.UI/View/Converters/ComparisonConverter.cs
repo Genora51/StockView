@@ -25,19 +25,17 @@ namespace StockView.UI.View.Converters
             } else if (values.Length >= 3)
             {
                 // TODO: Implement
-                var columnName = values[1].ToString();
-                var row = (DataRowView)values[0];
                 StockSnapshotWrapper snapshot;
-                try
-                {
-                    if (row[columnName] is StockSnapshotWrapper snap)
-                        snapshot = snap;
-                    else return 0;
-                } catch (RowNotInTableException)
-                {
+                if (values[0] is StockSnapshotWrapper snap)
+                    snapshot = snap;
+                else return 0;
+                var columnName = snapshot.Model.Stock.Symbol; // values[1].ToString();
+                DataView table;
+                if (values[2] is DataView view)
                     return 0;
-                }
-                var table = row.DataView;
+                else if (values[2] is DataRowView row)
+                    table = row.DataView;
+                else return 0;
                 var prevSnap = table.Cast<DataRowView>().Select(
                     r => r[columnName]
                 ).OfType<StockSnapshotWrapper>().FindPrevious(snapshot);

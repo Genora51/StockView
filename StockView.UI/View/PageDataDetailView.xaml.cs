@@ -48,12 +48,21 @@ namespace StockView.UI.View
                 };
                 e.Column = column;
             } else if (e.PropertyType == typeof(StockSnapshotWrapper)) {
-                var binding = tc.Binding as Binding;
-                binding.Path = new PropertyPath(binding.Path.Path + ".Value");
-                binding.FallbackValue = "-";
-                binding.StringFormat = "F2";
-                tc.ElementStyle = (Style)dataGrid1.FindResource("PDColumnStyle");
-                tc.EditingElementStyle = (Style)FindResource("DataGridEditingColumnStyle");
+                //var binding = tc.Binding as Binding;
+                //binding.Path = new PropertyPath(binding.Path.Path + ".Value");
+                //binding.FallbackValue = "-";
+                //binding.StringFormat = "F2";
+                //tc.ElementStyle = (Style)dataGrid1.FindResource("PDColumnStyle");
+                //tc.EditingElementStyle = (Style)FindResource("DataGridEditingColumnStyle");
+                var column = new MyDataGridTemplateColumn
+                {
+                    CellTemplate = (DataTemplate)dataGrid1.FindResource("SnapshotTemplate"),
+                    CellEditingTemplate = (DataTemplate)dataGrid1.FindResource("SnapshotEditingTemplate"),
+                    ColumnName = tc.Header.ToString(),
+                    MinWidth = 60,
+                    Header = tc.Header
+                };
+                e.Column = column;
             }
             
         }
@@ -64,6 +73,32 @@ namespace StockView.UI.View
             {
                 e.Cancel = true;
             }
+        }
+    }
+
+    public class MyDataGridTemplateColumn : DataGridTemplateColumn
+    {
+        public string ColumnName
+        {
+            get;
+            set;
+        }
+
+        protected override System.Windows.FrameworkElement GenerateElement(DataGridCell cell, object dataItem)
+        {
+            // The DataGridTemplateColumn uses ContentPresenter with your DataTemplate.
+            ContentPresenter cp = (ContentPresenter)base.GenerateElement(cell, dataItem);
+            // Reset the Binding to the specific column. The default binding is to the DataRowView.
+            BindingOperations.SetBinding(cp, ContentPresenter.ContentProperty, new Binding(this.ColumnName));
+            return cp;
+        }
+
+        protected override FrameworkElement GenerateEditingElement(DataGridCell cell, object dataItem)
+        {
+            ContentPresenter cp = (ContentPresenter)base.GenerateEditingElement(cell, dataItem);
+            // Reset the Binding to the specific column. The default binding is to the DataRowView.
+            BindingOperations.SetBinding(cp, ContentPresenter.ContentProperty, new Binding(this.ColumnName));
+            return cp;
         }
     }
 }
