@@ -24,7 +24,6 @@ namespace StockView.UI.View.Converters
                 return CompareSnapshots(prevSnap, snapshot);
             } else if (values.Length >= 3)
             {
-                // TODO: Implement
                 StockSnapshotWrapper snapshot;
                 if (values[0] is StockSnapshotWrapper snap)
                     snapshot = snap;
