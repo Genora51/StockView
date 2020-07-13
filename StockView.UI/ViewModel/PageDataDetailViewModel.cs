@@ -347,6 +347,7 @@ namespace StockView.UI.ViewModel
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
+                    // FIXME: why was this called even after VM is closed?
                     if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
                     break;
                 case nameof(PageDetailViewModel):
