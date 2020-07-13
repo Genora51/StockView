@@ -49,7 +49,6 @@ namespace StockView.UI.ViewModel
 
         public async override Task LoadAsync(int id)
         {
-            // TODO: Load data here
             Id = id;
             foreach (var wrapper in Industries)
             {
