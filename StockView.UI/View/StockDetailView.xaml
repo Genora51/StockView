@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="StockView.UI.View.StockDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StockView.UI.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Symbol" Margin="10 10 10 0"/>
+        <TextBox Grid.Row="1" Text="{Binding Stock.Symbol,
+                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
+
+        <Label Grid.Row="2" Content="Company Name" Margin="10 0"/>
+        <TextBox Grid.Row="3" Text="{Binding Stock.CompanyName,
+                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
+
+        <Label Grid.Row="4" Content="Industry" Margin="10 0"/>
+        <ComboBox Grid.Row="5" ItemsSource="{Binding Industries}"
+                  DisplayMemberPath="DisplayMember"
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding Stock.IndustryId,Mode=TwoWay}"
+                  Margin="10 0 10 10"/>
+
+        <DockPanel Grid.Row="6" Margin="10">
+            <StackPanel DockPanel.Dock="Right">
+                <Button Content="Add" Width="125" Margin="10"
+                        Command="{Binding AddSnapshotCommand}"/>
+                <Button Content="Remove" Width="125" Margin="10"
+                        Command="{Binding RemoveSnapshotCommand}"/>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Snapshots}"
+                      SelectedItem="{Binding SelectedSnapshot,Mode=TwoWay}"
+                      AutoGenerateColumns="False" RowHeaderWidth="0"
+                      Name="dataGrid1">
+                <DataGrid.Columns>
+                    <!--<DataGridTextColumn Header="Date"
+                        Binding="{Binding Date,Mode=TwoWay,StringFormat=\{0:yyyy-MM-dd\},UpdateSourceTrigger=PropertyChanged}"/>-->
+                    <DataGridTemplateColumn Header="Date" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date,
+                                    StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource DataGridColumnStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
+                                    Style="{StaticResource DataGridEditingColumnStyle}"
+                                            Foreground="Black"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Value" Width="*"
+                        Binding="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=F2}"
+                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Value="1">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding Path="ItemsSource"
+                                                        RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}"/>
+                                                    <Binding/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                    <DataTrigger Value="-1">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding Path="ItemsSource"
+                                                        RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}"/>
+                                                    <Binding/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridCheckBoxColumn Header="XD"
+                        Binding="{Binding ExDividends,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <StackPanel Grid.Row="7" Orientation="Horizontal">
+            <Button Content="Save" Width="125" Margin="10"
+                    Command="{Binding SaveCommand}"/>
+            <Button Content="Delete" Width="125" Margin="10"
+                    Command="{Binding DeleteCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

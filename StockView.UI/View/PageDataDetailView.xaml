@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="StockView.UI.View.PageDataDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:StockView.UI.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Margin="10">
+            <StackPanel DockPanel.Dock="Right">
+                <Button Content="Add Row" Width="125" Margin="10"
+                        Command="{Binding AddRowCommand}"/>
+                <Button Content="Remove Row" Width="125" Margin="10"
+                        Command="{Binding RemoveRowCommand}"/>
+                <Button Content="Add Value" Width="125" Margin="10"
+                        Command="{Binding AddSnapshotCommand}"/>
+                <Button Content="Remove Value" Width="125" Margin="10"
+                        Command="{Binding RemoveSnapshotCommand}"/>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
+                  AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                  BeginningEdit="DataGrid_BeginningEdit"
+                  CurrentCell="{Binding SelectedCell,Mode=TwoWay}"
+                  CanUserAddRows="False" SelectionUnit="Cell"
+                  Name="dataGrid1"
+                  RowHeaderWidth="0">
+                <DataGrid.Resources>
+                    <ControlTemplate TargetType="CheckBox" x:Key="cBoxTemp">
+                        <TextBlock Text="xd" TextAlignment="Center"
+                                   Width="18"></TextBlock>
+                    </ControlTemplate>
+                    <DataTemplate x:Key="DateTemplate">
+                        <TextBlock Text="{Binding Date,
+                        ValidatesOnDataErrors=True,
+                        StringFormat=\{0:dd-MMM\},UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource DataGridColumnStyle}"
+                       />
+                    </DataTemplate>
+                    <DataTemplate x:Key="DateEditingTemplate">
+                        <DatePicker SelectedDate="{Binding Date}" PreviewKeyDown="DatePicker_PreviewKeyDown"
+                        Style="{StaticResource DataGridEditingColumnStyle}"
+                        Foreground="Black"/>
+                    </DataTemplate>
+                    <Style x:Key="PDColumnStyle" BasedOn="{StaticResource DataGridColumnStyle}" TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=Text}" Value="-">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </DataTrigger>
+                            <DataTrigger Value="1">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding/>
+                                            <Binding Path="Column.Header"
+                                                RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridCell}"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridRow}" Path="DataContext"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                            <DataTrigger Value="-1">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource comparisonConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding/>
+                                            <Binding Path="Column.Header"
+                                                RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridCell}"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGridRow}" Path="DataContext"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <DataTemplate x:Key="SnapshotTemplate">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Value,
+                                FallbackValue='-',StringFormat=F2}"
+                                Style="{StaticResource PDColumnStyle}"/>
+                            <TextBlock Grid.Column="1" Margin="3 0 0 0"
+                                Text="xd" Visibility="{Binding ExDividends,FallbackValue=Collapsed,
+                                Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Style="{StaticResource DataGridColumnStyle}"/>
+                        </Grid>
+                    </DataTemplate>
+                    <DataTemplate x:Key="SnapshotEditingTemplate">
+                        <Grid Background="White">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding Value,Mode=TwoWay,StringFormat=F2}"
+                            TextAlignment="Right" BorderThickness="0"
+                            Style="{StaticResource DataGridEditingColumnStyle}"/>
+                            <CheckBox IsChecked="{Binding ExDividends,Mode=TwoWay}"
+                                      Template="{StaticResource cBoxTemp}"
+                                      Grid.Column="1">
+                                <CheckBox.Style>
+                                    <Style TargetType="CheckBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsChecked" Value="False">
+                                                <Setter Property="Foreground" Value="LightGray"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="FontWeight" Value="Medium"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
+                        </Grid>
+                    </DataTemplate>
+                </DataGrid.Resources>
+            </DataGrid>
+        </DockPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Content="Save" Width="125" Margin="10"
+                    Command="{Binding SaveCommand}"/>
+            <Button Content="Edit Page" Width="125" Margin="10"
+                    Command="{Binding OpenPageDetailViewCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
