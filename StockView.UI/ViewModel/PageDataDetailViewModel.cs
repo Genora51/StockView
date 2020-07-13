@@ -29,7 +29,6 @@ namespace StockView.UI.ViewModel
             IPageDataRepository pageDataRepository)
             : base(eventAggregator, messageDialogService)
         {
-            // TODO: Concurrency
             _pageDataRepository = pageDataRepository;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
@@ -37,7 +36,6 @@ namespace StockView.UI.ViewModel
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
             ChangeCount = 0;
-            // TODO: Reload snapshots on detail save/delete
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute, OnAddSnapshotCanExecute);
@@ -346,10 +344,10 @@ namespace StockView.UI.ViewModel
 
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
         {
-            // TODO: implement
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
+                    // FIXME: why was this called even after VM is closed?
                     if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
                     break;
                 case nameof(PageDetailViewModel):
@@ -360,7 +358,6 @@ namespace StockView.UI.ViewModel
 
         private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
         {
-            // TODO: implement
             switch (args.ViewModelName)
             {
                 case nameof(StockDetailViewModel):
