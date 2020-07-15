@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockView.DataAccess", "Sto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockView.Model", "StockView.Model\StockView.Model.csproj", "{CF9FBB28-4847-411E-8634-5CE6C325D469}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockView.Fetch", "StockView.Fetch\StockView.Fetch.csproj", "{D445F631-C72F-4F69-8A70-5BE5C1E7CA92}"
+EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "StockView.Setup", "StockView.Setup\StockView.Setup.vdproj", "{9077ED83-AA18-4C0A-B113-965546878CDF}"
 EndProject
 Global
@@ -29,6 +31,10 @@ Global
 		{CF9FBB28-4847-411E-8634-5CE6C325D469}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9FBB28-4847-411E-8634-5CE6C325D469}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF9FBB28-4847-411E-8634-5CE6C325D469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D445F631-C72F-4F69-8A70-5BE5C1E7CA92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D445F631-C72F-4F69-8A70-5BE5C1E7CA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D445F631-C72F-4F69-8A70-5BE5C1E7CA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D445F631-C72F-4F69-8A70-5BE5C1E7CA92}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9077ED83-AA18-4C0A-B113-965546878CDF}.Debug|Any CPU.ActiveCfg = Debug
 		{9077ED83-AA18-4C0A-B113-965546878CDF}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
