@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="Client\IStockWebServiceClient.cs" />
     <Compile Include="Client\StockWebServiceClient.cs" />
+    <Compile Include="IStockDataFetchService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StockDataFetchService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StockView.Model\StockView.Model.csproj">

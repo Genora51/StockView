@@ -21,7 +21,7 @@ namespace StockView.Fetch.Client
         public async Task<DateTime?> GetExDividendsAsync(string symbol)
         {
             var url = APIUrl
-                .AppendPathSegments("stock", symbol, "dividends", "ytd")
+                .AppendPathSegments("stock", symbol, "dividends", "3m")
                 .SetQueryParam("token", _key);
             IList<dynamic> result;
             try
