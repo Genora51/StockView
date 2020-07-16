@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Fetch;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
@@ -23,13 +24,16 @@ namespace StockView.UI.ViewModel
         private IPageDataRepository _pageDataRepository;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
+        private IStockDataFetchService _stockDataFetchService;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IPageDataRepository pageDataRepository)
+            IPageDataRepository pageDataRepository,
+            IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
             _pageDataRepository = pageDataRepository;
+            _stockDataFetchService = stockDataFetchService;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 
@@ -251,21 +255,10 @@ namespace StockView.UI.ViewModel
         public ICommand RemoveRowCommand { get; }
         public ICommand FetchRowCommand { get; }
 
-        private void OnOpenPageDetailViewExecute()
-        {
-            EventAggregator.GetEvent<OpenDetailViewEvent>().Publish(new OpenDetailViewEventArgs
-            {
-                Id = Page.Id,
-                ViewModelName = nameof(PageDetailViewModel)
-            });
-        }
-        private void OnAddSnapshotExecute()
+        private void AddSnapshotInPlace(StockSnapshot snapshot)
         {
             var row = (DataRowView)SelectedCell.Item;
-            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot
-            {
-                Date = (DateTime)row["Date"],
-            });
+            var newSnapshot = new StockSnapshotWrapper(snapshot);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             var symbol = SelectedCell.Column.Header.ToString();
             row[symbol] = newSnapshot;
@@ -278,6 +271,22 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+        }
+        private void OnOpenPageDetailViewExecute()
+        {
+            EventAggregator.GetEvent<OpenDetailViewEvent>().Publish(new OpenDetailViewEventArgs
+            {
+                Id = Page.Id,
+                ViewModelName = nameof(PageDetailViewModel)
+            });
+        }
+        private void OnAddSnapshotExecute()
+        {
+            var row = (DataRowView)SelectedCell.Item;
+            AddSnapshotInPlace(new StockSnapshot
+            {
+                Date = (DateTime)row["Date"],
+            });
         }
         private bool OnAddSnapshotCanExecute()
         {
@@ -343,9 +352,30 @@ namespace StockView.UI.ViewModel
         {
             return SelectedCell.Item is DataRowView;
         }
-        private void OnFetchSnapshotExecute()
+        private async void OnFetchSnapshotExecute()
         {
-            // TODO: Implement
+            var symbol = SelectedCell.Column.Header.ToString();
+            var stock = Stocks.First(
+                s => s.Symbol == symbol
+            ).Model;
+            var row = (DataRowView)SelectedCell.Item;
+            var date = (DateTime)row["Date"];
+            var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(stock, date);
+            if (fetchedSnapshot == null)
+            {
+                await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
+            } else
+            {
+                if (SelectedSnapshot == null)
+                {
+                    AddSnapshotInPlace(fetchedSnapshot);
+                }
+                else
+                {
+                    SelectedSnapshot.Value = fetchedSnapshot.Value;
+                    SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                }
+            }
         }
         private bool OnFetchSnapshotCanExecute()
         {
