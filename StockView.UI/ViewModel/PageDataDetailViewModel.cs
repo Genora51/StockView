@@ -69,6 +69,8 @@ namespace StockView.UI.ViewModel
                 ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -275,6 +277,7 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
         private bool OnAddSnapshotCanExecute()
         {
@@ -294,11 +297,13 @@ namespace StockView.UI.ViewModel
                 _selectedCell = default;
                 row.Delete();
                 ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
             }
             HasChanges = _pageDataRepository.HasChanges();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
         private bool OnRemoveSnapshotCanExecute()
         {
@@ -313,6 +318,8 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
         }
         private void OnRemoveRowExecute()
         {
@@ -329,6 +336,8 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
         }
         private bool OnRemoveRowCanExecute()
         {
@@ -340,8 +349,7 @@ namespace StockView.UI.ViewModel
         }
         private bool OnFetchSnapshotCanExecute()
         {
-            // TODO: Implement
-            return true;
+            return SelectedSnapshot != null || (SelectedCell.Item != null && SelectedCell.Column.Header.ToString() != "Date");
         }
         private void OnFetchRowExecute()
         {
@@ -349,8 +357,7 @@ namespace StockView.UI.ViewModel
         }
         private bool OnFetchRowCanExecute()
         {
-            // TODO: Implement
-            return true;
+            return SelectedCell.Item is DataRowView;
         }
 
         private async Task ReloadPage()
@@ -364,6 +371,8 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
 
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
