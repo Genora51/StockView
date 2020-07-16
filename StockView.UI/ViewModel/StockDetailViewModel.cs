@@ -250,9 +250,12 @@ namespace StockView.UI.ViewModel
             return SelectedSnapshot != null;
         }
 
-        private void OnFetchSnapshotExecute()
+        private async void OnFetchSnapshotExecute()
         {
-            // TODO: Implement
+            var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(Stock.Model, SelectedSnapshot.Date);
+            // TODO: Check for errors
+            SelectedSnapshot.Value = fetchedSnapshot.Value;
+            SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
         }
 
         private bool OnFetchSnapshotCanExecute()
