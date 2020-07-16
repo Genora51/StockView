@@ -7,6 +7,7 @@ using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -255,12 +256,13 @@ namespace StockView.UI.ViewModel
         public ICommand RemoveRowCommand { get; }
         public ICommand FetchRowCommand { get; }
 
-        private void AddSnapshotInPlace(StockSnapshot snapshot)
+        private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null)
         {
             var row = (DataRowView)SelectedCell.Item;
             var newSnapshot = new StockSnapshotWrapper(snapshot);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
-            var symbol = SelectedCell.Column.Header.ToString();
+            if (symbol == null)
+                symbol = SelectedCell.Column.Header.ToString();
             row[symbol] = newSnapshot;
             Stocks.First(
                 s => s.Symbol == symbol
@@ -354,6 +356,7 @@ namespace StockView.UI.ViewModel
         }
         private async void OnFetchSnapshotExecute()
         {
+            // TODO: Block command while loading for BOTH commands
             var symbol = SelectedCell.Column.Header.ToString();
             var stock = Stocks.First(
                 s => s.Symbol == symbol
@@ -381,9 +384,38 @@ namespace StockView.UI.ViewModel
         {
             return SelectedSnapshot != null || (SelectedCell.Item != null && SelectedCell.Column.Header.ToString() != "Date");
         }
-        private void OnFetchRowExecute()
+        private async void OnFetchRowExecute()
         {
-            // TODO: Implement
+            var row = ((DataRowView)SelectedCell.Item).Row;
+            var date = (DateTime)row["Date"];
+            var failedSymbols = new List<string>();
+            foreach (var stockWrapper in Stocks)
+            {
+                var stock = stockWrapper.Model;
+                var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(stock, date);
+                if (fetchedSnapshot == null)
+                {
+                    failedSymbols.Add(stock.Symbol);
+                }
+                else
+                {
+                    var currentCell = row[stock.Symbol];
+                    if (currentCell is StockSnapshotWrapper currentSnapshot)
+                    {
+                        currentSnapshot.Value = fetchedSnapshot.Value;
+                        currentSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                    }
+                    else
+                    {
+                        AddSnapshotInPlace(fetchedSnapshot, stock.Symbol);
+                    }
+                }
+            }
+            if (failedSymbols.Count > 0)
+            {
+                var notice = $"Data could not be fetched for the following symbols: {string.Join(", ", failedSymbols)}";
+                await MessageDialogService.ShowInfoDialogAsync(notice);
+            }
         }
         private bool OnFetchRowCanExecute()
         {
