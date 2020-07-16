@@ -253,9 +253,15 @@ namespace StockView.UI.ViewModel
         private async void OnFetchSnapshotExecute()
         {
             var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(Stock.Model, SelectedSnapshot.Date);
-            // TODO: Check for errors
-            SelectedSnapshot.Value = fetchedSnapshot.Value;
-            SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+            if (fetchedSnapshot == null)
+            {
+                await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
+            }
+            else
+            {
+                SelectedSnapshot.Value = fetchedSnapshot.Value;
+                SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+            }
         }
 
         private bool OnFetchSnapshotCanExecute()
