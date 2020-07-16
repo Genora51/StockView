@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Prism.Events;
 using StockView.DataAccess;
+using StockView.Fetch;
+using StockView.Fetch.Client;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
 using StockView.UI.View.Services;
@@ -19,6 +21,14 @@ namespace StockView.UI.Startup
 
             // Database
             builder.RegisterType<StockViewDbContext>().AsSelf();
+
+            // API Fetch
+            builder.Register(ctx =>
+            {
+                var apiKey = Properties.Settings.Default["api_key"] as string;
+                return new StockWebServiceClient(apiKey);
+            }).As<IStockWebServiceClient>();
+            builder.RegisterType<StockDataFetchService>().As<IStockDataFetchService>();
 
             // MVVM
             builder.RegisterType<MainWindow>().AsSelf();
