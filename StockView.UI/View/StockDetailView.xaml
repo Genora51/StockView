@@ -39,6 +39,8 @@
                         Command="{Binding AddSnapshotCommand}"/>
                 <Button Content="Remove" Width="125" Margin="10"
                         Command="{Binding RemoveSnapshotCommand}"/>
+                <Button Content="Fetch" Width="125" Margin="10"
+                        Command="{Binding FetchSnapshotCommand}"/>
             </StackPanel>
             <DataGrid ItemsSource="{Binding Snapshots}"
                       SelectedItem="{Binding SelectedSnapshot,Mode=TwoWay}"

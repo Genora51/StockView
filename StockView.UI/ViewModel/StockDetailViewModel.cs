@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Fetch;
 using StockView.Model;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
@@ -20,17 +21,20 @@ namespace StockView.UI.ViewModel
     {
         private IStockRepository _stockRepository;
         private IIndustryLookupDataService _industryLookupDataService;
+        private IStockDataFetchService _stockDataFetchService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IIndustryLookupDataService industryLookupDataService)
+            IIndustryLookupDataService industryLookupDataService,
+            IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
             _stockRepository = stockRepository;
             _industryLookupDataService = industryLookupDataService;
+            _stockDataFetchService = stockDataFetchService;
 
             eventAggregator.GetEvent<AfterCollectionSavedEvent>()
                 .Subscribe(AfterCollectionSaved);
@@ -39,6 +43,7 @@ namespace StockView.UI.ViewModel
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
+            FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
 
             Industries = new ObservableCollection<LookupItem>();
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
@@ -161,11 +166,13 @@ namespace StockView.UI.ViewModel
                 _selectedSnapshot = value;
                 OnPropertyChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
+        public ICommand FetchSnapshotCommand { get; }
 
         public ObservableCollection<LookupItem> Industries { get; }
 
@@ -239,6 +246,16 @@ namespace StockView.UI.ViewModel
         }
 
         private bool OnRemoveSnapshotCanExecute()
+        {
+            return SelectedSnapshot != null;
+        }
+
+        private void OnFetchSnapshotExecute()
+        {
+            // TODO: Implement
+        }
+
+        private bool OnFetchSnapshotCanExecute()
         {
             return SelectedSnapshot != null;
         }
