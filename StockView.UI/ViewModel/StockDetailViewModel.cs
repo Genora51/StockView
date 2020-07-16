@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
@@ -24,6 +25,7 @@ namespace StockView.UI.ViewModel
         private IStockDataFetchService _stockDataFetchService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
+        private int _changeCount;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
@@ -47,6 +49,7 @@ namespace StockView.UI.ViewModel
 
             Industries = new ObservableCollection<LookupItem>();
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
+            ChangeCount = 0;
         }
 
         public override async Task LoadAsync(int stockId)
@@ -102,6 +105,7 @@ namespace StockView.UI.ViewModel
             {
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
+            ChangeCount++;
         }
 
         private void InitialiseStock(Stock stock)
@@ -178,6 +182,30 @@ namespace StockView.UI.ViewModel
 
         public ObservableCollection<StockSnapshotWrapper> Snapshots { get; }
 
+        public int ChangeCount
+        {
+            get { return _changeCount; }
+            private set { _changeCount = value; OnPropertyChanged(); }
+        }
+
+        private ICollectionView _snapshotsView;
+        
+
+        public ICollectionView SnapshotsView
+        {
+            get {
+                if (_snapshotsView == null)
+                {
+                    _snapshotsView = CollectionViewSource.GetDefaultView(Snapshots);
+                    _snapshotsView?.SortDescriptions?.Add(
+                        new SortDescription("Date", ListSortDirection.Ascending)
+                    );
+                }
+                return _snapshotsView;
+            }
+        }
+
+
         protected override bool OnSaveCanExecute()
         {
             return Stock != null
@@ -232,6 +260,7 @@ namespace StockView.UI.ViewModel
             HasChanges = _stockRepository.HasChanges();
             // Trigger validation
             newSnapshot.Date = DateTime.Now.Date;
+            SnapshotsView.Refresh();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
@@ -242,6 +271,7 @@ namespace StockView.UI.ViewModel
             Snapshots.Remove(SelectedSnapshot);
             SelectedSnapshot = null;
             HasChanges = _stockRepository.HasChanges();
+            SnapshotsView.Refresh();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
