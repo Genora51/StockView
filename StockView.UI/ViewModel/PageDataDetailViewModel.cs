@@ -42,6 +42,10 @@ namespace StockView.UI.ViewModel
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             AddRowCommand = new DelegateCommand(OnAddRowExecute);
             RemoveRowCommand = new DelegateCommand(OnRemoveRowExecute, OnRemoveRowCanExecute);
+
+            // Fetch commands
+            FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
+            FetchRowCommand = new DelegateCommand(OnFetchRowExecute, OnFetchRowCanExecute);
         }
 
         public PageWrapper Page
@@ -240,8 +244,10 @@ namespace StockView.UI.ViewModel
         public ICommand OpenPageDetailViewCommand { get; }
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
+        public ICommand FetchSnapshotCommand { get; }
         public ICommand AddRowCommand { get; }
         public ICommand RemoveRowCommand { get; }
+        public ICommand FetchRowCommand { get; }
 
         private void OnOpenPageDetailViewExecute()
         {
@@ -327,6 +333,24 @@ namespace StockView.UI.ViewModel
         private bool OnRemoveRowCanExecute()
         {
             return SelectedCell.Item is DataRowView;
+        }
+        private void OnFetchSnapshotExecute()
+        {
+            // TODO: Implement
+        }
+        private bool OnFetchSnapshotCanExecute()
+        {
+            // TODO: Implement
+            return true;
+        }
+        private void OnFetchRowExecute()
+        {
+            // TODO: Implement
+        }
+        private bool OnFetchRowCanExecute()
+        {
+            // TODO: Implement
+            return true;
         }
 
         private async Task ReloadPage()
