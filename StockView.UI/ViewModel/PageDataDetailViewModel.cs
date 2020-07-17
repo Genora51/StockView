@@ -94,11 +94,21 @@ namespace StockView.UI.ViewModel
         public ObservableCollection<StockWrapper> Stocks { get; }
         public DataTable StockSnapshots { get; }
         private int _changeCount;
+        private bool _isFetching;
 
         public int ChangeCount
         {
             get { return _changeCount; }
             private set { _changeCount = value; OnPropertyChanged(); }
+        }
+        public bool IsFetching
+        {
+            get { return _isFetching; }
+            private set {
+                _isFetching = value;
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            }
         }
 
 
@@ -268,6 +278,7 @@ namespace StockView.UI.ViewModel
                 s => s.Symbol == symbol
             ).Model.Snapshots.Add(newSnapshot.Model);
             HasChanges = _pageDataRepository.HasChanges();
+            ChangeCount++;
             //SelectedCell
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
@@ -356,7 +367,7 @@ namespace StockView.UI.ViewModel
         }
         private async void OnFetchSnapshotExecute()
         {
-            // TODO: Block command while loading for BOTH commands
+            IsFetching = true;
             var symbol = SelectedCell.Column.Header.ToString();
             var stock = Stocks.First(
                 s => s.Symbol == symbol
@@ -379,13 +390,17 @@ namespace StockView.UI.ViewModel
                     SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
                 }
             }
+            IsFetching = false;
         }
         private bool OnFetchSnapshotCanExecute()
         {
-            return SelectedSnapshot != null || (SelectedCell.Item != null && SelectedCell.Column.Header.ToString() != "Date");
+            return !IsFetching && (
+                SelectedSnapshot != null || (SelectedCell.Item != null && SelectedCell.Column.Header.ToString() != "Date")
+            );
         }
         private async void OnFetchRowExecute()
         {
+            IsFetching = true;
             var row = ((DataRowView)SelectedCell.Item).Row;
             var date = (DateTime)row["Date"];
             var failedSymbols = new List<string>();
@@ -416,10 +431,11 @@ namespace StockView.UI.ViewModel
                 var notice = $"Data could not be fetched for the following symbols: {string.Join(", ", failedSymbols)}";
                 await MessageDialogService.ShowInfoDialogAsync(notice);
             }
+            IsFetching = false;
         }
         private bool OnFetchRowCanExecute()
         {
-            return SelectedCell.Item is DataRowView;
+            return SelectedCell.Item is DataRowView && !IsFetching;
         }
 
         private async Task ReloadPage()
