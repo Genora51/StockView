@@ -244,6 +244,10 @@
       <Project>{2e39fc4e-ceba-4e67-9c5d-5eb86cbcbd5a}</Project>
       <Name>StockView.DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StockView.Fetch\StockView.Fetch.csproj">
+      <Project>{d445f631-c72f-4f69-8a70-5be5c1e7ca92}</Project>
+      <Name>StockView.Fetch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StockView.Model\StockView.Model.csproj">
       <Project>{cf9fbb28-4847-411e-8634-5ce6c325d469}</Project>
       <Name>StockView.Model</Name>
@@ -263,6 +267,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Resources\SplashScreen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

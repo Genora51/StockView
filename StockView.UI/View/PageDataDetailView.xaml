@@ -23,6 +23,11 @@
                         Command="{Binding AddSnapshotCommand}"/>
                 <Button Content="Remove Value" Width="125" Margin="10"
                         Command="{Binding RemoveSnapshotCommand}"/>
+                <Separator Margin="10"/>
+                <Button Content="Fetch Row" Width="125" Margin="10"
+                        Command="{Binding FetchRowCommand}"/>
+                <Button Content="Fetch Value" Width="125" Margin="10"
+                        Command="{Binding FetchSnapshotCommand}"/>
             </StackPanel>
             <DataGrid ItemsSource="{Binding StockSnapshots.DefaultView}"
                   AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
