@@ -13,16 +13,17 @@ namespace StockView.UI.View.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length == 2)
+            if (values.Length < 4)
             {
+                // TODO: update other values when one is updated
                 var snapshot = (StockSnapshotWrapper)values[1];
                 IEnumerable<StockSnapshotWrapper> snapshots;
-                if (values[0] is IEnumerable<StockSnapshotWrapper> enumerable)
-                    snapshots = enumerable;
+                if (values[0] is IEnumerable enumerable)
+                    snapshots = enumerable.Cast<StockSnapshotWrapper>();
                 else snapshots = default;
-                var prevSnap = snapshots.FindPrevious(snapshot);
+                var prevSnap = snapshots?.FindPrevious(snapshot);
                 return CompareSnapshots(prevSnap, snapshot);
-            } else if (values.Length >= 3)
+            } else if (values.Length >= 4)
             {
                 StockSnapshotWrapper snapshot;
                 if (values[0] is StockSnapshotWrapper snap)
