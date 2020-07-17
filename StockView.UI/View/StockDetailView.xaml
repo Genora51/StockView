@@ -39,8 +39,10 @@
                         Command="{Binding AddSnapshotCommand}"/>
                 <Button Content="Remove" Width="125" Margin="10"
                         Command="{Binding RemoveSnapshotCommand}"/>
+                <Button Content="Fetch" Width="125" Margin="10"
+                        Command="{Binding FetchSnapshotCommand}"/>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding Snapshots}"
+            <DataGrid ItemsSource="{Binding SnapshotsView}"
                       SelectedItem="{Binding SelectedSnapshot,Mode=TwoWay}"
                       AutoGenerateColumns="False" RowHeaderWidth="0"
                       Name="dataGrid1">
@@ -77,6 +79,8 @@
                                                         RelativeSource="{RelativeSource FindAncestor,
                                                         AncestorType=DataGrid}"/>
                                                     <Binding/>
+                                                    <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
                                                 </MultiBinding.Bindings>
                                             </MultiBinding>
                                         </DataTrigger.Binding>
@@ -90,6 +94,8 @@
                                                         RelativeSource="{RelativeSource FindAncestor,
                                                         AncestorType=DataGrid}"/>
                                                     <Binding/>
+                                                    <Binding RelativeSource="{RelativeSource FindAncestor,
+                                                        AncestorType=DataGrid}" Path="DataContext.ChangeCount"/>
                                                 </MultiBinding.Bindings>
                                             </MultiBinding>
                                         </DataTrigger.Binding>

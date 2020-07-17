@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Fetch;
 using StockView.Model;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
@@ -12,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
@@ -20,17 +22,22 @@ namespace StockView.UI.ViewModel
     {
         private IStockRepository _stockRepository;
         private IIndustryLookupDataService _industryLookupDataService;
+        private IStockDataFetchService _stockDataFetchService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
+        private int _changeCount;
+        private bool _isFetching;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IIndustryLookupDataService industryLookupDataService)
+            IIndustryLookupDataService industryLookupDataService,
+            IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
             _stockRepository = stockRepository;
             _industryLookupDataService = industryLookupDataService;
+            _stockDataFetchService = stockDataFetchService;
 
             eventAggregator.GetEvent<AfterCollectionSavedEvent>()
                 .Subscribe(AfterCollectionSaved);
@@ -39,9 +46,11 @@ namespace StockView.UI.ViewModel
 
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
+            FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
 
             Industries = new ObservableCollection<LookupItem>();
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
+            ChangeCount = 0;
         }
 
         public override async Task LoadAsync(int stockId)
@@ -97,6 +106,7 @@ namespace StockView.UI.ViewModel
             {
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
+            ChangeCount++;
         }
 
         private void InitialiseStock(Stock stock)
@@ -161,15 +171,50 @@ namespace StockView.UI.ViewModel
                 _selectedSnapshot = value;
                 OnPropertyChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
+        public ICommand FetchSnapshotCommand { get; }
 
         public ObservableCollection<LookupItem> Industries { get; }
 
         public ObservableCollection<StockSnapshotWrapper> Snapshots { get; }
+
+        public int ChangeCount
+        {
+            get { return _changeCount; }
+            private set { _changeCount = value; OnPropertyChanged(); }
+        }
+
+        public bool IsFetching
+        {
+            get { return _isFetching; }
+            private set {
+                _isFetching = value;
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        private ICollectionView _snapshotsView;
+        
+
+        public ICollectionView SnapshotsView
+        {
+            get {
+                if (_snapshotsView == null)
+                {
+                    _snapshotsView = CollectionViewSource.GetDefaultView(Snapshots);
+                    _snapshotsView?.SortDescriptions?.Add(
+                        new SortDescription("Date", ListSortDirection.Ascending)
+                    );
+                }
+                return _snapshotsView;
+            }
+        }
+
 
         protected override bool OnSaveCanExecute()
         {
@@ -225,6 +270,7 @@ namespace StockView.UI.ViewModel
             HasChanges = _stockRepository.HasChanges();
             // Trigger validation
             newSnapshot.Date = DateTime.Now.Date;
+            SnapshotsView.Refresh();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
@@ -235,12 +281,34 @@ namespace StockView.UI.ViewModel
             Snapshots.Remove(SelectedSnapshot);
             SelectedSnapshot = null;
             HasChanges = _stockRepository.HasChanges();
+            SnapshotsView.Refresh();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private bool OnRemoveSnapshotCanExecute()
         {
             return SelectedSnapshot != null;
+        }
+
+        private async void OnFetchSnapshotExecute()
+        {
+            IsFetching = true;
+            var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(Stock.Model, SelectedSnapshot.Date);
+            if (fetchedSnapshot == null)
+            {
+                await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
+            }
+            else
+            {
+                SelectedSnapshot.Value = fetchedSnapshot.Value;
+                SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+            }
+            IsFetching = false;
+        }
+
+        private bool OnFetchSnapshotCanExecute()
+        {
+            return SelectedSnapshot != null && !IsFetching;
         }
 
         private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)

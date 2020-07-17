@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("StockView.Model")]
+[assembly: AssemblyTitle("StockView.Fetch")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("StockView.Model")]
+[assembly: AssemblyProduct("StockView.Fetch")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cf9fbb28-4847-411e-8634-5ce6c325d469")]
+[assembly: Guid("d445f631-c72f-4f69-8a70-5be5c1e7ca92")]
 
 // Version information for an assembly consists of the following four values:
 //
