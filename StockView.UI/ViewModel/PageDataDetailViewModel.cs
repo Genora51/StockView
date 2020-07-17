@@ -1,11 +1,13 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using StockView.Fetch;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,13 +25,16 @@ namespace StockView.UI.ViewModel
         private IPageDataRepository _pageDataRepository;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
+        private IStockDataFetchService _stockDataFetchService;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
-            IPageDataRepository pageDataRepository)
+            IPageDataRepository pageDataRepository,
+            IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
             _pageDataRepository = pageDataRepository;
+            _stockDataFetchService = stockDataFetchService;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 
@@ -42,6 +47,10 @@ namespace StockView.UI.ViewModel
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             AddRowCommand = new DelegateCommand(OnAddRowExecute);
             RemoveRowCommand = new DelegateCommand(OnRemoveRowExecute, OnRemoveRowCanExecute);
+
+            // Fetch commands
+            FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
+            FetchRowCommand = new DelegateCommand(OnFetchRowExecute, OnFetchRowCanExecute);
         }
 
         public PageWrapper Page
@@ -65,6 +74,8 @@ namespace StockView.UI.ViewModel
                 ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -83,11 +94,21 @@ namespace StockView.UI.ViewModel
         public ObservableCollection<StockWrapper> Stocks { get; }
         public DataTable StockSnapshots { get; }
         private int _changeCount;
+        private bool _isFetching;
 
         public int ChangeCount
         {
             get { return _changeCount; }
             private set { _changeCount = value; OnPropertyChanged(); }
+        }
+        public bool IsFetching
+        {
+            get { return _isFetching; }
+            private set {
+                _isFetching = value;
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            }
         }
 
 
@@ -240,9 +261,30 @@ namespace StockView.UI.ViewModel
         public ICommand OpenPageDetailViewCommand { get; }
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
+        public ICommand FetchSnapshotCommand { get; }
         public ICommand AddRowCommand { get; }
         public ICommand RemoveRowCommand { get; }
+        public ICommand FetchRowCommand { get; }
 
+        private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null)
+        {
+            var row = (DataRowView)SelectedCell.Item;
+            var newSnapshot = new StockSnapshotWrapper(snapshot);
+            newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
+            if (symbol == null)
+                symbol = SelectedCell.Column.Header.ToString();
+            row[symbol] = newSnapshot;
+            Stocks.First(
+                s => s.Symbol == symbol
+            ).Model.Snapshots.Add(newSnapshot.Model);
+            HasChanges = _pageDataRepository.HasChanges();
+            ChangeCount++;
+            //SelectedCell
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+        }
         private void OnOpenPageDetailViewExecute()
         {
             EventAggregator.GetEvent<OpenDetailViewEvent>().Publish(new OpenDetailViewEventArgs
@@ -254,21 +296,10 @@ namespace StockView.UI.ViewModel
         private void OnAddSnapshotExecute()
         {
             var row = (DataRowView)SelectedCell.Item;
-            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot
+            AddSnapshotInPlace(new StockSnapshot
             {
                 Date = (DateTime)row["Date"],
             });
-            newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
-            var symbol = SelectedCell.Column.Header.ToString();
-            row[symbol] = newSnapshot;
-            Stocks.First(
-                s => s.Symbol == symbol
-            ).Model.Snapshots.Add(newSnapshot.Model);
-            HasChanges = _pageDataRepository.HasChanges();
-            //SelectedCell
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
         }
         private bool OnAddSnapshotCanExecute()
         {
@@ -288,11 +319,13 @@ namespace StockView.UI.ViewModel
                 _selectedCell = default;
                 row.Delete();
                 ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
             }
             HasChanges = _pageDataRepository.HasChanges();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
         private bool OnRemoveSnapshotCanExecute()
         {
@@ -307,6 +340,8 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
         }
         private void OnRemoveRowExecute()
         {
@@ -323,10 +358,84 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
         }
         private bool OnRemoveRowCanExecute()
         {
             return SelectedCell.Item is DataRowView;
+        }
+        private async void OnFetchSnapshotExecute()
+        {
+            IsFetching = true;
+            var symbol = SelectedCell.Column.Header.ToString();
+            var stock = Stocks.First(
+                s => s.Symbol == symbol
+            ).Model;
+            var row = (DataRowView)SelectedCell.Item;
+            var date = (DateTime)row["Date"];
+            var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(stock, date);
+            if (fetchedSnapshot == null)
+            {
+                await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
+            } else
+            {
+                if (SelectedSnapshot == null)
+                {
+                    AddSnapshotInPlace(fetchedSnapshot);
+                }
+                else
+                {
+                    SelectedSnapshot.Value = fetchedSnapshot.Value;
+                    SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                }
+            }
+            IsFetching = false;
+        }
+        private bool OnFetchSnapshotCanExecute()
+        {
+            return !IsFetching && (
+                SelectedSnapshot != null || (SelectedCell.Item != null && SelectedCell.Column.Header.ToString() != "Date")
+            );
+        }
+        private async void OnFetchRowExecute()
+        {
+            IsFetching = true;
+            var row = ((DataRowView)SelectedCell.Item).Row;
+            var date = (DateTime)row["Date"];
+            var failedSymbols = new List<string>();
+            foreach (var stockWrapper in Stocks)
+            {
+                var stock = stockWrapper.Model;
+                var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(stock, date);
+                if (fetchedSnapshot == null)
+                {
+                    failedSymbols.Add(stock.Symbol);
+                }
+                else
+                {
+                    var currentCell = row[stock.Symbol];
+                    if (currentCell is StockSnapshotWrapper currentSnapshot)
+                    {
+                        currentSnapshot.Value = fetchedSnapshot.Value;
+                        currentSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                    }
+                    else
+                    {
+                        AddSnapshotInPlace(fetchedSnapshot, stock.Symbol);
+                    }
+                }
+            }
+            if (failedSymbols.Count > 0)
+            {
+                var notice = $"Data could not be fetched for the following symbols: {string.Join(", ", failedSymbols)}";
+                await MessageDialogService.ShowInfoDialogAsync(notice);
+            }
+            IsFetching = false;
+        }
+        private bool OnFetchRowCanExecute()
+        {
+            return SelectedCell.Item is DataRowView && !IsFetching;
         }
 
         private async Task ReloadPage()
@@ -340,6 +449,8 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)AddSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
             ((DelegateCommand)RemoveRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
 
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
