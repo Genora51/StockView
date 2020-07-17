@@ -15,7 +15,6 @@ namespace StockView.UI.View.Converters
         {
             if (values.Length < 4)
             {
-                // TODO: update other values when one is updated
                 var snapshot = (StockSnapshotWrapper)values[1];
                 IEnumerable<StockSnapshotWrapper> snapshots;
                 if (values[0] is IEnumerable enumerable)
