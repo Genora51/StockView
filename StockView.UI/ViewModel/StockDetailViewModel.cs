@@ -26,6 +26,7 @@ namespace StockView.UI.ViewModel
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
         private int _changeCount;
+        private bool _isFetching;
 
         public StockDetailViewModel(IStockRepository stockRepository,
             IEventAggregator eventAggregator,
@@ -188,6 +189,15 @@ namespace StockView.UI.ViewModel
             private set { _changeCount = value; OnPropertyChanged(); }
         }
 
+        public bool IsFetching
+        {
+            get { return _isFetching; }
+            private set {
+                _isFetching = value;
+                ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         private ICollectionView _snapshotsView;
         
 
@@ -282,6 +292,7 @@ namespace StockView.UI.ViewModel
 
         private async void OnFetchSnapshotExecute()
         {
+            IsFetching = true;
             var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(Stock.Model, SelectedSnapshot.Date);
             if (fetchedSnapshot == null)
             {
@@ -292,11 +303,12 @@ namespace StockView.UI.ViewModel
                 SelectedSnapshot.Value = fetchedSnapshot.Value;
                 SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
             }
+            IsFetching = false;
         }
 
         private bool OnFetchSnapshotCanExecute()
         {
-            return SelectedSnapshot != null;
+            return SelectedSnapshot != null && !IsFetching;
         }
 
         private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
