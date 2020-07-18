@@ -28,7 +28,7 @@ namespace StockView.Fetch
                 StockId = stock.Id,
                 Date = date.Date,
                 ExDividends = isExDividends,
-                Value = (float)value
+                Value = value.Value
             };
         }
     }

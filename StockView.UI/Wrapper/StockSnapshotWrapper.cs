@@ -18,9 +18,9 @@ namespace StockView.UI.Wrapper
             set { SetValue(value); }
         }
         
-        public float Value
+        public decimal Value
         {
-            get { return GetValue<float>(); }
+            get { return GetValue<decimal>(); }
             set { SetValue(value); }
         }
 
