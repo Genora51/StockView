@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:StockView.UI"
+             xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
              xmlns:con="clr-namespace:StockView.UI.View.Converters"
              Startup="Application_Startup"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
@@ -13,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml"/>
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
                     <con:ComparisonConverter x:Key="comparisonConverter"/>
