@@ -15,17 +15,16 @@ namespace StockView.UI.ViewModel
         public SettingsDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService)
             : base(eventAggregator, messageDialogService)
-        { }
+        {
+            Title = "Preferences";
+        }
 
         public string ApiKey
         {
             get { return _apiKey; }
             set {
                 _apiKey = value;
-                if (!HasChanges)
-                {
-                    HasChanges = originalApiKey != _apiKey;
-                }
+                HasChanges = originalApiKey != _apiKey;
                 OnPropertyChanged();
             }
         }
