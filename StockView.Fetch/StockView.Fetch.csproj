@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Client\IStockWebServiceClient.cs" />
     <Compile Include="Client\StockWebServiceClient.cs" />
     <Compile Include="IStockDataFetchService.cs" />

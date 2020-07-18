@@ -115,6 +115,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
     <Compile Include="Data\Lookups\IPageLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
