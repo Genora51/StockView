@@ -52,6 +52,7 @@ namespace StockView.UI.ViewModel
             Properties.Settings.Default["api_key"] = ApiKey;
             originalApiKey = ApiKey;
             HasChanges = false;
+            Properties.Settings.Default.Save();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
     }
