@@ -25,6 +25,25 @@
             <view:IndustryDetailView/>
         </DataTemplate>
     </Window.Resources>
+    <Window.InputBindings>
+        <!-- File => New -->
+        <KeyBinding Modifiers="Ctrl" Key="N"
+                    Command="{Binding CreateNewDetailCommand}"
+                    CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="N"
+                    Command="{Binding CreateNewDetailCommand}"
+                    CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
+        <!-- File => Save -->
+        <KeyBinding Modifiers="Ctrl" Key="S"
+                    Command="{Binding SelectedDetailViewModel.SaveCommand}"/>
+        <!-- File => Close -->
+        <KeyBinding Modifiers="Ctrl" Key="W"
+                    Command="{Binding SelectedDetailViewModel.CloseDetailViewCommand}"/>
+        <!-- Edit => Industries -->
+        <KeyBinding Modifiers="Ctrl" Key="I"
+                    Command="{Binding OpenSingleDetailViewCommand}"
+                    CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -35,16 +54,50 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="2" FontSize="15">
-            <MenuItem Header="Create">
-                <MenuItem Header="New Page" Command="{Binding CreateNewDetailCommand}"
-                          CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
-                <MenuItem Header="New Stock" Command="{Binding CreateNewDetailCommand}"
-                          CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
+            <MenuItem Header="_File">
+                <MenuItem Header="_New">
+                    <MenuItem Header="_Stock" Command="{Binding CreateNewDetailCommand}"
+                              InputGestureText="Ctrl+N"
+                              CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
+                    <MenuItem Header="_Page" Command="{Binding CreateNewDetailCommand}"
+                              InputGestureText="Ctrl+Shift+N"
+                              CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Save" Style="{StaticResource NullDisabledMenuItemStyle}"
+                          InputGestureText="Ctrl+S"
+                          Command="{Binding SelectedDetailViewModel.SaveCommand}"/>
+                <MenuItem Header="_Close" Style="{StaticResource NullDisabledMenuItemStyle}"
+                          InputGestureText="Ctrl+W"
+                          Command="{Binding SelectedDetailViewModel.CloseDetailViewCommand}"/>
+                <Separator/>
+                <!-- TODO: implement print -->
+                <MenuItem Header="_Print" Command="Print"
+                          InputGestureText="Ctrl+P"/>
+                <!--<MenuItem Header="E_xit"
+                          InputGestureText="Alt+F4"/>-->
             </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="Industries"
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Industries"
+                          InputGestureText="Ctrl+I"
                           Command="{Binding OpenSingleDetailViewCommand}"
                           CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+                <Separator/>
+                <MenuItem Header="_Undo" Command="Undo"
+                          InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="_Redo" Command="Redo"
+                          InputGestureText="Ctrl+Y"/>
+                <Separator/>
+                <MenuItem Header="Cu_t" Command="Cut"
+                          InputGestureText="Ctrl+X"/>
+                <MenuItem Header="_Copy" Command="Copy"
+                          InputGestureText="Ctrl+C"/>
+                <MenuItem Header="_Paste" Command="Paste"
+                          InputGestureText="Ctrl+V"/>
+                <Separator/>
+                <!-- TODO: implement preferences -->
+                <MenuItem Header="Pr_eferences" IsEnabled="False"
+                          InputGestureText="Ctrl+,"/>
             </MenuItem>
         </Menu>
         <view:NavigationView Grid.Row="1"
