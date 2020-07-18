@@ -25,6 +25,25 @@
             <view:IndustryDetailView/>
         </DataTemplate>
     </Window.Resources>
+    <Window.InputBindings>
+        <!-- File => New -->
+        <KeyBinding Modifiers="Ctrl" Key="N"
+                    Command="{Binding CreateNewDetailCommand}"
+                    CommandParameter="{x:Type viewModel:StockDetailViewModel}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="N"
+                    Command="{Binding CreateNewDetailCommand}"
+                    CommandParameter="{x:Type viewModel:PageDetailViewModel}"/>
+        <!-- File => Save -->
+        <KeyBinding Modifiers="Ctrl" Key="S"
+                    Command="{Binding SelectedDetailViewModel.SaveCommand}"/>
+        <!-- File => Close -->
+        <KeyBinding Modifiers="Ctrl" Key="W"
+                    Command="{Binding SelectedDetailViewModel.CloseDetailViewCommand}"/>
+        <!-- Edit => Industries -->
+        <KeyBinding Modifiers="Ctrl" Key="I"
+                    Command="{Binding OpenSingleDetailViewCommand}"
+                    CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
