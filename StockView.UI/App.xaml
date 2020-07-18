@@ -55,6 +55,14 @@
                             </Trigger>
                         </Style.Triggers>
                     </Style>
+                    <Style x:Key="NullDisabledMenuItemStyle"
+                        TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <Style.Triggers>
+                            <Trigger Property="Command" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
 
                     <Style x:Key="DataGridEditingColumnStyle" TargetType="{x:Type Control}">
                         <Setter Property="Foreground" Value="Black"/>
