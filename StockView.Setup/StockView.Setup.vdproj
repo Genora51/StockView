@@ -219,6 +219,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_AA848826B32422CBEB0B27C1B5916E19"
+        "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_AC5F3ED502FA87F850524A1852C2A779"
         "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
         "MsmSig" = "8:_UNDEFINED"
@@ -251,6 +257,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AA848826B32422CBEB0B27C1B5916E19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -304,6 +316,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_53739CD0B5379818B8A906CB6FD1577D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_79C08F6B47FEC437D94E7916E33B306A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -311,12 +329,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_309CEA8FF8B3F3369C7DA202E8FB4255"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AA848826B32422CBEB0B27C1B5916E19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -392,6 +404,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -416,6 +436,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -605,7 +633,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4CBCB5901CF0D19F793D5BFC3A30DD28"
@@ -791,7 +819,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_76C2F0A8811B70B33E3F31981CA8A68B"
@@ -853,7 +881,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_917F1891C60E04B76F22EF1234188A69"
@@ -1122,15 +1150,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:StockView"
-        "ProductCode" = "8:{BF519759-0378-481D-A15C-2FCB7CB6C584}"
-        "PackageCode" = "8:{3E3DE373-16C3-421D-8798-C413F2469F34}"
+        "ProductCode" = "8:{03321D2C-A0FE-4365-8BF4-0FC29845E403}"
+        "PackageCode" = "8:{17C30873-9B7E-48B1-89A4-C01E6500212A}"
         "UpgradeCode" = "8:{D875B590-26A3-4ECE-B9F6-116CEFFB26B1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.2.0"
+        "ProductVersion" = "8:0.3.0"
         "Manufacturer" = "8:GenoRA Dev"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1672,7 +1700,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3BD6EE43FA8F4D5A898BA50479CE31F8"
             {
-            "SourcePath" = "8:..\\StockView.UI\\obj\\Debug\\StockView.UI.exe"
+            "SourcePath" = "8:..\\StockView.UI\\obj\\Release\\StockView.UI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B91A961A77724BFD847C74DEE90FE30D"
