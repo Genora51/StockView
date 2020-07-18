@@ -13,7 +13,7 @@ namespace StockView.Model
         [Index("IX_StockDate", 2, IsUnique = true)]
         public DateTime Date { get; set; }
 
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         public bool ExDividends { get; set; }
 
