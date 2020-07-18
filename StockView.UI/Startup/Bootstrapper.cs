@@ -45,6 +45,8 @@ namespace StockView.UI.Startup
                 .Keyed<IDetailViewModel>(nameof(IndustryDetailViewModel));
             builder.RegisterType<PageDataDetailViewModel>()
                 .Keyed<IDetailViewModel>(nameof(PageDataDetailViewModel));
+            builder.RegisterType<SettingsDetailViewModel>()
+                .Keyed<IDetailViewModel>(nameof(SettingsDetailViewModel));
 
             // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();

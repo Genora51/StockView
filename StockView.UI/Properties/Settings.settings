@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="StockView.UI.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="api_key" Type="System.String" Scope="Application">
+    <Setting Name="api_key" Type="System.String" Scope="User">
       <Value Profile="(Default)">pk_d9d78d39c3304c74bfae652f2c76bd33</Value>
     </Setting>
   </Settings>
