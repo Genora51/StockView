@@ -51,6 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Migrations\202005181230343_InitialDatabase.cs" />
     <Compile Include="Migrations\202005181230343_InitialDatabase.designer.cs">
       <DependentUpon>202005181230343_InitialDatabase.cs</DependentUpon>
@@ -82,6 +85,10 @@
     <Compile Include="Migrations\202007111033568_AddedExDividendsToSnapshot.cs" />
     <Compile Include="Migrations\202007111033568_AddedExDividendsToSnapshot.designer.cs">
       <DependentUpon>202007111033568_AddedExDividendsToSnapshot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007181432287_DecimalSnapshotValues.cs" />
+    <Compile Include="Migrations\202007181432287_DecimalSnapshotValues.designer.cs">
+      <DependentUpon>202007181432287_DecimalSnapshotValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -131,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007111033568_AddedExDividendsToSnapshot.resx">
       <DependentUpon>202007111033568_AddedExDividendsToSnapshot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007181432287_DecimalSnapshotValues.resx">
+      <DependentUpon>202007181432287_DecimalSnapshotValues.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
