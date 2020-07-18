@@ -144,6 +144,7 @@
     <Compile Include="ViewModel\NavigationViewModel.cs" />
     <Compile Include="ViewModel\PageDataDetailViewModel.cs" />
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
+    <Compile Include="ViewModel\SettingsDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\Converters\ComparisonConverter.cs" />
