@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockView.Fetch", "StockVie
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "StockView.Setup", "StockView.Setup\StockView.Setup.vdproj", "{9077ED83-AA18-4C0A-B113-965546878CDF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{24DE72FD-754F-4DA4-BD86-1FA19112E13B}"
+	ProjectSection(SolutionItems) = preProject
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
