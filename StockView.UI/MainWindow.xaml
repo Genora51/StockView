@@ -25,6 +25,9 @@
         <DataTemplate DataType="{x:Type viewModel:IndustryDetailViewModel}">
             <view:IndustryDetailView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:SettingsDetailViewModel}">
+            <view:SettingsDetailView/>
+        </DataTemplate>
     </Window.Resources>
     <Window.InputBindings>
         <!-- File => New -->
@@ -44,6 +47,10 @@
         <KeyBinding Modifiers="Ctrl" Key="I"
                     Command="{Binding OpenSingleDetailViewCommand}"
                     CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+        <!-- Edit => Preferences -->
+        <KeyBinding Modifiers="Ctrl" Key="OemComma"
+                    Command="{Binding OpenSingleDetailViewCommand}"
+                    CommandParameter="{x:Type viewModel:SettingsDetailViewModel}"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -97,8 +104,10 @@
                           InputGestureText="Ctrl+V"/>
                 <Separator/>
                 <!-- TODO: implement preferences -->
-                <MenuItem Header="Pr_eferences" IsEnabled="False"
-                          InputGestureText="Ctrl+,"/>
+                <MenuItem Header="Pr_eferences"
+                          InputGestureText="Ctrl+,"
+                          Command="{Binding OpenSingleDetailViewCommand}"
+                          CommandParameter="{x:Type viewModel:SettingsDetailViewModel}"/>
             </MenuItem>
         </Menu>
         <view:NavigationView Grid.Row="1"
