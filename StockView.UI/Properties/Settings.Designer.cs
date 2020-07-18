@@ -23,12 +23,15 @@ namespace StockView.UI.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
         public string api_key {
             get {
                 return ((string)(this["api_key"]));
+            }
+            set {
+                this["api_key"] = value;
             }
         }
     }
