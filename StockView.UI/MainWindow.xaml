@@ -56,7 +56,7 @@
                     SelectedItem="{Binding SelectedDetailViewModel,Mode=TwoWay}">
             <dragablz:TabablzControl.Style>
                 <Style TargetType="dragablz:TabablzControl">
-                    <Setter Property="ItemContainerStyle" Value="{StaticResource TrapezoidStyle}" />
+                    <Setter Property="ItemContainerStyle" Value="{StaticResource TrapezoidDragableTabItemStyle}" />
                 </Style>
             </dragablz:TabablzControl.Style>
             <dragablz:TabablzControl.HeaderItemTemplate>
@@ -69,7 +69,7 @@
                             Converter={StaticResource booleanToVisibilityConverter}}"/>
                                 <Separator Width="8" Background="Transparent"/>
                             </StackPanel>
-                            <Thumb Style="{StaticResource MahAppsInvisibleThumbStyle}"
+                            <Thumb Style="{StaticResource InvisibleThumbStyle}"
                                    dragablz:DragablzItem.IsCustomThumb="True"/>
                         </Grid>
                         <Button Command="{Binding CloseDetailViewCommand}"

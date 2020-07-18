@@ -14,7 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MahApps.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml"/>
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
                     <con:ComparisonConverter x:Key="comparisonConverter"/>
@@ -64,14 +64,6 @@
                             <Trigger Property="Validation.HasError" Value="True">
                                 <Setter Property="Background" Value="Pink"/>
                                 <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-
-                    <Style x:Key="TrapezoidStyle" TargetType="{x:Type dragablz:DragablzItem}" BasedOn="{StaticResource MahAppsTrapezoidDragableTabItemStyle}">
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter Property="Background" Value="#FFE0E0E0"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
