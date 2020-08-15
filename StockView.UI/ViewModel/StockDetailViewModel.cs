@@ -293,6 +293,8 @@ namespace StockView.UI.ViewModel
         private async void OnFetchSnapshotExecute()
         {
             IsFetching = true;
+            // Store selected snapshot now to prevent incorrect cell being filled
+            var selectedSnapshot = SelectedSnapshot;
             var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(Stock.Model, SelectedSnapshot.Date);
             if (fetchedSnapshot == null)
             {
@@ -300,8 +302,8 @@ namespace StockView.UI.ViewModel
             }
             else
             {
-                SelectedSnapshot.Value = fetchedSnapshot.Value;
-                SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                selectedSnapshot.Value = fetchedSnapshot.Value;
+                selectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
             }
             IsFetching = false;
         }

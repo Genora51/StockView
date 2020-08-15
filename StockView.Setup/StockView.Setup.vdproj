@@ -262,12 +262,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AA848826B32422CBEB0B27C1B5916E19"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4CBCB5901CF0D19F793D5BFC3A30DD28"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -329,6 +323,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_309CEA8FF8B3F3369C7DA202E8FB4255"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AA848826B32422CBEB0B27C1B5916E19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -633,7 +633,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4CBCB5901CF0D19F793D5BFC3A30DD28"
@@ -819,7 +819,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_76C2F0A8811B70B33E3F31981CA8A68B"
@@ -881,7 +881,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_917F1891C60E04B76F22EF1234188A69"
@@ -1150,15 +1150,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:StockView"
-        "ProductCode" = "8:{03321D2C-A0FE-4365-8BF4-0FC29845E403}"
-        "PackageCode" = "8:{17C30873-9B7E-48B1-89A4-C01E6500212A}"
+        "ProductCode" = "8:{3D3595F5-922E-46B0-B09B-67D8ED531E5A}"
+        "PackageCode" = "8:{53857FD6-33DB-417E-AC40-6665102579FB}"
         "UpgradeCode" = "8:{D875B590-26A3-4ECE-B9F6-116CEFFB26B1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.3.0"
+        "ProductVersion" = "8:0.3.1"
         "Manufacturer" = "8:GenoRA Dev"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
