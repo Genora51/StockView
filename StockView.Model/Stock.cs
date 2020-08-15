@@ -22,6 +22,8 @@ namespace StockView.Model
         [StringLength(50)]
         public string CompanyName { get; set; }
 
+        public int Shares { get; set; }
+
         public int? IndustryId { get; set; }
 
         [Timestamp]
