@@ -266,9 +266,9 @@ namespace StockView.UI.ViewModel
         public ICommand RemoveRowCommand { get; }
         public ICommand FetchRowCommand { get; }
 
-        private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null)
+        private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null, DataRowView rowView = null)
         {
-            var row = (DataRowView)SelectedCell.Item;
+            var row = rowView ?? (DataRowView)SelectedCell.Item;
             var newSnapshot = new StockSnapshotWrapper(snapshot);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
             if (symbol == null)
@@ -374,20 +374,22 @@ namespace StockView.UI.ViewModel
             ).Model;
             var row = (DataRowView)SelectedCell.Item;
             var date = (DateTime)row["Date"];
+            // Store selectedsnapshot now to avoid errors
+            var selectedSnapshot = SelectedSnapshot;
             var fetchedSnapshot = await _stockDataFetchService.FetchSnapshotAsync(stock, date);
             if (fetchedSnapshot == null)
             {
                 await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
             } else
             {
-                if (SelectedSnapshot == null)
+                if (selectedSnapshot == null)
                 {
-                    AddSnapshotInPlace(fetchedSnapshot);
+                    AddSnapshotInPlace(fetchedSnapshot, symbol, row);
                 }
                 else
                 {
-                    SelectedSnapshot.Value = fetchedSnapshot.Value;
-                    SelectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
+                    selectedSnapshot.Value = fetchedSnapshot.Value;
+                    selectedSnapshot.ExDividends = fetchedSnapshot.ExDividends;
                 }
             }
             IsFetching = false;
@@ -401,7 +403,8 @@ namespace StockView.UI.ViewModel
         private async void OnFetchRowExecute()
         {
             IsFetching = true;
-            var row = ((DataRowView)SelectedCell.Item).Row;
+            var rowView = ((DataRowView)SelectedCell.Item);
+            var row = rowView.Row;
             var date = (DateTime)row["Date"];
             var failedSymbols = new List<string>();
             foreach (var stockWrapper in Stocks)
@@ -422,7 +425,7 @@ namespace StockView.UI.ViewModel
                     }
                     else
                     {
-                        AddSnapshotInPlace(fetchedSnapshot, stock.Symbol);
+                        AddSnapshotInPlace(fetchedSnapshot, stock.Symbol, rowView);
                     }
                 }
             }
