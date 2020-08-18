@@ -253,9 +253,10 @@ namespace StockView.UI.ViewModel
                 "Question");
             if (result == MessageDialogResult.OK)
             {
+
                 _stockRepository.Remove(Stock.Model);
                 await _stockRepository.SaveAsync();
-                RaiseDetailDeletedEvent(Stock.Id);
+                RaiseDetailDeletedEvent(Id);
             }
         }
 
