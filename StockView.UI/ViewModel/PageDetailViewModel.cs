@@ -115,7 +115,7 @@ namespace StockView.UI.ViewModel
             {
                 _pageRepository.Remove(Page.Model);
                 await _pageRepository.SaveAsync();
-                RaiseDetailDeletedEvent(Page.Id);
+                RaiseDetailDeletedEvent(Id);
             }
         }
 
