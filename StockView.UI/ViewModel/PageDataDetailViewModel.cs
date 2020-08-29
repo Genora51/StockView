@@ -10,12 +10,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
@@ -26,6 +28,7 @@ namespace StockView.UI.ViewModel
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
         private IStockDataFetchService _stockDataFetchService;
+        private bool _autoGenerateColumns;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -40,6 +43,7 @@ namespace StockView.UI.ViewModel
 
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
+            Summaries = new DataTable();
             ChangeCount = 0;
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
@@ -92,7 +96,17 @@ namespace StockView.UI.ViewModel
         }
 
         public ObservableCollection<StockWrapper> Stocks { get; }
+        public bool AutoGenerateColumns
+        {
+            get { return _autoGenerateColumns; }
+            private set
+            {
+                _autoGenerateColumns = value;
+                OnPropertyChanged();
+            }
+        }
         public DataTable StockSnapshots { get; }
+        public DataTable Summaries { get; }
         private int _changeCount;
         private bool _isFetching;
 
@@ -119,7 +133,10 @@ namespace StockView.UI.ViewModel
             Id = pageId;
             InitialisePage(page);
             InitialisePageStocks(page.Stocks);
+            AutoGenerateColumns = false;
             InitialisePageSnapshots(page.Stocks);
+            InitialisePageSummaries(page.Stocks);
+            AutoGenerateColumns = true;
         }
 
         private void InitialisePage(Model.Page page)
@@ -197,6 +214,22 @@ namespace StockView.UI.ViewModel
             StockSnapshots.ColumnChanged += StockSnapshots_ColumnChanged;
         }
 
+        private void InitialisePageSummaries(ICollection<Stock> stocks)
+        {
+            Summaries.Rows.Clear();
+            Summaries.DefaultView.Sort = "";
+            Summaries.Columns.Clear();
+            // Set up summaries
+            Summaries.Columns.Add("Statistic", typeof(string));
+            Summaries.DefaultView.Sort = "Statistic ASC";
+            foreach (var stock in stocks)
+            {
+                Summaries.Columns.Add(stock.Symbol, typeof(string));
+            }
+            var sharesRow = from stock in stocks select stock.Shares.ToString();
+            Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
+        }
+
         private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!HasChanges)
@@ -208,6 +241,7 @@ namespace StockView.UI.ViewModel
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
             ChangeCount++;
+            // TODO: may need to update summaries
         }
 
         private void StockSnapshots_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -462,10 +496,16 @@ namespace StockView.UI.ViewModel
             {
                 case nameof(StockDetailViewModel):
                     // FIXME: why was this called even after VM is closed?
-                    if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
+                    if (Stocks.Any(s => s.Id == args.Id))
+                    {
+                        await ReloadPage();
+                    }
                     break;
                 case nameof(PageDetailViewModel):
-                    if (args.Id == Page.Id) await ReloadPage();
+                    if (args.Id == Page.Id)
+                    {
+                        await ReloadPage();
+                    }
                     break;
             }
         }
