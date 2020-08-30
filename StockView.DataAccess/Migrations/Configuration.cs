@@ -42,6 +42,12 @@
                         context.Stocks.Single(s => s.Symbol == "JNJ")
                     }
                 });
+            context.Summaries.AddOrUpdate(s => s.Name,
+                new Summary
+                {
+                    Name = "Shares",
+                    Code = "return stock.shares"
+                });
         }
     }
 }
