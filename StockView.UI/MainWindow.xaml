@@ -28,6 +28,9 @@
         <DataTemplate DataType="{x:Type viewModel:SettingsDetailViewModel}">
             <view:SettingsDetailView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:SummaryDetailViewModel}">
+            <view:SummaryDetailView/>
+        </DataTemplate>
     </Window.Resources>
     <Window.InputBindings>
         <!-- File => New -->
@@ -47,6 +50,10 @@
         <KeyBinding Modifiers="Ctrl" Key="I"
                     Command="{Binding OpenSingleDetailViewCommand}"
                     CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+        <!-- Edit => Summaries -->
+        <KeyBinding Modifiers="Ctrl" Key="M"
+                    Command="{Binding OpenSingleDetailViewCommand}"
+                    CommandParameter="{x:Type viewModel:SummaryDetailViewModel}"/>
         <!-- Edit => Preferences -->
         <KeyBinding Modifiers="Ctrl" Key="OemComma"
                     Command="{Binding OpenSingleDetailViewCommand}"
@@ -90,6 +97,10 @@
                           InputGestureText="Ctrl+I"
                           Command="{Binding OpenSingleDetailViewCommand}"
                           CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+                <MenuItem Header="_Summaries"
+                          InputGestureText="Ctrl+M"
+                          Command="{Binding OpenSingleDetailViewCommand}"
+                          CommandParameter="{x:Type viewModel:SummaryDetailViewModel}"/>
                 <Separator/>
                 <MenuItem Header="_Undo" Command="Undo"
                           InputGestureText="Ctrl+Z"/>
