@@ -128,8 +128,10 @@
     <Compile Include="Data\Repositories\IndustryRepository.cs" />
     <Compile Include="Data\Repositories\IPageDataRepository.cs" />
     <Compile Include="Data\Repositories\IPageRepository.cs" />
+    <Compile Include="Data\Repositories\ISummaryRepository.cs" />
     <Compile Include="Data\Repositories\PageDataRepository.cs" />
     <Compile Include="Data\Repositories\PageRepository.cs" />
+    <Compile Include="Data\Repositories\SummaryRepository.cs" />
     <Compile Include="Event\AfterCollectionSavedEvent.cs" />
     <Compile Include="Event\AfterDetailClosedEvent.cs" />
     <Compile Include="Event\AfterDetailDeletedEvent.cs" />
@@ -177,6 +179,7 @@
     <Compile Include="Wrapper\PageWrapper.cs" />
     <Compile Include="Wrapper\StockSnapshotWrapper.cs" />
     <Compile Include="Wrapper\StockWrapper.cs" />
+    <Compile Include="Wrapper\SummaryWrapper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
