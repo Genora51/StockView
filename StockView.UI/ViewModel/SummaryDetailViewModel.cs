@@ -128,9 +128,11 @@ namespace StockView.UI.ViewModel
             var wrapper = new SummaryWrapper(new Summary());
             wrapper.PropertyChanged += Wrapper_PropertyChanged;
             _summaryRepository.Add(wrapper.Model);
+            Summaries.Add(wrapper);
 
             // Trigger validation
             wrapper.Name = "";
+            wrapper.Code = "";
         }
     }
 }
