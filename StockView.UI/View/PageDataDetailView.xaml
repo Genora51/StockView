@@ -28,6 +28,8 @@
                         Command="{Binding FetchRowCommand}"/>
                 <Button Content="Fetch Value" Width="125" Margin="10"
                         Command="{Binding FetchSnapshotCommand}"/>
+                <Button Content="Print" Width="125" Margin="10"
+                        Command="{Binding PrintCommand}"/>
             </StackPanel>
             <ScrollViewer x:Name="scrollViewer">
                 <StackPanel>

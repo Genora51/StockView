@@ -177,7 +177,9 @@
       <DependentUpon>PageDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Services\IMessageDialogService.cs" />
+    <Compile Include="View\Services\IPrintService.cs" />
     <Compile Include="View\Services\MessageDialogService.cs" />
+    <Compile Include="View\Services\PrintService.cs" />
     <Compile Include="View\SettingsDetailView.xaml.cs">
       <DependentUpon>SettingsDetailView.xaml</DependentUpon>
     </Compile>
