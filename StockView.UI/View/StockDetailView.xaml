@@ -15,7 +15,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -35,11 +34,31 @@
                   SelectedValue="{Binding Stock.IndustryId,Mode=TwoWay}"
                   Margin="10 0 10 10"/>
 
-        <Label Grid.Row="6" Content="Shares" Margin="10 0"/>
-        <TextBox Grid.Row="7" Text="{Binding Stock.Shares,StringFormat=N0,
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Shares" Margin="10 0"/>
+            <TextBox Grid.Row="1" Text="{Binding Stock.Shares,StringFormat=N0,
                  Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
 
-        <DockPanel Grid.Row="8" Margin="10">
+            <Label Grid.Column="1" Content="Cost" Margin="10 0"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Stock.Cost,StringFormat=F2,
+                 Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
+
+            <Label Grid.Column="2" Content="Yield" Margin="10 0"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Stock.Yield,Converter={StaticResource percentageConverter},
+                 Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
+        </Grid>
+
+
+        <DockPanel Grid.Row="7" Margin="10">
             <StackPanel DockPanel.Dock="Right">
                 <Button Content="Add" Width="125" Margin="10"
                         Command="{Binding AddSnapshotCommand}"/>
@@ -117,7 +136,7 @@
             </DataGrid>
         </DockPanel>
 
-        <StackPanel Grid.Row="9" Orientation="Horizontal">
+        <StackPanel Grid.Row="10" Orientation="Horizontal">
             <Button Content="Save" Width="125" Margin="10"
                     Command="{Binding SaveCommand}"/>
             <Button Content="Delete" Width="125" Margin="10"

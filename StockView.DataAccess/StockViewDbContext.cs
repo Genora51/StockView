@@ -1,4 +1,6 @@
 ﻿using StockView.Model;
+using StockView.Model.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Configuration;
@@ -27,6 +29,7 @@ namespace StockView.DataAccess
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Conventions.Add(new DataTypePropertyAttributeConvention());
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
         }
     }
 
@@ -40,6 +43,25 @@ namespace StockView.DataAccess
             {
                 configuration.HasColumnType("Date");
             }
+        }
+    }
+
+    public class DecimalPrecisionAttributeConvention
+    : PrimitivePropertyAttributeConfigurationConvention<DecimalPrecisionAttribute>
+    {
+        public override void Apply(ConventionPrimitivePropertyConfiguration configuration, DecimalPrecisionAttribute attribute)
+        {
+            if (attribute.Precision < 1 || attribute.Precision > 38)
+            {
+                throw new InvalidOperationException("Precision must be between 1 and 38.");
+            }
+
+            if (attribute.Scale > attribute.Precision)
+            {
+                throw new InvalidOperationException("Scale must be between 0 and the Precision value.");
+            }
+
+            configuration.HasPrecision(attribute.Precision, attribute.Scale);
         }
     }
 }

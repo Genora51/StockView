@@ -235,6 +235,7 @@ namespace StockView.UI.ViewModel
             }
             //var sharesRow = from stock in stocks select stock.Shares.ToString();
             //Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
+            // TODO: update this when necessary
             using (var lua = new Lua())
             {
                 foreach (var summary in summaries)
