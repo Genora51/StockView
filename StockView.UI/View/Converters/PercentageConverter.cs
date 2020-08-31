@@ -17,7 +17,8 @@ namespace StockView.UI.View.Converters
             if (decimal.TryParse(value.ToString().TrimEnd(new char[] { '%', ' ' }), out var result))
             {
                 return Math.Round(result, 1) / 100M;
-            } else
+            }
+            else
             {
                 return new ValidationResult(false, "Invalid percentage format.");
             }

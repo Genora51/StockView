@@ -35,12 +35,12 @@ namespace StockView.UI
         private void Application_DispatcherUnhandledException(object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            #if !DEBUG
+#if !DEBUG
             MessageBox.Show("Unexpected error occurred. Please inform the administrator."
                 + Environment.NewLine + e.Exception.Message, "Unexpected error");
 
             e.Handled = true;
-            #endif
+#endif
         }
     }
 }

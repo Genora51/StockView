@@ -1,7 +1,6 @@
 ﻿using Prism.Events;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Event;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;

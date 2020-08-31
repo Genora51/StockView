@@ -18,13 +18,13 @@ namespace StockView.UI.Wrapper
 
         private Func<string, object, IEnumerable<string>> ValidatePropertyExternal;
 
-        protected virtual TValue GetValue<TValue>([CallerMemberName]string propertyName = null)
+        protected virtual TValue GetValue<TValue>([CallerMemberName] string propertyName = null)
         {
-            return (TValue) typeof(T).GetProperty(propertyName).GetValue(Model);
+            return (TValue)typeof(T).GetProperty(propertyName).GetValue(Model);
         }
 
         protected virtual void SetValue<TValue>(TValue value,
-            [CallerMemberName]string propertyName = null)
+            [CallerMemberName] string propertyName = null)
         {
             typeof(T).GetProperty(propertyName).SetValue(Model, value);
             OnPropertyChanged(propertyName);
