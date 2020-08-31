@@ -14,10 +14,14 @@ namespace StockView.UI.View.Services
     {
         public void Print(DataTable data, DataTable summaryData, string title)
         {
+            var printDialog = new PrintDialog();
             var flowDocument = new FlowDocument();
             var table = CreateTable(data, summaryData, title);
             flowDocument.Blocks.Add(table);
-            var printDialog = new PrintDialog();
+            const int padding = 50;
+            flowDocument.PagePadding = new Thickness(padding);
+            flowDocument.ColumnGap = 0;
+            flowDocument.ColumnWidth = printDialog.PrintableAreaWidth - padding * 2;
             if (printDialog.ShowDialog() == true)
             {
                 IDocumentPaginatorSource doc = flowDocument;
@@ -51,7 +55,43 @@ namespace StockView.UI.View.Services
                 var prevRow = i > 0 ? data.Rows[i - 1] : null;
                 dataRowGroup.Rows.Add(CreateDataRow(row, prevRow));
             }
-            // TODO: summaries
+
+            var sepRow = new TableRow();
+            var sepCell = new TableCell
+            {
+                FontSize = 0.1,
+                BorderThickness = new Thickness(0, 0.3, 0, 0.3),
+                BorderBrush = Brushes.Black,
+                ColumnSpan = data.Columns.Count
+            };
+            sepRow.Cells.Add(sepCell);
+            dataRowGroup.Rows.Add(sepRow);
+
+            for (var i = 0; i < summaryData.Rows.Count; i ++)
+            {
+                var row = new TableRow()
+                {
+                    FontWeight = GlobalFormating.TableFooterFontWeight,
+                    FontSize = GlobalFormating.TableFooterFontSize,
+                    Background = GlobalFormating.TableFooterBackground
+                };
+                var dataRow = summaryData.Rows[i];
+                foreach (var column in summaryData.Columns.Cast<DataColumn>())
+                {
+                    var paragraph = new Paragraph();
+                    paragraph.Inlines.Add(new TextBlock
+                    {
+                        Text = dataRow[column].ToString(),
+                        TextWrapping = TextWrapping.NoWrap
+                    });
+                    if (column.ColumnName != "Statistic")
+                    {
+                        paragraph.TextAlignment = TextAlignment.Right;
+                    }
+                    row.Cells.Add(CreateCell(paragraph));
+                }
+                dataRowGroup.Rows.Add(row);
+            }
             return table;
         }
 
@@ -151,7 +191,7 @@ namespace StockView.UI.View.Services
             };
             if (snapshot.ExDividends)
             {
-                paragraph.Inlines.Add(new Run("xd"));
+                paragraph.Inlines.Add(new Run(" xd"));
             }
             return CreateCell(paragraph);
         }
@@ -177,8 +217,8 @@ namespace StockView.UI.View.Services
         public static double TableTitleFontSize { get; set; } = 18;
         public static FontWeight TableTitleFontWeight { get; set; } = FontWeights.Bold;
         // -------------
-        public static Brush TableFooterBackground { get; set; } = Brushes.LightGray;
-        public static double TableFooterFontSize { get; set; } = 18;
+        public static Brush TableFooterBackground { get; set; } = Brushes.White;
+        public static double TableFooterFontSize { get; set; } = 13;
         public static FontWeight TableFooterFontWeight { get; set; } = FontWeights.Normal;
         // -------------
         public static double ColumnsHeaderRowFontSize { get; set; } = 14;
