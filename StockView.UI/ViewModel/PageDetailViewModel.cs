@@ -15,7 +15,7 @@ namespace StockView.UI.ViewModel
 {
     public class PageDetailViewModel : DetailViewModelBase, IPageDetailViewModel
     {
-        private IPageRepository _pageRepository;
+        private readonly IPageRepository _pageRepository;
         private PageWrapper _page;
 
         private Stock _selectedAvailableStock;

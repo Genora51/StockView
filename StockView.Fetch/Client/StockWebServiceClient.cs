@@ -10,7 +10,7 @@ namespace StockView.Fetch.Client
     public class StockWebServiceClient : IStockWebServiceClient
     {
         private const string APIUrl = @"https://cloud.iexapis.com/stable";
-        private string _key;
+        private readonly string _key;
 
         public StockWebServiceClient(string key)
         {

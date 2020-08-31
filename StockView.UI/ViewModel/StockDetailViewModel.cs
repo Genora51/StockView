@@ -20,9 +20,9 @@ namespace StockView.UI.ViewModel
 {
     public class StockDetailViewModel : DetailViewModelBase, IStockDetailViewModel
     {
-        private IStockRepository _stockRepository;
-        private IIndustryLookupDataService _industryLookupDataService;
-        private IStockDataFetchService _stockDataFetchService;
+        private readonly IStockRepository _stockRepository;
+        private readonly IIndustryLookupDataService _industryLookupDataService;
+        private readonly IStockDataFetchService _stockDataFetchService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
         private int _changeCount;

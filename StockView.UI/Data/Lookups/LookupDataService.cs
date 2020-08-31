@@ -13,7 +13,7 @@ namespace StockView.UI.Data.Lookups
         IPageLookupDataService,
         ISummaryLookupDataService
     {
-        private Func<StockViewDbContext> _contextCreator;
+        private readonly Func<StockViewDbContext> _contextCreator;
 
         public LookupDataService(Func<StockViewDbContext> contextCreator)
         {

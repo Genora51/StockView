@@ -16,7 +16,7 @@ namespace StockView.UI.Wrapper
 
         public T Model { get; }
 
-        private Func<string, object, IEnumerable<string>> ValidatePropertyExternal;
+        private readonly Func<string, object, IEnumerable<string>> ValidatePropertyExternal;
 
         protected virtual TValue GetValue<TValue>([CallerMemberName] string propertyName = null)
         {
