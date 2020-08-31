@@ -93,6 +93,11 @@ namespace StockView.UI.View
         {
             BindFooterColumns(dataGrid1, dataGrid2);
         }
+
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta / 3);
+        }
     }
 
     public class MyDataGridTemplateColumn : DataGridTemplateColumn
