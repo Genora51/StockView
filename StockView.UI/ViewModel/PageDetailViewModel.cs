@@ -5,7 +5,6 @@ using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

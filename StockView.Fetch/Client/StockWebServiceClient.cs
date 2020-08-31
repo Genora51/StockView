@@ -1,7 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -27,7 +26,8 @@ namespace StockView.Fetch.Client
             try
             {
                 result = await url.GetJsonListAsync();
-            } catch (FlurlHttpException)
+            }
+            catch (FlurlHttpException)
             {
                 return null;
             }
@@ -58,7 +58,8 @@ namespace StockView.Fetch.Client
                     return (decimal)result[0].uClose;
                 }
                 else return null;
-            } catch (FlurlHttpException)
+            }
+            catch (FlurlHttpException)
             {
                 return null;
             }

@@ -27,7 +27,7 @@ namespace StockView.UI.Data.Repositories
 
         public bool HasChanges()
         {
-           return Context.ChangeTracker.HasChanges();
+            return Context.ChangeTracker.HasChanges();
         }
 
         public void Remove(TEntity model)

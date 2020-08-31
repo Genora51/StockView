@@ -1,6 +1,5 @@
 ﻿using StockView.DataAccess;
 using StockView.Model;
-using StockView.UI.Wrapper;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +47,7 @@ namespace StockView.UI.Data.Repositories
             foreach (var snapEntry in Context.ChangeTracker.Entries<StockSnapshot>())
             {
                 snapEntry.State = EntityState.Detached;
-            }    
+            }
             var entry = Context.Entry(stock);
             entry.State = EntityState.Detached;
         }

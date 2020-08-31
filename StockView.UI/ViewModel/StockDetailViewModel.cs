@@ -167,7 +167,8 @@ namespace StockView.UI.ViewModel
         public StockSnapshotWrapper SelectedSnapshot
         {
             get { return _selectedSnapshot; }
-            set {
+            set
+            {
                 _selectedSnapshot = value;
                 OnPropertyChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
@@ -192,18 +193,20 @@ namespace StockView.UI.ViewModel
         public bool IsFetching
         {
             get { return _isFetching; }
-            private set {
+            private set
+            {
                 _isFetching = value;
                 ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
         private ICollectionView _snapshotsView;
-        
+
 
         public ICollectionView SnapshotsView
         {
-            get {
+            get
+            {
                 if (_snapshotsView == null)
                 {
                     _snapshotsView = CollectionViewSource.GetDefaultView(Snapshots);
@@ -262,7 +265,8 @@ namespace StockView.UI.ViewModel
 
         private void OnAddSnapshotExecute()
         {
-            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot {
+            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot
+            {
                 Date = new DateTime(1970, 1, 1)
             }, ValidateSnapshotProperty);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
