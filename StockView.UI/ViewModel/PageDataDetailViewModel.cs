@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Events;
 using StockView.Fetch;
 using StockView.Model;
+using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
@@ -26,7 +27,7 @@ namespace StockView.UI.ViewModel
     public class PageDataDetailViewModel : DetailViewModelBase
     {
         private IPageDataRepository _pageDataRepository;
-        private ISummaryRepository _summaryRepository;
+        private ISummaryLookupDataService _summaryLookupDataService;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
         private IStockDataFetchService _stockDataFetchService;
@@ -35,15 +36,16 @@ namespace StockView.UI.ViewModel
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             IPageDataRepository pageDataRepository,
-            ISummaryRepository summaryRepository,
+            ISummaryLookupDataService summaryLookupDataService,
             IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
             _pageDataRepository = pageDataRepository;
-            _summaryRepository = summaryRepository;
+            _summaryLookupDataService = summaryLookupDataService;
             _stockDataFetchService = stockDataFetchService;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
+            eventAggregator.GetEvent<AfterCollectionSavedEvent>().Subscribe(AfterCollectionSaved);
 
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
@@ -134,14 +136,14 @@ namespace StockView.UI.ViewModel
         public async override Task LoadAsync(int pageId)
         {
             var page = await _pageDataRepository.GetByIdAsync(pageId);
-            var summaries = await _summaryRepository.GetAllAsync();
+            var summaries = await _summaryLookupDataService.GetSummaryLookupAsync();
 
             Id = pageId;
             InitialisePage(page);
             InitialisePageStocks(page.Stocks);
             AutoGenerateColumns = false;
             InitialisePageSnapshots(page.Stocks);
-            InitialisePageSummaries(page.Stocks, summaries);
+            InitialisePageSummaries(summaries);
             AutoGenerateColumns = true;
         }
 
@@ -220,40 +222,48 @@ namespace StockView.UI.ViewModel
             StockSnapshots.ColumnChanged += StockSnapshots_ColumnChanged;
         }
 
-        private void InitialisePageSummaries(ICollection<Stock> stocks, IEnumerable<Summary> summaries)
+        private void InitialisePageSummaries(IEnumerable<Summary> summaries)
         {
-            _summaries = summaries;
             Summaries.Rows.Clear();
             Summaries.DefaultView.Sort = "";
             Summaries.Columns.Clear();
             // Set up summaries
             Summaries.Columns.Add("Statistic", typeof(string));
             Summaries.DefaultView.Sort = "Statistic ASC";
-            foreach (var stock in stocks)
+            foreach (var stock in Stocks)
             {
                 Summaries.Columns.Add(stock.Symbol, typeof(string));
             }
             //var sharesRow = from stock in stocks select stock.Shares.ToString();
             //Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
             // TODO: update this when necessary
+            LoadSummaries(summaries);
+        }
+
+        private void LoadSummaries(IEnumerable<Summary> summaries)
+        {
+            _summaries = summaries;
+            Summaries.Rows.Clear();
             using (var lua = new Lua())
             {
                 foreach (var summary in summaries)
                 {
                     var summaryRow = new List<string>();
-                    foreach (var stock in stocks)
+                    foreach (var stock in Stocks)
                     {
                         var env = lua.CreateEnvironment();
                         dynamic dg = env;
-                        dg.stock = stock;
-                        dg.latestSnapshot = stock.Snapshots.OrderByDescending(sn => sn.Date).FirstOrDefault();
+                        dg.stock = stock.Model;
+                        dg.latestSnapshot = stock.Model.Snapshots.OrderByDescending(sn => sn.Date).FirstOrDefault();
                         string result;
                         try
                         {
                             result = env.DoChunk(summary.Code, "summary.lua").ToString();
-                        } catch (LuaException)
+                        }
+                        catch (LuaException e)
                         {
                             result = "";
+                            Console.WriteLine(e.Message);
                         }
                         summaryRow.Add(result);
                     }
@@ -273,7 +283,7 @@ namespace StockView.UI.ViewModel
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
             ChangeCount++;
-            // TODO: may need to update summaries
+            LoadSummaries(_summaries);
         }
 
         private void StockSnapshots_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -298,6 +308,7 @@ namespace StockView.UI.ViewModel
                 }
             }
             ChangeCount++;
+            LoadSummaries(_summaries);
         }
 
         protected override void OnDeleteExecute()
@@ -560,6 +571,16 @@ namespace StockView.UI.ViewModel
                                 ViewModelName = this.GetType().Name
                             });
                     }
+                    break;
+            }
+        }
+
+        private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
+        {
+            switch (args.ViewModelName)
+            {
+                case nameof(SummaryDetailViewModel):
+                    InitialisePageSummaries(await _summaryLookupDataService.GetSummaryLookupAsync());
                     break;
             }
         }

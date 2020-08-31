@@ -128,6 +128,7 @@
     <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
     <Compile Include="Data\Lookups\IPageLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
+    <Compile Include="Data\Lookups\ISummaryLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Data\Repositories\GenericRepository.cs" />
     <Compile Include="Data\Repositories\IGenericRepository.cs" />

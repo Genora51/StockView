@@ -10,7 +10,8 @@ namespace StockView.UI.Data.Lookups
 {
     public class LookupDataService : IStockLookupDataService,
         IIndustryLookupDataService,
-        IPageLookupDataService
+        IPageLookupDataService,
+        ISummaryLookupDataService
     {
         private Func<StockViewDbContext> _contextCreator;
 
@@ -62,6 +63,14 @@ namespace StockView.UI.Data.Lookups
                         })
                     .ToListAsync();
                 return items;
+            }
+        }
+
+        public async Task<IEnumerable<Summary>> GetSummaryLookupAsync()
+        {
+            using (var ctx = _contextCreator())
+            {
+                return await ctx.Summaries.AsNoTracking().ToListAsync();
             }
         }
     }
