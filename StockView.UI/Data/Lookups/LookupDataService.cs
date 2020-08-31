@@ -70,7 +70,8 @@ namespace StockView.UI.Data.Lookups
         {
             using (var ctx = _contextCreator())
             {
-                return await ctx.Summaries.AsNoTracking().ToListAsync();
+                return await ctx.Summaries.AsNoTracking()
+                    .Where(s => s.Enabled).ToListAsync();
             }
         }
     }
