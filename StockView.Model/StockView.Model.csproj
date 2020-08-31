@@ -54,6 +54,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Attributes\DecimalPrecisionAttribute.cs" />
     <Compile Include="Industry.cs" />
     <Compile Include="LookupItem.cs" />
     <Compile Include="Page.cs" />

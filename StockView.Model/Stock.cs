@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using StockView.Model.Attributes;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,11 @@ namespace StockView.Model
 
         [StringLength(50)]
         public string CompanyName { get; set; }
+
+        public decimal Cost { get; set; }
+
+        [DecimalPrecision(18, 3)]
+        public decimal Yield { get; set; }
 
         public int Shares { get; set; }
 

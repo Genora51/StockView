@@ -162,6 +162,7 @@
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\Behaviours\AvalonEditBehaviour.cs" />
     <Compile Include="View\Converters\ComparisonConverter.cs" />
+    <Compile Include="View\Converters\PercentageConverter.cs" />
     <Compile Include="View\IndustryDetailView.xaml.cs">
       <DependentUpon>IndustryDetailView.xaml</DependentUpon>
     </Compile>
