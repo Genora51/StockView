@@ -1,7 +1,10 @@
 ﻿using Autofac;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using StockView.UI.Startup;
-using System;
+using System.IO;
 using System.Windows;
+using System.Xml;
 
 namespace StockView.UI
 {
@@ -12,6 +15,16 @@ namespace StockView.UI
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            using (var stream = new MemoryStream(UI.Properties.Resources.Lua))
+            {
+                using (var xmlReader = new XmlTextReader(stream))
+                {
+                    var highlight = HighlightingLoader.Load(xmlReader, HighlightingManager.Instance);
+                    HighlightingManager.Instance.RegisterHighlighting(
+                        "Lua", new string[0], highlight
+                    );
+                }
+            }
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
 
