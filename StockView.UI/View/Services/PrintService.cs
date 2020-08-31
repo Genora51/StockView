@@ -218,13 +218,13 @@ namespace StockView.UI.View.Services
         public static FontWeight TableTitleFontWeight { get; set; } = FontWeights.Bold;
         // -------------
         public static Brush TableFooterBackground { get; set; } = Brushes.White;
-        public static double TableFooterFontSize { get; set; } = 13;
+        public static double TableFooterFontSize { get; set; } = 11;
         public static FontWeight TableFooterFontWeight { get; set; } = FontWeights.Normal;
         // -------------
         public static double ColumnsHeaderRowFontSize { get; set; } = 14;
         public static FontWeight ColumnsHeaderRowFontWeight { get; set; } = FontWeights.Bold;
         // -------------
-        public static double DataRowsFontSize { get; set; } = 11;
+        public static double DataRowsFontSize { get; set; } = 12;
         public static FontWeight DataRowsFontWeight { get; set; } = FontWeights.Normal;
     }
 }
