@@ -23,12 +23,12 @@ namespace StockView.UI.ViewModel
 {
     public class PageDataDetailViewModel : DetailViewModelBase
     {
-        private IPrintService _printService;
-        private IPageDataRepository _pageDataRepository;
-        private ISummaryLookupDataService _summaryLookupDataService;
+        private readonly IPrintService _printService;
+        private readonly IPageDataRepository _pageDataRepository;
+        private readonly ISummaryLookupDataService _summaryLookupDataService;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
-        private IStockDataFetchService _stockDataFetchService;
+        private readonly IStockDataFetchService _stockDataFetchService;
         private bool _autoGenerateColumns;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,

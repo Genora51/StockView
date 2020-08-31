@@ -15,7 +15,7 @@ namespace StockView.UI.ViewModel
 {
     public class SummaryDetailViewModel : DetailViewModelBase
     {
-        private ISummaryRepository _summaryRepository;
+        private readonly ISummaryRepository _summaryRepository;
         private SummaryWrapper _selectedSummary;
 
         public SummaryDetailViewModel(IEventAggregator eventAggregator,

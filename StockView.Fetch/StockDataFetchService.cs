@@ -7,7 +7,7 @@ namespace StockView.Fetch
 {
     public class StockDataFetchService : IStockDataFetchService
     {
-        private IStockWebServiceClient _stockWebService;
+        private readonly IStockWebServiceClient _stockWebService;
 
         public StockDataFetchService(IStockWebServiceClient stockWebService)
         {

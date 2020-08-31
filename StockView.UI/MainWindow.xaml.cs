@@ -6,7 +6,7 @@ namespace StockView.UI
 {
     public partial class MainWindow : MetroWindow
     {
-        private MainViewModel _viewModel;
+        private readonly MainViewModel _viewModel;
 
         public MainWindow(MainViewModel viewModel)
         {

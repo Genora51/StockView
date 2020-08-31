@@ -8,8 +8,8 @@ namespace StockView.UI.ViewModel
     public class NavigationItemViewModel : ViewModelBase
     {
         private string _displayMember;
-        private IEventAggregator _eventAggregator;
-        private string _detailViewModelName;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly string _detailViewModelName;
 
         public NavigationItemViewModel(int id, string displayMember,
             string detailViewModelName,
