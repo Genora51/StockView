@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:StockView.UI.View"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:local="clr-namespace:StockView.UI.View" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:behaviours="clr-namespace:StockView.UI.View.Behaviours"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -28,18 +29,28 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBox Text="{Binding SelectedSummary.Code,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 Grid.Row="1" AcceptsReturn="True">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}">
+        <avalonEdit:TextEditor Grid.Row="1" Margin="5 0" Padding="5" BorderThickness="1"
+            SyntaxHighlighting="Lua" FontFamily="Consolas">
+            <i:Interaction.Behaviors>
+                <behaviours:AvalonEditBehaviour Text="{Binding SelectedSummary.Code,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+            </i:Interaction.Behaviors>
+            <avalonEdit:TextEditor.Style>
+                <Style TargetType="{x:Type avalonEdit:TextEditor}">
+                    <Setter Property="BorderBrush" Value="LightGray"/>
                     <Style.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter Property="BorderBrush" Value="DeepSkyBlue"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding SelectedSummary.HasErrors}" Value="True">
+                            <Setter Property="BorderBrush" Value="Red"/>
+                        </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedSummary}" Value="{x:Null}">
                             <Setter Property="IsEnabled" Value="False"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </TextBox.Style>
-        </TextBox>
+            </avalonEdit:TextEditor.Style>
+        </avalonEdit:TextEditor>
 
         <StackPanel Grid.Column="1" Margin="0 5 5 5">
             <Button Content="Add" Command="{Binding AddCommand}" Margin="5" Width="125"/>
