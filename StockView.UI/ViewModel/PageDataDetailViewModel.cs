@@ -240,7 +240,6 @@ namespace StockView.UI.ViewModel
             }
             //var sharesRow = from stock in stocks select stock.Shares.ToString();
             //Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
-            // TODO: update this when necessary
             LoadSummaries(summaries);
         }
 
@@ -542,7 +541,6 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
 
-        // TODO: After collection save
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
         {
             switch (args.ViewModelName)
