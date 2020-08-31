@@ -26,6 +26,7 @@ namespace StockView.UI.ViewModel
 {
     public class PageDataDetailViewModel : DetailViewModelBase
     {
+        private IPrintService _printService;
         private IPageDataRepository _pageDataRepository;
         private ISummaryLookupDataService _summaryLookupDataService;
         private PageWrapper _page;
@@ -35,11 +36,13 @@ namespace StockView.UI.ViewModel
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
+            IPrintService printService,
             IPageDataRepository pageDataRepository,
             ISummaryLookupDataService summaryLookupDataService,
             IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
+            _printService = printService;
             _pageDataRepository = pageDataRepository;
             _summaryLookupDataService = summaryLookupDataService;
             _stockDataFetchService = stockDataFetchService;
@@ -57,6 +60,7 @@ namespace StockView.UI.ViewModel
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             AddRowCommand = new DelegateCommand(OnAddRowExecute);
             RemoveRowCommand = new DelegateCommand(OnRemoveRowExecute, OnRemoveRowCanExecute);
+            PrintCommand = new DelegateCommand(OnPrintExecute);
 
             // Fetch commands
             FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
@@ -236,7 +240,6 @@ namespace StockView.UI.ViewModel
             }
             //var sharesRow = from stock in stocks select stock.Shares.ToString();
             //Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
-            // TODO: update this when necessary
             LoadSummaries(summaries);
         }
 
@@ -342,6 +345,7 @@ namespace StockView.UI.ViewModel
         public ICommand AddRowCommand { get; }
         public ICommand RemoveRowCommand { get; }
         public ICommand FetchRowCommand { get; }
+        public ICommand PrintCommand { get; }
 
         private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null, DataRowView rowView = null)
         {
@@ -517,6 +521,10 @@ namespace StockView.UI.ViewModel
         {
             return SelectedCell.Item is DataRowView && !IsFetching;
         }
+        private void OnPrintExecute()
+        {
+            _printService.Print(StockSnapshots, Summaries, Title);
+        }
 
         private async Task ReloadPage()
         {
@@ -533,7 +541,6 @@ namespace StockView.UI.ViewModel
             ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
         }
 
-        // TODO: After collection save
         private async void AfterDetailSaved(AfterDetailSavedEventArgs args)
         {
             switch (args.ViewModelName)

@@ -34,6 +34,7 @@ namespace StockView.UI.Startup
             builder.RegisterType<MainWindow>().AsSelf();
 
             builder.RegisterType<MessageDialogService>().As<IMessageDialogService>();
+            builder.RegisterType<PrintService>().As<IPrintService>();
 
             builder.RegisterType<MainViewModel>().AsSelf();
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
