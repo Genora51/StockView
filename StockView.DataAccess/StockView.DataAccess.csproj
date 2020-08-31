@@ -102,6 +102,10 @@
     <Compile Include="Migrations\202008311106301_AddedSummaryProperties.designer.cs">
       <DependentUpon>202008311106301_AddedSummaryProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008311321086_AddedEnabledToSummaries.cs" />
+    <Compile Include="Migrations\202008311321086_AddedEnabledToSummaries.designer.cs">
+      <DependentUpon>202008311321086_AddedEnabledToSummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -162,6 +166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008311106301_AddedSummaryProperties.resx">
       <DependentUpon>202008311106301_AddedSummaryProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008311321086_AddedEnabledToSummaries.resx">
+      <DependentUpon>202008311321086_AddedEnabledToSummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

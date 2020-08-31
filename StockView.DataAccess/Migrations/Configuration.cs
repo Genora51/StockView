@@ -46,7 +46,7 @@
                 new Summary
                 {
                     Name = "Shares",
-                    Code = "return stock.shares"
+                    Code = "return stock.Shares"
                 });
         }
     }

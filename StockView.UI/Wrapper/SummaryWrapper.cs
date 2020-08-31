@@ -21,5 +21,11 @@ namespace StockView.UI.Wrapper
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
+
+        public bool Enabled
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
     }
 }

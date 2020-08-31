@@ -26,6 +26,7 @@
                     ElementStyle="{StaticResource DataGridColumnStyle}"
                     EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
                     Binding="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
         </DataGrid>
 

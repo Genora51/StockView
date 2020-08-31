@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockView.Model
 {
@@ -13,5 +14,7 @@ namespace StockView.Model
         [Required]
         [MaxLength]
         public string Code { get; set; }
+
+        public bool Enabled { get; set; } = true;
     }
 }
