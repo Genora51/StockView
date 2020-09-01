@@ -64,5 +64,30 @@ namespace StockView.Fetch.Client
                 return null;
             }
         }
+
+        public async Task<decimal?> GetYieldAsync(string symbol)
+        {
+            var url = APIUrl
+                .AppendPathSegments("stock", symbol, "stats", "dividendYield")
+                .SetQueryParams(new
+                {
+                    token = _key
+                });
+            string result;
+            try
+            {
+                result = await url.GetStringAsync();
+            } catch (FlurlHttpException)
+            {
+                return null;
+            }
+            
+            if (!decimal.TryParse(result, out var yield))
+            {
+                return null;
+            }
+
+            return yield;
+        }
     }
 }

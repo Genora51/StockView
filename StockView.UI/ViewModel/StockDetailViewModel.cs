@@ -47,6 +47,7 @@ namespace StockView.UI.ViewModel
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
+            FetchYieldCommand = new DelegateCommand(OnFetchYieldExecute);
 
             Industries = new ObservableCollection<LookupItem>();
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
@@ -179,6 +180,7 @@ namespace StockView.UI.ViewModel
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
         public ICommand FetchSnapshotCommand { get; }
+        public ICommand FetchYieldCommand { get; }
 
         public ObservableCollection<LookupItem> Industries { get; }
 
@@ -316,6 +318,15 @@ namespace StockView.UI.ViewModel
         private bool OnFetchSnapshotCanExecute()
         {
             return SelectedSnapshot != null && !IsFetching;
+        }
+
+        private async void OnFetchYieldExecute()
+        {
+            var yield = await _stockDataFetchService.FetchYieldAsync(Stock.Model);
+            if (yield.HasValue)
+            {
+                Stock.Yield = yield.Value;
+            }
         }
 
         private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
