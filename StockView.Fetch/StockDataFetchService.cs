@@ -31,5 +31,10 @@ namespace StockView.Fetch
                 Value = value.Value
             };
         }
+
+        public Task<decimal?> FetchYieldAsync(Stock stock)
+        {
+            return _stockWebService.GetYieldAsync(stock.Symbol);
+        }
     }
 }

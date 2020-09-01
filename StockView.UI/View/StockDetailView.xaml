@@ -53,8 +53,12 @@
                  Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
 
             <Label Grid.Column="2" Content="Yield" Margin="10 0"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Stock.Yield,Converter={StaticResource percentageConverter},
+            <DockPanel Grid.Row="1" Grid.Column="2" >
+                <Button Content="Fetch" DockPanel.Dock="Right" Margin="0 0 10 10" FontSize="13"
+                        Command="{Binding FetchYieldCommand}"/>
+                <TextBox Text="{Binding Stock.Yield,Converter={StaticResource percentageConverter},
                  Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
+            </DockPanel>
         </Grid>
 
 
