@@ -11,11 +11,11 @@ namespace StockView.UI.View.Services
 {
     public class PrintService : IPrintService
     {
-        public void Print(DataTable data, DataTable summaryData, string title)
+        public void Print(DataView data, DataView summaryData, string title)
         {
             var printDialog = new PrintDialog();
             var flowDocument = new FlowDocument();
-            var table = CreateTable(data, summaryData, title);
+            var table = CreateTable(data.ToTable(), summaryData.ToTable(), title);
             flowDocument.Blocks.Add(table);
             const int padding = 50;
             flowDocument.PagePadding = new Thickness(padding);
