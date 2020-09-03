@@ -27,5 +27,11 @@ namespace StockView.UI.Wrapper
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
+
+        public int SortIndex
+        {
+            get { return GetValue<int>(); }
+            set { SetValue(value); }
+        }
     }
 }

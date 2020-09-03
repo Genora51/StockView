@@ -227,11 +227,9 @@ namespace StockView.UI.ViewModel
         private void InitialisePageSummaries(IEnumerable<Summary> summaries)
         {
             Summaries.Rows.Clear();
-            Summaries.DefaultView.Sort = "";
             Summaries.Columns.Clear();
             // Set up summaries
             Summaries.Columns.Add("Statistic", typeof(string));
-            Summaries.DefaultView.Sort = "Statistic ASC";
             foreach (var stock in Stocks)
             {
                 Summaries.Columns.Add(stock.Symbol, typeof(string));
