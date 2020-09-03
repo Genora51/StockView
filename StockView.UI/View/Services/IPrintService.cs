@@ -4,6 +4,6 @@ namespace StockView.UI.View.Services
 {
     public interface IPrintService
     {
-        void Print(DataTable data, DataTable summaryData, string title);
+        void Print(DataView data, DataView summaryData, string title);
     }
 }

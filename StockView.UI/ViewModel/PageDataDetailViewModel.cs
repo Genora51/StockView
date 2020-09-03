@@ -523,7 +523,7 @@ namespace StockView.UI.ViewModel
         }
         private void OnPrintExecute()
         {
-            _printService.Print(StockSnapshots, Summaries, Title);
+            _printService.Print(StockSnapshots.DefaultView, Summaries.DefaultView, Title);
         }
 
         private async Task ReloadPage()
