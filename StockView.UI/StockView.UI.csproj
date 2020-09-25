@@ -71,11 +71,20 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.1.278, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.1\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
+      <HintPath>..\packages\NeoLua.1.3.11\lib\net47\Neo.Lua.dll</HintPath>
     </Reference>
     <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
@@ -94,6 +103,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -121,6 +131,7 @@
     <Compile Include="Data\Lookups\IIndustryLookupDataService.cs" />
     <Compile Include="Data\Lookups\IPageLookupDataService.cs" />
     <Compile Include="Data\Lookups\IStockLookupDataService.cs" />
+    <Compile Include="Data\Lookups\ISummaryLookupDataService.cs" />
     <Compile Include="Data\Lookups\LookupDataService.cs" />
     <Compile Include="Data\Repositories\GenericRepository.cs" />
     <Compile Include="Data\Repositories\IGenericRepository.cs" />
@@ -128,8 +139,10 @@
     <Compile Include="Data\Repositories\IndustryRepository.cs" />
     <Compile Include="Data\Repositories\IPageDataRepository.cs" />
     <Compile Include="Data\Repositories\IPageRepository.cs" />
+    <Compile Include="Data\Repositories\ISummaryRepository.cs" />
     <Compile Include="Data\Repositories\PageDataRepository.cs" />
     <Compile Include="Data\Repositories\PageRepository.cs" />
+    <Compile Include="Data\Repositories\SummaryRepository.cs" />
     <Compile Include="Event\AfterCollectionSavedEvent.cs" />
     <Compile Include="Event\AfterDetailClosedEvent.cs" />
     <Compile Include="Event\AfterDetailDeletedEvent.cs" />
@@ -149,8 +162,11 @@
     <Compile Include="ViewModel\PageDetailViewModel.cs" />
     <Compile Include="ViewModel\SettingsDetailViewModel.cs" />
     <Compile Include="ViewModel\StockDetailViewModel.cs" />
+    <Compile Include="ViewModel\SummaryDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\Behaviours\AvalonEditBehaviour.cs" />
     <Compile Include="View\Converters\ComparisonConverter.cs" />
+    <Compile Include="View\Converters\PercentageConverter.cs" />
     <Compile Include="View\IndustryDetailView.xaml.cs">
       <DependentUpon>IndustryDetailView.xaml</DependentUpon>
     </Compile>
@@ -164,12 +180,17 @@
       <DependentUpon>PageDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Services\IMessageDialogService.cs" />
+    <Compile Include="View\Services\IPrintService.cs" />
     <Compile Include="View\Services\MessageDialogService.cs" />
+    <Compile Include="View\Services\PrintService.cs" />
     <Compile Include="View\SettingsDetailView.xaml.cs">
       <DependentUpon>SettingsDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StockDetailView.xaml.cs">
       <DependentUpon>StockDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SummaryDetailView.xaml.cs">
+      <DependentUpon>SummaryDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrapper\IndustryWrapper.cs" />
     <Compile Include="Wrapper\ModelWrapper.cs" />
@@ -177,6 +198,7 @@
     <Compile Include="Wrapper\PageWrapper.cs" />
     <Compile Include="Wrapper\StockSnapshotWrapper.cs" />
     <Compile Include="Wrapper\StockWrapper.cs" />
+    <Compile Include="Wrapper\SummaryWrapper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -212,6 +234,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StockDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SummaryDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -268,6 +294,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Lua.xshd" />
     <None Include="Resources\StockView.ico" />
   </ItemGroup>
   <ItemGroup>

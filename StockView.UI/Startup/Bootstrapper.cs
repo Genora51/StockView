@@ -34,6 +34,7 @@ namespace StockView.UI.Startup
             builder.RegisterType<MainWindow>().AsSelf();
 
             builder.RegisterType<MessageDialogService>().As<IMessageDialogService>();
+            builder.RegisterType<PrintService>().As<IPrintService>();
 
             builder.RegisterType<MainViewModel>().AsSelf();
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
@@ -47,6 +48,8 @@ namespace StockView.UI.Startup
                 .Keyed<IDetailViewModel>(nameof(PageDataDetailViewModel));
             builder.RegisterType<SettingsDetailViewModel>()
                 .Keyed<IDetailViewModel>(nameof(SettingsDetailViewModel));
+            builder.RegisterType<SummaryDetailViewModel>()
+                .Keyed<IDetailViewModel>(nameof(SummaryDetailViewModel));
 
             // VM Services
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
@@ -54,6 +57,7 @@ namespace StockView.UI.Startup
             builder.RegisterType<PageRepository>().As<IPageRepository>();
             builder.RegisterType<IndustryRepository>().As<IIndustryRepository>();
             builder.RegisterType<PageDataRepository>().As<IPageDataRepository>();
+            builder.RegisterType<SummaryRepository>().As<ISummaryRepository>();
 
             return builder.Build();
         }

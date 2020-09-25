@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml"/>
                 <ResourceDictionary>
+                    <con:PercentageConverter x:Key="percentageConverter"/>
                     <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
                     <con:ComparisonConverter x:Key="comparisonConverter"/>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">

@@ -75,6 +75,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_42D892B3327D37F217CE6B7DEDE3BCEB"
+        "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_437E36CD1E350C66A52C43C359DA3823"
         "OwnerKey" = "8:_AC5F3ED502FA87F850524A1852C2A779"
         "MsmSig" = "8:_UNDEFINED"
@@ -195,6 +201,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_7A87D5AB2D52800B56DE1F3A8182B077"
+        "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_917F1891C60E04B76F22EF1234188A69"
         "OwnerKey" = "8:_3BD6EE43FA8F4D5A898BA50479CE31F8"
         "MsmSig" = "8:_UNDEFINED"
@@ -310,6 +322,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_42D892B3327D37F217CE6B7DEDE3BCEB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_53739CD0B5379818B8A906CB6FD1577D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -341,6 +359,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_5AF15E8AE6EB53D34FB587C04D307CB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7A87D5AB2D52800B56DE1F3A8182B077"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -567,6 +591,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_42D892B3327D37F217CE6B7DEDE3BCEB"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_42D892B3327D37F217CE6B7DEDE3BCEB"
+                    {
+                    "Name" = "8:Neo.Lua.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Neo.Lua.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B91A961A77724BFD847C74DEE90FE30D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_437E36CD1E350C66A52C43C359DA3823"
             {
             "AssemblyRegister" = "3:1"
@@ -633,7 +688,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Fetch, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4CBCB5901CF0D19F793D5BFC3A30DD28"
@@ -819,7 +874,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.Model, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_76C2F0A8811B70B33E3F31981CA8A68B"
@@ -877,11 +932,42 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7A87D5AB2D52800B56DE1F3A8182B077"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ICSharpCode.AvalonEdit, Version=6.0.1.278, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_7A87D5AB2D52800B56DE1F3A8182B077"
+                    {
+                    "Name" = "8:ICSharpCode.AvalonEdit.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ICSharpCode.AvalonEdit.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B91A961A77724BFD847C74DEE90FE30D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_917F1891C60E04B76F22EF1234188A69"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StockView.DataAccess, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_917F1891C60E04B76F22EF1234188A69"
@@ -1150,15 +1236,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:StockView"
-        "ProductCode" = "8:{3D3595F5-922E-46B0-B09B-67D8ED531E5A}"
-        "PackageCode" = "8:{53857FD6-33DB-417E-AC40-6665102579FB}"
+        "ProductCode" = "8:{D48A7C8B-1B4E-47F5-9DD6-A3AE9C913B7D}"
+        "PackageCode" = "8:{D5C47A09-813D-4DA8-9968-58EAA77F6155}"
         "UpgradeCode" = "8:{D875B590-26A3-4ECE-B9F6-116CEFFB26B1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.3.1"
+        "ProductVersion" = "8:1.0.0"
         "Manufacturer" = "8:GenoRA Dev"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1700,7 +1786,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3BD6EE43FA8F4D5A898BA50479CE31F8"
             {
-            "SourcePath" = "8:..\\StockView.UI\\obj\\Release\\StockView.UI.exe"
+            "SourcePath" = "8:..\\StockView.UI\\obj\\Debug\\StockView.UI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B91A961A77724BFD847C74DEE90FE30D"

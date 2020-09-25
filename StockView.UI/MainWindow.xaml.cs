@@ -1,13 +1,12 @@
 ﻿using MahApps.Metro.Controls;
 using StockView.UI.ViewModel;
-using System;
 using System.Windows;
 
 namespace StockView.UI
 {
     public partial class MainWindow : MetroWindow
     {
-        private MainViewModel _viewModel;
+        private readonly MainViewModel _viewModel;
 
         public MainWindow(MainViewModel viewModel)
         {
