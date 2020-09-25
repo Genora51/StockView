@@ -90,6 +90,26 @@
     <Compile Include="Migrations\202007181432287_DecimalSnapshotValues.designer.cs">
       <DependentUpon>202007181432287_DecimalSnapshotValues.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008151605435_AddedSharesToStock.cs" />
+    <Compile Include="Migrations\202008151605435_AddedSharesToStock.designer.cs">
+      <DependentUpon>202008151605435_AddedSharesToStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008301725218_AddedSummaries.cs" />
+    <Compile Include="Migrations\202008301725218_AddedSummaries.designer.cs">
+      <DependentUpon>202008301725218_AddedSummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008311106301_AddedSummaryProperties.cs" />
+    <Compile Include="Migrations\202008311106301_AddedSummaryProperties.designer.cs">
+      <DependentUpon>202008311106301_AddedSummaryProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008311321086_AddedEnabledToSummaries.cs" />
+    <Compile Include="Migrations\202008311321086_AddedEnabledToSummaries.designer.cs">
+      <DependentUpon>202008311321086_AddedEnabledToSummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009031323450_AddedSortingToSummaries.cs" />
+    <Compile Include="Migrations\202009031323450_AddedSortingToSummaries.designer.cs">
+      <DependentUpon>202009031323450_AddedSortingToSummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockViewDbContext.cs" />
@@ -141,6 +161,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007181432287_DecimalSnapshotValues.resx">
       <DependentUpon>202007181432287_DecimalSnapshotValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008151605435_AddedSharesToStock.resx">
+      <DependentUpon>202008151605435_AddedSharesToStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008301725218_AddedSummaries.resx">
+      <DependentUpon>202008301725218_AddedSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008311106301_AddedSummaryProperties.resx">
+      <DependentUpon>202008311106301_AddedSummaryProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008311321086_AddedEnabledToSummaries.resx">
+      <DependentUpon>202008311321086_AddedEnabledToSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009031323450_AddedSortingToSummaries.resx">
+      <DependentUpon>202009031323450_AddedSortingToSummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

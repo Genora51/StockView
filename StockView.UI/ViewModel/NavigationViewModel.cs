@@ -1,7 +1,6 @@
 ﻿using Prism.Events;
 using StockView.UI.Data.Lookups;
 using StockView.UI.Event;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +9,9 @@ namespace StockView.UI.ViewModel
 {
     public class NavigationViewModel : ViewModelBase, INavigationViewModel
     {
-        private IStockLookupDataService _stockLookupService;
-        private IPageLookupDataService _pageLookupService;
-        private IEventAggregator _eventAggregator;
+        private readonly IStockLookupDataService _stockLookupService;
+        private readonly IPageLookupDataService _pageLookupService;
+        private readonly IEventAggregator _eventAggregator;
 
         public NavigationViewModel(IStockLookupDataService stockLookupService,
             IPageLookupDataService pageLookupService,

@@ -17,7 +17,7 @@ namespace StockView.UI.Wrapper
             get { return GetValue<DateTime>(); }
             set { SetValue(value); }
         }
-        
+
         public decimal Value
         {
             get { return GetValue<decimal>(); }

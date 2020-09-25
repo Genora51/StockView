@@ -28,6 +28,9 @@
         <DataTemplate DataType="{x:Type viewModel:SettingsDetailViewModel}">
             <view:SettingsDetailView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:SummaryDetailViewModel}">
+            <view:SummaryDetailView/>
+        </DataTemplate>
     </Window.Resources>
     <Window.InputBindings>
         <!-- File => New -->
@@ -43,10 +46,17 @@
         <!-- File => Close -->
         <KeyBinding Modifiers="Ctrl" Key="W"
                     Command="{Binding SelectedDetailViewModel.CloseDetailViewCommand}"/>
+        <!-- File => Print -->
+        <KeyBinding Modifiers="Ctrl" Key="P"
+                    Command="{Binding SelectedDetailViewModel.PrintCommand}"/>
         <!-- Edit => Industries -->
         <KeyBinding Modifiers="Ctrl" Key="I"
                     Command="{Binding OpenSingleDetailViewCommand}"
                     CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+        <!-- Edit => Summaries -->
+        <KeyBinding Modifiers="Ctrl" Key="M"
+                    Command="{Binding OpenSingleDetailViewCommand}"
+                    CommandParameter="{x:Type viewModel:SummaryDetailViewModel}"/>
         <!-- Edit => Preferences -->
         <KeyBinding Modifiers="Ctrl" Key="OemComma"
                     Command="{Binding OpenSingleDetailViewCommand}"
@@ -79,9 +89,18 @@
                           InputGestureText="Ctrl+W"
                           Command="{Binding SelectedDetailViewModel.CloseDetailViewCommand}"/>
                 <Separator/>
-                <!-- TODO: implement print -->
-                <MenuItem Header="_Print" Command="Print"
-                          InputGestureText="Ctrl+P"/>
+                <MenuItem Header="_Print" Command="{Binding SelectedDetailViewModel.PrintCommand}"
+                          InputGestureText="Ctrl+P">
+                    <MenuItem.Style>
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedDetailViewModel.PrintCommand}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
                 <!--<MenuItem Header="E_xit"
                           InputGestureText="Alt+F4"/>-->
             </MenuItem>
@@ -90,6 +109,10 @@
                           InputGestureText="Ctrl+I"
                           Command="{Binding OpenSingleDetailViewCommand}"
                           CommandParameter="{x:Type viewModel:IndustryDetailViewModel}"/>
+                <MenuItem Header="_Summaries"
+                          InputGestureText="Ctrl+M"
+                          Command="{Binding OpenSingleDetailViewCommand}"
+                          CommandParameter="{x:Type viewModel:SummaryDetailViewModel}"/>
                 <Separator/>
                 <MenuItem Header="_Undo" Command="Undo"
                           InputGestureText="Ctrl+Z"/>
@@ -103,7 +126,6 @@
                 <MenuItem Header="_Paste" Command="Paste"
                           InputGestureText="Ctrl+V"/>
                 <Separator/>
-                <!-- TODO: implement preferences -->
                 <MenuItem Header="Pr_eferences"
                           InputGestureText="Ctrl+,"
                           Command="{Binding OpenSingleDetailViewCommand}"

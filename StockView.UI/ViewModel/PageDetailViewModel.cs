@@ -5,7 +5,6 @@ using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace StockView.UI.ViewModel
 {
     public class PageDetailViewModel : DetailViewModelBase, IPageDetailViewModel
     {
-        private IPageRepository _pageRepository;
+        private readonly IPageRepository _pageRepository;
         private PageWrapper _page;
 
         private Stock _selectedAvailableStock;
@@ -115,7 +114,7 @@ namespace StockView.UI.ViewModel
             {
                 _pageRepository.Remove(Page.Model);
                 await _pageRepository.SaveAsync();
-                RaiseDetailDeletedEvent(Page.Id);
+                RaiseDetailDeletedEvent(Id);
             }
         }
 

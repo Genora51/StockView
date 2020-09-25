@@ -9,7 +9,7 @@ namespace StockView.UI.Wrapper
 {
     public class NotifyDataErrorInfoBase : ViewModelBase, INotifyDataErrorInfo
     {
-        private Dictionary<string, List<string>> _errorsByPropertyName
+        private readonly Dictionary<string, List<string>> _errorsByPropertyName
             = new Dictionary<string, List<string>>();
 
         public bool HasErrors => _errorsByPropertyName.Any();

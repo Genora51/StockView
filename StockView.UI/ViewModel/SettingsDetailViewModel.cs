@@ -22,7 +22,8 @@ namespace StockView.UI.ViewModel
         public string ApiKey
         {
             get { return _apiKey; }
-            set {
+            set
+            {
                 _apiKey = value;
                 HasChanges = originalApiKey != _apiKey;
                 OnPropertyChanged();

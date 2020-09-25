@@ -30,6 +30,24 @@ namespace StockView.UI.Wrapper
             set { SetValue(value); }
         }
 
+        public int Shares
+        {
+            get { return GetValue<int>(); }
+            set { SetValue(value); }
+        }
+
+        public decimal Cost
+        {
+            get { return GetValue<decimal>(); }
+            set { SetValue(value); }
+        }
+
+        public decimal Yield
+        {
+            get { return GetValue<decimal>(); }
+            set { SetValue(value); }
+        }
+
         protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
             switch (propertyName)

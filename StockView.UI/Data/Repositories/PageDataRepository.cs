@@ -1,9 +1,8 @@
 ﻿using StockView.DataAccess;
 using StockView.Model;
-using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Linq;
-using System;
+using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Repositories
 {
@@ -18,6 +17,7 @@ namespace StockView.UI.Data.Repositories
         {
             var page = await Context.Pages
                 .Include(p => p.Stocks.Select(s => s.Snapshots))
+                .Include(p => p.Stocks.Select(s => s.Industry))
                 .SingleAsync(p => p.Id == id);
             return page;
         }

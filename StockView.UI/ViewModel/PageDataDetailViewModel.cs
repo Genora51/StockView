@@ -1,13 +1,14 @@
-﻿using Prism.Commands;
+﻿using Neo.IronLua;
+using Prism.Commands;
 using Prism.Events;
 using StockView.Fetch;
 using StockView.Model;
+using StockView.UI.Data.Lookups;
 using StockView.UI.Data.Repositories;
 using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,24 +23,33 @@ namespace StockView.UI.ViewModel
 {
     public class PageDataDetailViewModel : DetailViewModelBase
     {
-        private IPageDataRepository _pageDataRepository;
+        private readonly IPrintService _printService;
+        private readonly IPageDataRepository _pageDataRepository;
+        private readonly ISummaryLookupDataService _summaryLookupDataService;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
-        private IStockDataFetchService _stockDataFetchService;
+        private readonly IStockDataFetchService _stockDataFetchService;
+        private bool _autoGenerateColumns;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
+            IPrintService printService,
             IPageDataRepository pageDataRepository,
+            ISummaryLookupDataService summaryLookupDataService,
             IStockDataFetchService stockDataFetchService)
             : base(eventAggregator, messageDialogService)
         {
+            _printService = printService;
             _pageDataRepository = pageDataRepository;
+            _summaryLookupDataService = summaryLookupDataService;
             _stockDataFetchService = stockDataFetchService;
             eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
+            eventAggregator.GetEvent<AfterCollectionSavedEvent>().Subscribe(AfterCollectionSaved);
 
             Stocks = new ObservableCollection<StockWrapper>();
             StockSnapshots = new DataTable();
+            Summaries = new DataTable();
             ChangeCount = 0;
             // Assign delegate commands
             OpenPageDetailViewCommand = new DelegateCommand(OnOpenPageDetailViewExecute);
@@ -47,6 +57,7 @@ namespace StockView.UI.ViewModel
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             AddRowCommand = new DelegateCommand(OnAddRowExecute);
             RemoveRowCommand = new DelegateCommand(OnRemoveRowExecute, OnRemoveRowCanExecute);
+            PrintCommand = new DelegateCommand(OnPrintExecute);
 
             // Fetch commands
             FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
@@ -92,9 +103,20 @@ namespace StockView.UI.ViewModel
         }
 
         public ObservableCollection<StockWrapper> Stocks { get; }
+        public bool AutoGenerateColumns
+        {
+            get { return _autoGenerateColumns; }
+            private set
+            {
+                _autoGenerateColumns = value;
+                OnPropertyChanged();
+            }
+        }
         public DataTable StockSnapshots { get; }
+        public DataTable Summaries { get; }
         private int _changeCount;
         private bool _isFetching;
+        private IEnumerable<Summary> _summaries;
 
         public int ChangeCount
         {
@@ -104,7 +126,8 @@ namespace StockView.UI.ViewModel
         public bool IsFetching
         {
             get { return _isFetching; }
-            private set {
+            private set
+            {
                 _isFetching = value;
                 ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
@@ -115,11 +138,15 @@ namespace StockView.UI.ViewModel
         public async override Task LoadAsync(int pageId)
         {
             var page = await _pageDataRepository.GetByIdAsync(pageId);
+            var summaries = await _summaryLookupDataService.GetSummaryLookupAsync();
 
             Id = pageId;
             InitialisePage(page);
             InitialisePageStocks(page.Stocks);
+            AutoGenerateColumns = false;
             InitialisePageSnapshots(page.Stocks);
+            InitialisePageSummaries(summaries);
+            AutoGenerateColumns = true;
         }
 
         private void InitialisePage(Model.Page page)
@@ -197,6 +224,53 @@ namespace StockView.UI.ViewModel
             StockSnapshots.ColumnChanged += StockSnapshots_ColumnChanged;
         }
 
+        private void InitialisePageSummaries(IEnumerable<Summary> summaries)
+        {
+            Summaries.Rows.Clear();
+            Summaries.Columns.Clear();
+            // Set up summaries
+            Summaries.Columns.Add("Statistic", typeof(string));
+            foreach (var stock in Stocks)
+            {
+                Summaries.Columns.Add(stock.Symbol, typeof(string));
+            }
+            //var sharesRow = from stock in stocks select stock.Shares.ToString();
+            //Summaries.Rows.Add(sharesRow.Prepend("Shares").ToArray());
+            LoadSummaries(summaries);
+        }
+
+        private void LoadSummaries(IEnumerable<Summary> summaries)
+        {
+            _summaries = summaries;
+            Summaries.Rows.Clear();
+            using (var lua = new Lua())
+            {
+                foreach (var summary in summaries)
+                {
+                    var summaryRow = new List<string>();
+                    foreach (var stock in Stocks)
+                    {
+                        var env = lua.CreateEnvironment();
+                        dynamic dg = env;
+                        dg.stock = stock.Model;
+                        dg.latestSnapshot = stock.Model.Snapshots.OrderByDescending(sn => sn.Date).FirstOrDefault();
+                        string result;
+                        try
+                        {
+                            result = env.DoChunk(summary.Code, "summary.lua").ToString();
+                        }
+                        catch (LuaException e)
+                        {
+                            result = "";
+                            Console.WriteLine(e.Message);
+                        }
+                        summaryRow.Add(result);
+                    }
+                    Summaries.Rows.Add(summaryRow.Prepend(summary.Name).ToArray());
+                }
+            }
+        }
+
         private void StockSnapshotWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!HasChanges)
@@ -208,6 +282,7 @@ namespace StockView.UI.ViewModel
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             }
             ChangeCount++;
+            LoadSummaries(_summaries);
         }
 
         private void StockSnapshots_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -217,21 +292,25 @@ namespace StockView.UI.ViewModel
                 if (StockSnapshots.Rows.OfType<DataRow>().Count(
                         r => (DateTime)r["Date"] == (DateTime)e.ProposedValue
                     ) > 1
-                ) {
+                )
+                {
                     e.Row.SetColumnError(e.Column, "Date must be unique");
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                     return;
-                } else {
+                }
+                else
+                {
                     e.Row.ClearErrors();
                 }
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 foreach (var item in e.Row.ItemArray)
                 {
                     if (item is StockSnapshotWrapper wrapper)
-                        wrapper.Date = (DateTime) e.ProposedValue;
+                        wrapper.Date = (DateTime)e.ProposedValue;
                 }
             }
             ChangeCount++;
+            LoadSummaries(_summaries);
         }
 
         protected override void OnDeleteExecute()
@@ -265,6 +344,7 @@ namespace StockView.UI.ViewModel
         public ICommand AddRowCommand { get; }
         public ICommand RemoveRowCommand { get; }
         public ICommand FetchRowCommand { get; }
+        public ICommand PrintCommand { get; }
 
         private void AddSnapshotInPlace(StockSnapshot snapshot, string symbol = null, DataRowView rowView = null)
         {
@@ -380,7 +460,8 @@ namespace StockView.UI.ViewModel
             if (fetchedSnapshot == null)
             {
                 await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
-            } else
+            }
+            else
             {
                 if (selectedSnapshot == null)
                 {
@@ -440,6 +521,10 @@ namespace StockView.UI.ViewModel
         {
             return SelectedCell.Item is DataRowView && !IsFetching;
         }
+        private void OnPrintExecute()
+        {
+            _printService.Print(StockSnapshots.DefaultView, Summaries.DefaultView, Title);
+        }
 
         private async Task ReloadPage()
         {
@@ -462,10 +547,16 @@ namespace StockView.UI.ViewModel
             {
                 case nameof(StockDetailViewModel):
                     // FIXME: why was this called even after VM is closed?
-                    if (Stocks.Any(s => s.Id == args.Id)) await ReloadPage();
+                    if (Stocks.Any(s => s.Id == args.Id))
+                    {
+                        await ReloadPage();
+                    }
                     break;
                 case nameof(PageDetailViewModel):
-                    if (args.Id == Page.Id) await ReloadPage();
+                    if (args.Id == Page.Id)
+                    {
+                        await ReloadPage();
+                    }
                     break;
             }
         }
@@ -487,6 +578,16 @@ namespace StockView.UI.ViewModel
                                 ViewModelName = this.GetType().Name
                             });
                     }
+                    break;
+            }
+        }
+
+        private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
+        {
+            switch (args.ViewModelName)
+            {
+                case nameof(SummaryDetailViewModel):
+                    InitialisePageSummaries(await _summaryLookupDataService.GetSummaryLookupAsync());
                     break;
             }
         }
