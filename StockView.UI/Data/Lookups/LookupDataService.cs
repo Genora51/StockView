@@ -13,7 +13,7 @@ namespace StockView.UI.Data.Lookups
         IPageLookupDataService,
         ISummaryLookupDataService
     {
-        private Func<StockViewDbContext> _contextCreator;
+        private readonly Func<StockViewDbContext> _contextCreator;
 
         public LookupDataService(Func<StockViewDbContext> contextCreator)
         {
@@ -71,7 +71,8 @@ namespace StockView.UI.Data.Lookups
             using (var ctx = _contextCreator())
             {
                 return await ctx.Summaries.AsNoTracking()
-                    .Where(s => s.Enabled).ToListAsync();
+                    .Where(s => s.Enabled)
+                    .OrderBy(s => s.SortIndex).ToListAsync();
             }
         }
     }

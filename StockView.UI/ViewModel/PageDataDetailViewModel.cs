@@ -9,29 +9,26 @@ using StockView.UI.Event;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
     public class PageDataDetailViewModel : DetailViewModelBase
     {
-        private IPrintService _printService;
-        private IPageDataRepository _pageDataRepository;
-        private ISummaryLookupDataService _summaryLookupDataService;
+        private readonly IPrintService _printService;
+        private readonly IPageDataRepository _pageDataRepository;
+        private readonly ISummaryLookupDataService _summaryLookupDataService;
         private PageWrapper _page;
         private DataGridCellInfo _selectedCell;
-        private IStockDataFetchService _stockDataFetchService;
+        private readonly IStockDataFetchService _stockDataFetchService;
         private bool _autoGenerateColumns;
 
         public PageDataDetailViewModel(IEventAggregator eventAggregator,
@@ -129,7 +126,8 @@ namespace StockView.UI.ViewModel
         public bool IsFetching
         {
             get { return _isFetching; }
-            private set {
+            private set
+            {
                 _isFetching = value;
                 ((DelegateCommand)FetchRowCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
@@ -229,11 +227,9 @@ namespace StockView.UI.ViewModel
         private void InitialisePageSummaries(IEnumerable<Summary> summaries)
         {
             Summaries.Rows.Clear();
-            Summaries.DefaultView.Sort = "";
             Summaries.Columns.Clear();
             // Set up summaries
             Summaries.Columns.Add("Statistic", typeof(string));
-            Summaries.DefaultView.Sort = "Statistic ASC";
             foreach (var stock in Stocks)
             {
                 Summaries.Columns.Add(stock.Symbol, typeof(string));
@@ -296,18 +292,21 @@ namespace StockView.UI.ViewModel
                 if (StockSnapshots.Rows.OfType<DataRow>().Count(
                         r => (DateTime)r["Date"] == (DateTime)e.ProposedValue
                     ) > 1
-                ) {
+                )
+                {
                     e.Row.SetColumnError(e.Column, "Date must be unique");
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                     return;
-                } else {
+                }
+                else
+                {
                     e.Row.ClearErrors();
                 }
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 foreach (var item in e.Row.ItemArray)
                 {
                     if (item is StockSnapshotWrapper wrapper)
-                        wrapper.Date = (DateTime) e.ProposedValue;
+                        wrapper.Date = (DateTime)e.ProposedValue;
                 }
             }
             ChangeCount++;
@@ -461,7 +460,8 @@ namespace StockView.UI.ViewModel
             if (fetchedSnapshot == null)
             {
                 await MessageDialogService.ShowInfoDialogAsync("No data available for this date.");
-            } else
+            }
+            else
             {
                 if (selectedSnapshot == null)
                 {
@@ -523,7 +523,7 @@ namespace StockView.UI.ViewModel
         }
         private void OnPrintExecute()
         {
-            _printService.Print(StockSnapshots, Summaries, Title);
+            _printService.Print(StockSnapshots.DefaultView, Summaries.DefaultView, Title);
         }
 
         private async Task ReloadPage()

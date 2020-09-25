@@ -1,21 +1,25 @@
-﻿using Prism.Commands;
+﻿using GongSolutions.Wpf.DragDrop;
+using Prism.Commands;
 using Prism.Events;
 using StockView.Model;
 using StockView.UI.Data.Repositories;
 using StockView.UI.View.Services;
 using StockView.UI.Wrapper;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StockView.UI.ViewModel
 {
-    public class SummaryDetailViewModel : DetailViewModelBase
+    public class SummaryDetailViewModel : DetailViewModelBase, IDropTarget
     {
-        private ISummaryRepository _summaryRepository;
+        private readonly ISummaryRepository _summaryRepository;
         private SummaryWrapper _selectedSummary;
 
         public SummaryDetailViewModel(IEventAggregator eventAggregator,
@@ -57,7 +61,7 @@ namespace StockView.UI.ViewModel
 
             Summaries.Clear();
 
-            var summaries = await _summaryRepository.GetAllAsync();
+            var summaries = (await _summaryRepository.GetAllAsync()).OrderBy(s => s.SortIndex);
             foreach (var model in summaries)
             {
                 var wrapper = new SummaryWrapper(model);
@@ -119,6 +123,7 @@ namespace StockView.UI.ViewModel
             _summaryRepository.Remove(SelectedSummary.Model);
             Summaries.Remove(SelectedSummary);
             SelectedSummary = null;
+            RecalculateSummaryIndices();
             HasChanges = _summaryRepository.HasChanges();
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
@@ -129,10 +134,71 @@ namespace StockView.UI.ViewModel
             wrapper.PropertyChanged += Wrapper_PropertyChanged;
             _summaryRepository.Add(wrapper.Model);
             Summaries.Add(wrapper);
+            RecalculateSummaryIndices();
 
             // Trigger validation
             wrapper.Name = "";
             wrapper.Code = "";
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo == null || dropInfo.DragInfo == null)
+            {
+                return;
+            }
+
+            if (!(dropInfo.Data is SummaryWrapper wrapper))
+            {
+                return;
+            }
+
+            var insertIndex = dropInfo.UnfilteredInsertIndex;
+
+            if (dropInfo.VisualTarget is ItemsControl itemsControl)
+            {
+                if (itemsControl.Items is IEditableCollectionView editableItems)
+                {
+                    var newItemPlaceholderPosition = editableItems.NewItemPlaceholderPosition;
+                    if (newItemPlaceholderPosition == NewItemPlaceholderPosition.AtBeginning && insertIndex == 0)
+                    {
+                        ++insertIndex;
+                    }
+                    else if (newItemPlaceholderPosition == NewItemPlaceholderPosition.AtEnd && insertIndex == itemsControl.Items.Count)
+                    {
+                        --insertIndex;
+                    }
+                }
+            }
+
+            var index = Summaries.IndexOf(wrapper);
+            if (index != -1)
+            {
+                Summaries.RemoveAt(index);
+                // so, is the source list the destination list too ?
+                if (index < insertIndex)
+                {
+                    --insertIndex;
+                }
+            }
+
+            Summaries.Insert(insertIndex, wrapper);
+
+            RecalculateSummaryIndices();
+        }
+
+        private void RecalculateSummaryIndices()
+        {
+            for (int i = 0; i < Summaries.Count; i++)
+            {
+                Summaries[i].SortIndex = i;
+            }
         }
     }
 }

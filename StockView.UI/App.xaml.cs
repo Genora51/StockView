@@ -2,6 +2,7 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using StockView.UI.Startup;
+using System;
 using System.IO;
 using System.Windows;
 using System.Xml;
@@ -35,12 +36,12 @@ namespace StockView.UI
         private void Application_DispatcherUnhandledException(object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            #if !DEBUG
+#if !DEBUG
             MessageBox.Show("Unexpected error occurred. Please inform the administrator."
                 + Environment.NewLine + e.Exception.Message, "Unexpected error");
 
             e.Handled = true;
-            #endif
+#endif
         }
     }
 }

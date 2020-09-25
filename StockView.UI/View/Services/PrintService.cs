@@ -1,6 +1,5 @@
 ﻿using StockView.UI.Wrapper;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -12,11 +11,11 @@ namespace StockView.UI.View.Services
 {
     public class PrintService : IPrintService
     {
-        public void Print(DataTable data, DataTable summaryData, string title)
+        public void Print(DataView data, DataView summaryData, string title)
         {
             var printDialog = new PrintDialog();
             var flowDocument = new FlowDocument();
-            var table = CreateTable(data, summaryData, title);
+            var table = CreateTable(data.ToTable(), summaryData.ToTable(), title);
             flowDocument.Blocks.Add(table);
             const int padding = 50;
             flowDocument.PagePadding = new Thickness(padding);
@@ -27,7 +26,7 @@ namespace StockView.UI.View.Services
                 IDocumentPaginatorSource doc = flowDocument;
                 printDialog.PrintDocument(doc.DocumentPaginator, title);
             }
-            
+
         }
 
         private Table CreateTable(DataTable data, DataTable summaryData, string title)
@@ -67,7 +66,7 @@ namespace StockView.UI.View.Services
             sepRow.Cells.Add(sepCell);
             dataRowGroup.Rows.Add(sepRow);
 
-            for (var i = 0; i < summaryData.Rows.Count; i ++)
+            for (var i = 0; i < summaryData.Rows.Count; i++)
             {
                 var row = new TableRow()
                 {
@@ -154,7 +153,9 @@ namespace StockView.UI.View.Services
                 else if (obj is StockSnapshotWrapper wrapper)
                 {
                     row.Cells.Add(CreateSnapshotCell(wrapper, prevRow?[column] as StockSnapshotWrapper));
-                } else if (obj is DBNull) {
+                }
+                else if (obj is DBNull)
+                {
                     row.Cells.Add(CreateCell(
                         new Paragraph(new Run("-"))
                         {

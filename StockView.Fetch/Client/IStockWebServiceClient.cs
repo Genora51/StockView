@@ -7,5 +7,6 @@ namespace StockView.Fetch.Client
     {
         Task<decimal?> GetValueAsync(string symbol, DateTime date);
         Task<DateTime?> GetExDividendsAsync(string symbol);
+        Task<decimal?> GetYieldAsync(string symbol);
     }
 }

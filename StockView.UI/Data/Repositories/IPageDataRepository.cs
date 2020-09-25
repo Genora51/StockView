@@ -1,5 +1,4 @@
 ﻿using StockView.Model;
-using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Repositories
 {
@@ -7,6 +6,6 @@ namespace StockView.UI.Data.Repositories
     {
         void DetachPage(Page page);
         void RemoveSnapshot(StockSnapshot Model);
-        
+
     }
 }

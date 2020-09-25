@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-             xmlns:local="clr-namespace:StockView.UI.View" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:behaviours="clr-namespace:StockView.UI.View.Behaviours"
+             xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:local="clr-namespace:StockView.UI.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviours="clr-namespace:StockView.UI.View.Behaviours"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -20,7 +23,10 @@
 
         <DataGrid ItemsSource="{Binding Summaries}"
                   SelectedItem="{Binding SelectedSummary,Mode=TwoWay}"
-                  AutoGenerateColumns="False" RowHeaderWidth="0" Margin="10">
+                  AutoGenerateColumns="False" RowHeaderWidth="0" Margin="10"
+                  dd:DragDrop.IsDragSource="True"
+                  dd:DragDrop.IsDropTarget="True"
+                  dd:DragDrop.DropHandler="{Binding}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Summary" Width="*"
                     ElementStyle="{StaticResource DataGridColumnStyle}"

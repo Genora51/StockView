@@ -13,9 +13,9 @@ namespace StockView.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private IEventAggregator _eventAggregator;
-        private IIndex<string, IDetailViewModel> _detailViewModelCreator;
-        private IMessageDialogService _messageDialogService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IIndex<string, IDetailViewModel> _detailViewModelCreator;
+        private readonly IMessageDialogService _messageDialogService;
         private IDetailViewModel _selectedDetailViewModel;
 
         public MainViewModel(INavigationViewModel navigationViewModel,
@@ -102,7 +102,8 @@ namespace StockView.UI.ViewModel
         private int nextNewItemId = 0;
         private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenDetailView(new OpenDetailViewEventArgs {
+            OnOpenDetailView(new OpenDetailViewEventArgs
+            {
                 Id = nextNewItemId--,
                 ViewModelName = viewModelType.Name
             });

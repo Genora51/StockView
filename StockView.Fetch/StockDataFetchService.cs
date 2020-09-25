@@ -7,7 +7,7 @@ namespace StockView.Fetch
 {
     public class StockDataFetchService : IStockDataFetchService
     {
-        private IStockWebServiceClient _stockWebService;
+        private readonly IStockWebServiceClient _stockWebService;
 
         public StockDataFetchService(IStockWebServiceClient stockWebService)
         {
@@ -30,6 +30,11 @@ namespace StockView.Fetch
                 ExDividends = isExDividends,
                 Value = value.Value
             };
+        }
+
+        public Task<decimal?> FetchYieldAsync(Stock stock)
+        {
+            return _stockWebService.GetYieldAsync(stock.Symbol);
         }
     }
 }

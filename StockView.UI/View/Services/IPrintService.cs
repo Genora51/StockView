@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace StockView.UI.View.Services
 {
     public interface IPrintService
     {
-        void Print(DataTable data, DataTable summaryData, string title);
+        void Print(DataView data, DataView summaryData, string title);
     }
 }

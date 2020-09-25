@@ -15,7 +15,7 @@ namespace StockView.UI.ViewModel
 {
     public class IndustryDetailViewModel : DetailViewModelBase
     {
-        private IIndustryRepository _industryRepository;
+        private readonly IIndustryRepository _industryRepository;
         private IndustryWrapper _selectedIndustry;
 
         public IndustryDetailViewModel(IEventAggregator eventAggregator,

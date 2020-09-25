@@ -20,9 +20,9 @@ namespace StockView.UI.ViewModel
 {
     public class StockDetailViewModel : DetailViewModelBase, IStockDetailViewModel
     {
-        private IStockRepository _stockRepository;
-        private IIndustryLookupDataService _industryLookupDataService;
-        private IStockDataFetchService _stockDataFetchService;
+        private readonly IStockRepository _stockRepository;
+        private readonly IIndustryLookupDataService _industryLookupDataService;
+        private readonly IStockDataFetchService _stockDataFetchService;
         private StockWrapper _stock;
         private StockSnapshotWrapper _selectedSnapshot;
         private int _changeCount;
@@ -47,6 +47,7 @@ namespace StockView.UI.ViewModel
             AddSnapshotCommand = new DelegateCommand(OnAddSnapshotExecute);
             RemoveSnapshotCommand = new DelegateCommand(OnRemoveSnapshotExecute, OnRemoveSnapshotCanExecute);
             FetchSnapshotCommand = new DelegateCommand(OnFetchSnapshotExecute, OnFetchSnapshotCanExecute);
+            FetchYieldCommand = new DelegateCommand(OnFetchYieldExecute);
 
             Industries = new ObservableCollection<LookupItem>();
             Snapshots = new ObservableCollection<StockSnapshotWrapper>();
@@ -167,7 +168,8 @@ namespace StockView.UI.ViewModel
         public StockSnapshotWrapper SelectedSnapshot
         {
             get { return _selectedSnapshot; }
-            set {
+            set
+            {
                 _selectedSnapshot = value;
                 OnPropertyChanged();
                 ((DelegateCommand)RemoveSnapshotCommand).RaiseCanExecuteChanged();
@@ -178,6 +180,7 @@ namespace StockView.UI.ViewModel
         public ICommand AddSnapshotCommand { get; }
         public ICommand RemoveSnapshotCommand { get; }
         public ICommand FetchSnapshotCommand { get; }
+        public ICommand FetchYieldCommand { get; }
 
         public ObservableCollection<LookupItem> Industries { get; }
 
@@ -192,18 +195,20 @@ namespace StockView.UI.ViewModel
         public bool IsFetching
         {
             get { return _isFetching; }
-            private set {
+            private set
+            {
                 _isFetching = value;
                 ((DelegateCommand)FetchSnapshotCommand).RaiseCanExecuteChanged();
             }
         }
 
         private ICollectionView _snapshotsView;
-        
+
 
         public ICollectionView SnapshotsView
         {
-            get {
+            get
+            {
                 if (_snapshotsView == null)
                 {
                     _snapshotsView = CollectionViewSource.GetDefaultView(Snapshots);
@@ -262,7 +267,8 @@ namespace StockView.UI.ViewModel
 
         private void OnAddSnapshotExecute()
         {
-            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot {
+            var newSnapshot = new StockSnapshotWrapper(new StockSnapshot
+            {
                 Date = new DateTime(1970, 1, 1)
             }, ValidateSnapshotProperty);
             newSnapshot.PropertyChanged += StockSnapshotWrapper_PropertyChanged;
@@ -312,6 +318,15 @@ namespace StockView.UI.ViewModel
         private bool OnFetchSnapshotCanExecute()
         {
             return SelectedSnapshot != null && !IsFetching;
+        }
+
+        private async void OnFetchYieldExecute()
+        {
+            var yield = await _stockDataFetchService.FetchYieldAsync(Stock.Model);
+            if (yield.HasValue)
+            {
+                Stock.Yield = yield.Value;
+            }
         }
 
         private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)

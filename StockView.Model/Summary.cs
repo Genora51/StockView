@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StockView.Model
 {
@@ -16,5 +16,7 @@ namespace StockView.Model
         public string Code { get; set; }
 
         public bool Enabled { get; set; } = true;
+
+        public int SortIndex { get; set; }
     }
 }

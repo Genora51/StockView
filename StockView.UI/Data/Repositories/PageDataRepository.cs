@@ -1,9 +1,8 @@
 ﻿using StockView.DataAccess;
 using StockView.Model;
-using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Linq;
-using System;
+using System.Threading.Tasks;
 
 namespace StockView.UI.Data.Repositories
 {
